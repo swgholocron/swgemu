@@ -833,7 +833,17 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 
 	int diffDisplay = difficultyLevel < 5 ? 4 : difficultyLevel;
 
-	if (player->isGrouped()) {
+	ManagedReference<PlayerObject*> ghost = player->getPlayerObject();
+	int levelChoice = 0;
+
+	if (ghost != nullptr) {
+		String level = ghost->getScreenPlayData("mission_level_choice", "levelChoice");
+		levelChoice = Integer::valueOf(level);
+	}
+
+	if (levelChoice > 0) {
+		diffDisplay += levelChoice;
+	} else if (player->isGrouped()) {
 		bool includeFactionPets = faction != Factions::FACTIONNEUTRAL || ConfigManager::instance()->includeFactionPetsForMissionDifficulty();
 		Reference<GroupObject*> group = player->getGroup();
 
@@ -864,6 +874,13 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 
 	Vector3 startPos;
 
+	int dirChoice = 0;
+
+	if (ghost != nullptr) {
+		String dir = ghost->getScreenPlayData("mission_direction_choice", "directionChoice");
+		dirChoice = Integer::valueOf(dir);
+	}
+
 	bool foundPosition = false;
 	int maximumNumberOfTries = 20;
 	while (!foundPosition && maximumNumberOfTries-- > 0) {
@@ -871,7 +888,37 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 
 		int distance = destroyMissionBaseDistance + destroyMissionDifficultyDistanceFactor * difficultyLevel;
 		distance += System::random(destroyMissionRandomDistance) + System::random(destroyMissionDifficultyRandomDistance * difficultyLevel);
-		startPos = player->getWorldCoordinate((float)distance, (float)System::random(360), false);
+
+		float direction = (float)System::random(360);
+
+		if (dirChoice > 0) {
+			int deviation = System::random(8);
+
+			if (System::random(100) > 49)
+				deviation *= -1;
+
+			direction = (float)dirChoice + deviation;
+
+			if (direction >= 360)
+				direction -= 360;
+			else if (direction < 0)
+				direction += 360;
+
+			// Compass directions need to be absolute (world-relative). getWorldCoordinate()
+			// computes its angle relative to the player's current facing, so a chosen
+			// direction would drift with however the player happens to be facing --
+			// most visible on the diagonals (NE/SE/SW/NW), where even a small facing
+			// offset is enough to collapse the result toward an adjacent cardinal.
+			float angleRads = direction * ((float)M_PI / 180.0f);
+			float newAngle = angleRads + ((float)M_PI / 2.0f);
+
+			float newX = player->getWorldPositionX() + (cos(newAngle) * distance);
+			float newY = player->getWorldPositionY() + (sin(newAngle) * distance);
+
+			startPos = Vector3(newX, newY, 0.0f);
+		} else {
+			startPos = player->getWorldCoordinate((float)distance, direction, false);
+		}
 
 		if (zone->isWithinBoundaries(startPos)) {
 			float height = zone->getHeight(startPos.getX(), startPos.getY());
@@ -1877,7 +1924,17 @@ LairSpawn* MissionManagerImplementation::getRandomLairSpawn(CreatureObject* play
 	int counter = availableLairList->size();
 	int playerLevel = server->getPlayerManager()->calculatePlayerLevel(player);
 
-	if (player->isGrouped()) {
+	ManagedReference<PlayerObject*> ghost = player->getPlayerObject();
+	int levelChoice = 0;
+
+	if (ghost != nullptr) {
+		String level = ghost->getScreenPlayData("mission_level_choice", "levelChoice");
+		levelChoice = Integer::valueOf(level);
+	}
+
+	if (levelChoice > 0) {
+		playerLevel = levelChoice;
+	} else if (player->isGrouped()) {
 		bool includeFactionPets = faction != Factions::FACTIONNEUTRAL || ConfigManager::instance()->includeFactionPetsForMissionDifficulty();
 		Reference<GroupObject*> group = player->getGroup();
 
