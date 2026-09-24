@@ -42,7 +42,14 @@
 
 
 object_tangible_wearables_hat_nightsister_hat_s03 = object_tangible_wearables_hat_shared_nightsister_hat_s03:new {
-	playerRaces = { "object/creature/player/human_female.iff",
+	playerRaces = { "object/creature/player/aqualish_female.iff",
+				"object/creature/player/bith_female.iff",
+				"object/creature/player/chiss_female.iff",
+				"object/creature/player/human_female.iff",
+				"object/creature/player/hutt_female.iff",
+				"object/creature/player/nightsister_female.iff",
+				"object/creature/player/smc_female.iff",
+				"object/creature/player/togruta_female.iff",
 				"object/creature/player/zabrak_female.iff",
 				"object/mobile/vendor/human_female.iff",
 				"object/mobile/vendor/zabrak_female.iff" },
