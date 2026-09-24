@@ -83,10 +83,16 @@ public:
 			return GENERALERROR;
 		}
 
-		// Player is in the tutorial zone and is allowed to migrate stats.
+		// Player is in an allowed zone and is allowed to migrate stats.
 		auto zone = creature->getZone();
+		String zoneName = zone != nullptr ? zone->getZoneName() : String();
 
-		if ((zone != nullptr && zone->getZoneName() == "tutorial") || privilegedPlayer) {
+		bool allowedZone = zoneName == "tutorial" || zoneName == "tatooine" || zoneName == "corellia" ||
+				zoneName == "dantooine" || zoneName == "dathomir" || zoneName == "endor" ||
+				zoneName == "lok" || zoneName == "naboo" || zoneName == "rori" ||
+				zoneName == "talus" || zoneName == "yavin4";
+
+		if (allowedZone || privilegedPlayer) {
 			session->migrateStats();
 
 			if (privilegedPlayer) {
