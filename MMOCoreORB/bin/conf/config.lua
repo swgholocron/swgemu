@@ -91,6 +91,11 @@ Core3 = {
 	ZoneAllowedConnections = 30000,
 	ZoneGalaxyID = 2, --The actual zone server's galaxyID. Should coordinate with your login server.
 
+	------Player Creation Manager Config------
+	PlayerCreationManager = {
+		MaxCharactersPerGalaxy = 15, -- Max characters allowed per account on this galaxy.
+	},
+
 	-------- GROUND ZONES -------
 	ZonesEnabled = {
 
