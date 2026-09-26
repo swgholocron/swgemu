@@ -106,7 +106,12 @@ void AbilityList::loadFromNames(Vector<String>& abilities) {
 		Ability* ability = skillManager->getAbility(name);
 
 		if (ability == nullptr) {
-			Logger::console.error(name + " is null when trying to load from database");
+			// Not a real problem: this is a stale/renamed ability name left
+			// over from an older skills.iff (the current one no longer
+			// grants an ability by this name). It's simply dropped here and
+			// won't be written back on the next save, so this is a one-time,
+			// self-correcting cleanup rather than something to alert on.
+			Logger::console.warning(name + " is null when trying to load from database");
 		} else {
 			vector.add(ability);
 		}
