@@ -1297,35 +1297,8 @@ bool CreatureManagerImplementation::addWearableItem(CreatureObject* creature, Ta
 	if (tanoData == nullptr || chatManager == nullptr)
 		return false;
 
-	const Vector<uint32>* races = tanoData->getPlayerRaces();
-	const String race = creature->getObjectTemplate()->getFullTemplateString();
-
-	if (clothing->isWearableObject() && !races->contains(race.hashCode())) {
-		int species = creature->getSpecies();
-		UnicodeString message;
-
-		// Vendor fail messages
-		if (isVendor) {
-			if (species == CreatureObject::ITHORIAN) {
-				message = "@player_structure:wear_not_ithorian";
-			} else {
-				message = "@player_structure:wear_no";
-			}
-		// NPC actor fail messages
-		} else {
-			if (species == CreatureObject::ITHORIAN) {
-				message = "@event_perk_npc_actor:wear_no_ithorian";
-			} else if (species == CreatureObject::WOOKIEE) {
-				message = "@event_perk_npc_actor:wear_no_wookiee";
-			} else {
-				message = "@event_perk_npc_actor:wear_no";
-			}
-		}
-
-		chatManager->broadcastChatMessage(creature, message, clothing->getObjectID(), 0, creature->getMoodID());
-
-		return false;
-	}
+	// All species can wear all clothing/armor -- the playerRaces
+	// species-restriction check is intentionally skipped.
 
 	ManagedReference<SceneObject*> clothingParent = clothing->getParent().get();
 

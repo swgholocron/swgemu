@@ -27,16 +27,8 @@ int PlayerContainerComponent::canAddObject(SceneObject* sceneObject, SceneObject
 
 		SharedTangibleObjectTemplate* tanoData = dynamic_cast<SharedTangibleObjectTemplate*>(wearable->getObjectTemplate());
 
-		if (tanoData != nullptr) {
-			const auto races = tanoData->getPlayerRaces();
-			String race = creo->getObjectTemplate()->getFullTemplateString();
-
-			if (!races->contains(race.hashCode())) {
-				errorDescription = "You lack the necessary requirements to wear this object";
-
-				return TransferErrorCode::PLAYERUSEMASKERROR;
-			}
-		}
+		// All species can equip all weapons/wear all armor and clothing --
+		// the playerRaces species-restriction check is intentionally skipped.
 
 		if (creo->isPlayerCreature()) {
 			if (!wearable->isNeutral()) {
