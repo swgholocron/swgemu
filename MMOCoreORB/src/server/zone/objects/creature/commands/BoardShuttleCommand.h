@@ -89,12 +89,7 @@ public:
 			return GENERALERROR;
 		}
 
-		// Is shuttle ready to board yet?
-		// Shuttle at Theed Spaceport, Naboo should always be available. Even when the shuttle isn't there.
-		if (!closestPoint->isPoint("naboo","Theed Spaceport")){
-			if (!planetManager->checkShuttleStatus(creature, shuttle))
-				return GENERALERROR;
-		}
+		// Shuttles and starports board instantly -- no "next shuttle in X minutes" wait.
 
 		uint64 ticketoid = target;
 
