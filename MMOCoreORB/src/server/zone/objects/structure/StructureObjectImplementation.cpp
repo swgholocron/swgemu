@@ -321,6 +321,8 @@ float StructureObjectImplementation::getMaintenanceRate() const {
 	rate *= 10000.0f; // Make structures really expensive
 #endif // DEBUG_STRUCTURE_RAPID_DECAY
 
+	rate *= 0.45f; // Structure maintenance reduced 55% (houses, factories, harvesters)
+
 	if (maintenanceReduced) {
 		rate *= 0.8f;
 	}
