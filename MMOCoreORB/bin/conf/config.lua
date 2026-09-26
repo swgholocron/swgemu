@@ -154,6 +154,7 @@ Core3 = {
 	------TRE config------
 	TrePath = "/home/sygnum/Projects/swgemu/TRE/",
 	TreFiles = {
+		"holocron.tre",
 		"species.tre",
 		"mtg_patch_001_appearance_01.tre",
 		"mtg_patch_002_appearance_02.tre",
