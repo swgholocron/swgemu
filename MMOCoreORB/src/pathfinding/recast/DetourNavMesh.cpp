@@ -919,6 +919,33 @@ dtStatus dtNavMesh::addTile(unsigned char* data, int dataSize, int flags,
 	if (header->version != DT_NAVMESH_VERSION)
 		return DT_FAILURE | DT_WRONG_VERSION;
 
+	// Sanity-check the header counts before trusting them. A truncated or
+	// otherwise corrupted tile blob (e.g. loaded from a stale/corrupt DB
+	// record) can have a header whose counts don't match the actual size of
+	// the buffer that follows it; trusting such counts causes the section
+	// pointers below (tile->polys, etc.) to run past the allocation, and the
+	// out-of-bounds access crashes later in connectIntLinks/baseOffMeshLinks.
+	if (header->vertCount < 0 || header->polyCount < 0 || header->maxLinkCount < 0 ||
+		header->detailMeshCount < 0 || header->detailVertCount < 0 || header->detailTriCount < 0 ||
+		header->bvNodeCount < 0 || header->offMeshConCount < 0)
+		return DT_FAILURE | DT_INVALID_PARAM;
+
+	const int headerSize = dtAlign4(sizeof(dtMeshHeader));
+	const int vertsSize = dtAlign4(sizeof(float)*3*header->vertCount);
+	const int polysSize = dtAlign4(sizeof(dtPoly)*header->polyCount);
+	const int linksSize = dtAlign4(sizeof(dtLink)*(header->maxLinkCount));
+	const int detailMeshesSize = dtAlign4(sizeof(dtPolyDetail)*header->detailMeshCount);
+	const int detailVertsSize = dtAlign4(sizeof(float)*3*header->detailVertCount);
+	const int detailTrisSize = dtAlign4(sizeof(unsigned char)*4*header->detailTriCount);
+	const int bvtreeSize = dtAlign4(sizeof(dtBVNode)*header->bvNodeCount);
+	const int offMeshLinksSize = dtAlign4(sizeof(dtOffMeshConnection)*header->offMeshConCount);
+
+	const long long expectedSize = (long long)headerSize + vertsSize + polysSize + linksSize +
+			detailMeshesSize + detailVertsSize + detailTrisSize + bvtreeSize + offMeshLinksSize;
+
+	if (expectedSize != (long long)dataSize)
+		return DT_FAILURE | DT_INVALID_PARAM;
+
 #ifndef DT_POLYREF64
 	// Do not allow adding more polygons than specified in the NavMesh's maxPolys constraint.
 	// Otherwise, the poly ID cannot be represented with the given number of bits.
@@ -978,17 +1005,7 @@ dtStatus dtNavMesh::addTile(unsigned char* data, int dataSize, int flags,
 	tile->next = m_posLookup[h];
 	m_posLookup[h] = tile;
 
-	// Patch header pointers.
-	const int headerSize = dtAlign4(sizeof(dtMeshHeader));
-	const int vertsSize = dtAlign4(sizeof(float)*3*header->vertCount);
-	const int polysSize = dtAlign4(sizeof(dtPoly)*header->polyCount);
-	const int linksSize = dtAlign4(sizeof(dtLink)*(header->maxLinkCount));
-	const int detailMeshesSize = dtAlign4(sizeof(dtPolyDetail)*header->detailMeshCount);
-	const int detailVertsSize = dtAlign4(sizeof(float)*3*header->detailVertCount);
-	const int detailTrisSize = dtAlign4(sizeof(unsigned char)*4*header->detailTriCount);
-	const int bvtreeSize = dtAlign4(sizeof(dtBVNode)*header->bvNodeCount);
-	const int offMeshLinksSize = dtAlign4(sizeof(dtOffMeshConnection)*header->offMeshConCount);
-
+	// Patch header pointers (section sizes already computed and validated above).
 	unsigned char* d = data + headerSize;
 	tile->verts = dtGetThenAdvanceBufferPointer<float>(d, vertsSize);
 	tile->polys = dtGetThenAdvanceBufferPointer<dtPoly>(d, polysSize);
@@ -1005,9 +1022,11 @@ dtStatus dtNavMesh::addTile(unsigned char* data, int dataSize, int flags,
 
 	// Build links freelist
 	tile->linksFreeList = 0;
-	tile->links[header->maxLinkCount-1].next = DT_NULL_LINK;
-	for (int i = 0; i < header->maxLinkCount-1; ++i)
-		tile->links[i].next = i+1;
+	if (header->maxLinkCount > 0) {
+		tile->links[header->maxLinkCount-1].next = DT_NULL_LINK;
+		for (int i = 0; i < header->maxLinkCount-1; ++i)
+			tile->links[i].next = i+1;
+	}
 
 	// Init tile.
 	tile->header = header;

@@ -21,9 +21,15 @@ class RecastNavMesh : public Object, public Logger {
 	NavMeshSetHeader header;
 	String name;
 
+	// Set when loadAll() encountered a corrupt/truncated tile and had to skip
+	// it. The mesh is then missing geometry it should have, so callers must
+	// treat it as not usable and rebuild it rather than pathfinding on it.
+	bool tilesFailedToLoad;
+
 public:
 	RecastNavMesh() : Logger("RecastNavMesh"), header() {
 		navMesh = nullptr;
+		tilesFailedToLoad = false;
 	}
 
 	~RecastNavMesh() {
@@ -35,7 +41,7 @@ public:
 	bool parseFromBinaryStream(ObjectInputStream* stream);
 
 	bool isLoaded() const {
-		return navMesh != nullptr;
+		return navMesh != nullptr && !tilesFailedToLoad;
 	}
 
 	const NavMeshSetHeader& getMeshHeader() {
@@ -52,6 +58,7 @@ public:
 
 	void setDetourNavMesh(dtNavMesh* navMesh) {
 		this->navMesh = navMesh;
+		tilesFailedToLoad = false;
 	}
 
 	void setName(const String& name) {

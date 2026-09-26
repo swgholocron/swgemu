@@ -56,31 +56,53 @@ void RecastNavMesh::loadAll(ObjectInputStream* stream) {
 
 	// Read tiles.
 	for (int i = 0; i < header.numTiles; ++i) {
-		NavMeshTileHeader tileHeader;
-		int headerSize = sizeof(tileHeader);
+		try {
+			NavMeshTileHeader tileHeader;
+			int headerSize = sizeof(tileHeader);
 
-		stream->readStream((char*)&tileHeader, headerSize);
+			stream->readStream((char*)&tileHeader, headerSize);
 
-		if (!tileHeader.tileRef || !tileHeader.dataSize) {
-			error("Invalid tileHeader tileRef or dataSize in " + name);
-			dtFreeNavMesh(mesh);
-			return;
+			if (!tileHeader.tileRef || !tileHeader.dataSize) {
+				error("Invalid tileHeader tileRef or dataSize in " + name);
+				tilesFailedToLoad = true;
+				break;
+			}
+
+			byte* data = (byte*) dtAlloc(tileHeader.dataSize, DT_ALLOC_PERM);
+			if (!data) {
+				error("Failed to buffer for tile in RecastNavMesh " + name);
+				tilesFailedToLoad = true;
+				break;
+			}
+
+			memset(data, 0, tileHeader.dataSize);
+			stream->readStream((char*)data, tileHeader.dataSize);
+
+			dtStatus status = mesh->addTile(data, tileHeader.dataSize, DT_TILE_FREE_DATA, tileHeader.tileRef, 0);
+
+			if (dtStatusFailed(status)) {
+				error("Failed to add corrupt navmesh tile while loading RecastNavMesh " + name + ", skipping tile.");
+				dtFree(data);
+				tilesFailedToLoad = true;
+			}
+		} catch (Exception& e) {
+			// A corrupt tileHeader (e.g. a garbage dataSize) desyncs the
+			// stream's read position for everything after it -- the
+			// remaining tiles in this record can no longer be trusted, so
+			// stop here rather than let the exception unwind out of
+			// loadAll(), which would abort construction of the whole
+			// NavArea (and everything that references it) and leak `mesh`.
+			error("Exception reading tile " + String::valueOf(i) + " of " + String::valueOf(header.numTiles)
+					+ " while loading RecastNavMesh " + name + ": " + e.getMessage());
+			tilesFailedToLoad = true;
+			break;
 		}
-
-		byte* data = (byte*) dtAlloc(tileHeader.dataSize, DT_ALLOC_PERM);
-		if (!data) {
-			error("Failed to buffer for tile in RecastNavMesh " + name);
-			dtFreeNavMesh(mesh);
-			return;
-		}
-
-		memset(data, 0, tileHeader.dataSize);
-		stream->readStream((char*)data, tileHeader.dataSize);
-
-		mesh->addTile(data, tileHeader.dataSize, DT_TILE_FREE_DATA, tileHeader.tileRef, 0);
 	}
 
 	navMesh = mesh;
+
+	if (tilesFailedToLoad)
+		error("RecastNavMesh " + name + " had corrupt tile(s) and will be flagged for a full rebuild.");
 }
 
 void RecastNavMesh::saveAll(ObjectOutputStream* stream) {
