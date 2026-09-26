@@ -5,5 +5,6 @@ luacov.stats.out
 .cache
 compile_commands.json
 TRE/
+TRE_src/
 MMOCoreORB/import_errors.log
 Documentation/
