@@ -89,6 +89,6 @@ class ForageManager extends Observer implements Logger {
 	 * @param planet The planet (zone ID) the player was on when they first started foraging.
 	 */
 	@local
-	private native boolean forageGiveResource(@dereferenced TransactionLog trx, CreatureObject player, float forageX, float forageY, final string planet, string resType);
+	private native boolean forageGiveResource(@dereferenced TransactionLog trx, CreatureObject player, float forageX, float forageY, final string planet, string resType, int minQuantity = 10, int maxQuantity = 40);
 }
 

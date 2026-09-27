@@ -330,7 +330,8 @@ bool ForageManagerImplementation::forageGiveItems(CreatureObject* player, int fo
 		}
 		else if (dice > 39 && dice < 110) { // Eggs
 			resName = "meat_egg";
-			if(forageGiveResource(trx, player, forageX, forageY, planet, resName)) {
+			// Lair foraging yields a much larger 250-2500 haul than other forage types.
+			if(forageGiveResource(trx, player, forageX, forageY, planet, resName, 250, 2500)) {
 				player->sendSystemMessage("@lair_n:found_eggs");
 				trx.commit(true);
 				return true;
@@ -357,7 +358,7 @@ bool ForageManagerImplementation::forageGiveItems(CreatureObject* player, int fo
 	return true;
 }
 
-bool ForageManagerImplementation::forageGiveResource(TransactionLog& trx, CreatureObject* player, float forageX, float forageY, const String& planet, String& resType) {
+bool ForageManagerImplementation::forageGiveResource(TransactionLog& trx, CreatureObject* player, float forageX, float forageY, const String& planet, String& resType, int minQuantity, int maxQuantity) {
 	if (player == nullptr)
 		return false;
 
@@ -402,7 +403,7 @@ bool ForageManagerImplementation::forageGiveResource(TransactionLog& trx, Creatu
 		}
 	}
 
-	int quantity = System::random(30) + 10;
+	int quantity = System::random(maxQuantity - minQuantity) + minQuantity;
 	resourceManager->harvestResourceToPlayer(trx, player, resource, quantity);
 	return true;
 }
