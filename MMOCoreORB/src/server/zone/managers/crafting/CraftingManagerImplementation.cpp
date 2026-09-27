@@ -96,6 +96,10 @@ int CraftingManagerImplementation::calculateExperimentationSuccess(CreatureObjec
 	/// Range 0-100
 	int luckRoll = System::random(100) + cityBonus;
 
+	// Luck and Force Luck now factor into the whole roll, including the
+	// chance at an amazing success, instead of only the lower tiers.
+	luckRoll += System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck"));
+
 	if(luckRoll > ((95 - expbonus) - forceSkill))
 		return AMAZINGSUCCESS;
 
@@ -104,8 +108,6 @@ int CraftingManagerImplementation::calculateExperimentationSuccess(CreatureObjec
 
 	//if(luckRoll < 5)
 	//	return CRITICALFAILURE;
-
-	luckRoll += System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck"));
 
 	///
 	int experimentRoll = (toolModifier * (luckRoll + (experimentingPoints * 4)));
