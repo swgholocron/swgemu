@@ -2033,6 +2033,23 @@ void PlayerManagerImplementation::disseminateExperience(TangibleObject* destruct
 
 	int playerHitCount = playerList.size();
 
+	// Combat XP is split evenly among qualifying player attackers instead of
+	// proportional to damage dealt -- count them up front so each entry's
+	// share below can be divided by this instead of weighted by damage.
+	int qualifyingAttackerCount = 0;
+
+	for (int i = 0; i < threatMap->size(); ++i) {
+		TangibleObject* countedAttacker = threatMap->elementAt(i).getKey();
+
+		if (countedAttacker != nullptr && countedAttacker->isPlayerCreature()
+				&& countedAttacker->getZone() == zone && destructedObject->isInRangeZoneless(countedAttacker, 80)) {
+			++qualifyingAttackerCount;
+		}
+	}
+
+	if (qualifyingAttackerCount == 0)
+		qualifyingAttackerCount = 1;
+
 	for (int i = 0; i < threatMap->size(); ++i) {
 		ThreatMapEntry* entry = &threatMap->elementAt(i).getValue();
 		TangibleObject* attacker = threatMap->elementAt(i).getKey();
@@ -2159,7 +2176,16 @@ void PlayerManagerImplementation::disseminateExperience(TangibleObject* destruct
 				float xpAmount = baseXp;
 				int playerLevel = calculatePlayerLevel(attackerCreo, xpType);
 
-				xpAmount *= (float) damage / totalDamage;
+				// Split this attacker's own xp-type contributions proportionally
+				// to their own damage (so xp still lands on the skills they used),
+				// then divide their overall share evenly across attackers instead
+				// of weighting it by damage dealt relative to everyone else.
+				uint32 entryTotalDamage = entry->getTotalDamage();
+
+				if (entryTotalDamage > 0)
+					xpAmount *= (float) damage / entryTotalDamage;
+
+				xpAmount /= qualifyingAttackerCount;
 
 				//Cap xp based on level
 				xpAmount = Math::min(xpAmount, playerLevel * 300.f);
