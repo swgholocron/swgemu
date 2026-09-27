@@ -96,6 +96,11 @@ Core3 = {
 		MaxCharactersPerGalaxy = 15, -- Max characters allowed per account on this galaxy.
 	},
 
+	------Player Manager Config------
+	PlayerManager = {
+		GalaxyWideGrouping = true, -- Allow /invite, /uninvite, and group leadership across planets, not just same-zone.
+	},
+
 	-------- GROUND ZONES -------
 	ZonesEnabled = {
 
