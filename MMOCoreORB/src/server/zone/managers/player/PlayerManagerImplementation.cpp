@@ -1378,9 +1378,15 @@ void PlayerManagerImplementation::killPlayer(TangibleObject* attacker, CreatureO
 	player->sendSystemMessage(stringId);
 
 	player->updateTimeOfDeath();
-	player->clearBuffs(true, false);
 
 	PlayerObject* ghost = player->getPlayerObject();
+
+	// Buffs only drop on death if the kill was PvP -- either the player had
+	// a PvP TEF, or the attacker was another player. Dying to an NPC/creature
+	// with no PvP TEF no longer strips buffs.
+	if (attacker->isPlayerCreature() || (ghost != nullptr && ghost->hasTef())) {
+		player->clearBuffs(true, false);
+	}
 
 	if (ghost != nullptr) {
 		ghost->resetIncapacitationTimes();
