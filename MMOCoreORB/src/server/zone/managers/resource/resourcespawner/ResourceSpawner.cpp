@@ -519,9 +519,13 @@ ResourceSpawn* ResourceSpawner::createResourceSpawn(const String& type,
 		newSpawn->addStfClass(resClass);
 	}
 
+	// 10% chance for a newly spawned resource to roll perfect -- every stat
+	// maxed out for its class instead of randomized within its range.
+	bool perfectStats = System::random(9) == 0;
+
 	for (int i = 0; i < resourceEntry->getAttributeCount(); ++i) {
 		auto attrib = resourceEntry->getAttribute(i);
-		int randomValue = randomizeValue(attrib->getMinimum(),
+		int randomValue = perfectStats ? attrib->getMaximum() : randomizeValue(attrib->getMinimum(),
 				attrib->getMaximum());
 		String attribName = attrib->getName();
 		int index = attrib->getIndex();
