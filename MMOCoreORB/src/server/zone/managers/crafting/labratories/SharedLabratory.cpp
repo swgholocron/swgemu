@@ -24,6 +24,11 @@ float SharedLabratory::calculateExperimentationValueModifier(int experimentation
 	switch (experimentationResult) {
 	case CraftingManager::AMAZINGSUCCESS:
 		results = 0.08f;
+
+		// 10% chance to double the modifier on an amazing success.
+		if (System::random(9) == 0)
+			results *= 2.0f;
+
 		break;
 	case CraftingManager::GREATSUCCESS:
 		results = 0.07f;
