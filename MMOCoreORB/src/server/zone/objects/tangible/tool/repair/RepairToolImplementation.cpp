@@ -67,8 +67,8 @@ void RepairToolImplementation::sendRepairListTo(CreatureObject* player) {
 		ManagedReference<TangibleObject*> tano = cast<TangibleObject*>(item);
 
 		if (tano != nullptr ) {
-			// Not broken (1/1) but still damaged.
-			bool inNeedOfRepair = (!(tano -> isBroken()) && (tano -> getConditionDamage() > 0));
+			// Still damaged, including fully broken items.
+			bool inNeedOfRepair = (tano -> getConditionDamage() > 0);
 			if (inNeedOfRepair) {
 				listbox->addMenuItem( tano->getDisplayedName(), tano->getObjectID());
 			}

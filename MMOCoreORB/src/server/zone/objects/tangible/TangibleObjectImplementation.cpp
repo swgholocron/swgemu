@@ -1344,14 +1344,6 @@ void TangibleObjectImplementation::repair(CreatureObject* player, RepairTool * r
 		return;
 	}
 
-	//Condition is unrepairable
-	if ((getMaxCondition() - getConditionDamage()) <= 0) {
-		StringIdChatParameter cantrepair("error_message", "sys_repair_unrepairable");
-		cantrepair.setTT(getDisplayedName());
-		player->sendSystemMessage(cantrepair); //%TT's condition is beyond repair even for your skills.
-		return;
-	}
-
 	Reference<RepairToolTemplate*> repairTemplate = nullptr;
 
 	if (repairTool == nullptr) {
@@ -1427,12 +1419,12 @@ void TangibleObjectImplementation::repair(CreatureObject* player, RepairTool * r
 	/// Subtract complexity
 	repairChance -= (getComplexity() / 3);
 
-	/// 5% random failure
-	if (getMaxCondition() < 20 || roll < 5)
-		repairChance = 0;
-
 	if (roll > 95)
 		repairChance = 100;
+
+	// Failure chances removed -- repairs can no longer destroy an item outright.
+	if (repairChance < 25)
+		repairChance = 25;
 
 	String result = repairAttempt(repairChance);
 

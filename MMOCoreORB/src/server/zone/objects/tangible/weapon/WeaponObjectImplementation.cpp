@@ -712,20 +712,21 @@ void WeaponObjectImplementation::decreasePowerupUses(CreatureObject* player) {
 String WeaponObjectImplementation::repairAttempt(int repairChance) {
 	String message = "@error_message:";
 
+	// Condition loss on repair reduced by 50% across all outcome tiers.
 	if(repairChance < 25) {
 		message += "sys_repair_failed";
-		setMaxCondition(1, true);
+		setMaxCondition(getMaxCondition() * .50f, true);
 		setConditionDamage(0, true);
 	} else if(repairChance < 50) {
 		message += "sys_repair_imperfect";
-		setMaxCondition(getMaxCondition() * .65f, true);
+		setMaxCondition(getMaxCondition() * .825f, true);
 		setConditionDamage(0, true);
 	} else if(repairChance < 75) {
-		setMaxCondition(getMaxCondition() * .80f, true);
+		setMaxCondition(getMaxCondition() * .90f, true);
 		setConditionDamage(0, true);
 		message += "sys_repair_slight";
 	} else {
-		setMaxCondition(getMaxCondition() * .95f, true);
+		setMaxCondition(getMaxCondition() * .975f, true);
 		setConditionDamage(0, true);
 		message += "sys_repair_perfect";
 	}
