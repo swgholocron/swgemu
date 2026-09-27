@@ -885,4 +885,62 @@ trainerSkills = {
 		"force_discipline_defender_preternatural_defense_03",
 		"force_discipline_defender_preternatural_defense_04"
 	},
+
+	trainer_combatjedigray = {
+		"combat_jedi_novice",
+		"combat_jedi_master",
+		"combat_jedi_dark_01",
+		"combat_jedi_dark_02",
+		"combat_jedi_dark_03",
+		"combat_jedi_dark_04",
+		"combat_jedi_light_01",
+		"combat_jedi_light_02",
+		"combat_jedi_light_03",
+		"combat_jedi_light_04"
+	},
+
+	trainer_combatjedigrayelder = {
+		"combat_jedi_elder_novice",
+		"combat_jedi_elder_master",
+		"combat_jedi_elder_lightning_01",
+		"combat_jedi_elder_lightning_02",
+		"combat_jedi_elder_lightning_03",
+		"combat_jedi_elder_lightning_04",
+		"combat_jedi_elder_mental_01",
+		"combat_jedi_elder_mental_02",
+		"combat_jedi_elder_mental_03",
+		"combat_jedi_elder_mental_04",
+		"combat_jedi_elder_debuff_01",
+		"combat_jedi_elder_debuff_02",
+		"combat_jedi_elder_debuff_03",
+		"combat_jedi_elder_debuff_04",
+		"combat_jedi_elder_push_01",
+		"combat_jedi_elder_push_02",
+		"combat_jedi_elder_push_03",
+		"combat_jedi_elder_push_04"
+	},
+
+	trainer_combatjedigrayelderrank = {
+		"combat_jedi_elder_rank_novice",
+		"combat_jedi_elder_rank_master",
+		"combat_jedi_elder_rank_dark_01",
+		"combat_jedi_elder_rank_dark_02",
+		"combat_jedi_elder_rank_dark_03",
+		"combat_jedi_elder_rank_dark_04"
+	},
+
+	trainer_combatjedigrayelderrankcouncil = {
+		"force_rank_gray_novice",
+		"force_rank_gray_master",
+		"force_rank_gray_rank_01",
+		"force_rank_gray_rank_02",
+		"force_rank_gray_rank_03",
+		"force_rank_gray_rank_04",
+		"force_rank_gray_rank_05",
+		"force_rank_gray_rank_06",
+		"force_rank_gray_rank_07",
+		"force_rank_gray_rank_08",
+		"force_rank_gray_rank_09",
+		"force_rank_gray_rank_10"
+	},
 }

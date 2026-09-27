@@ -148,3 +148,8 @@ createTrainerConversationTemplate("weaponsmithTrainerConvoTemplate", "trainer_we
 
 createTrainerConversationTemplate("fsTrainerConvoTemplate", "trainer_fs")
 createTrainerConversationTemplate("jediTrainerConvoTemplate", "trainer_jedi")
+
+createTrainerConversationTemplate("combatjedigrayTrainerConvoTemplate", "trainer_combatjedigray")
+createTrainerConversationTemplate("combatjedigrayelderTrainerConvoTemplate", "trainer_combatjedigrayelder")
+createTrainerConversationTemplate("combatjedigrayelderrankTrainerConvoTemplate", "trainer_combatjedigrayelderrank")
+createTrainerConversationTemplate("combatjedigrayelderrankcouncilTrainerConvoTemplate", "trainer_combatjedigrayelderrankcouncil")
