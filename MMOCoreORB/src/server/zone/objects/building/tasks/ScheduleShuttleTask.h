@@ -76,7 +76,12 @@ public:
 			Reference<PlanetTravelPoint*> travelPoint = planetManager->getNearestPlanetTravelPoint(strongShuttle, 128.f);
 
 			if (travelPoint == nullptr) {
-				error() << " Planet Travel Point (travelPoint) has a nullptr in Zone: " << zone->getZoneName();
+				error() << " Planet Travel Point (travelPoint) has a nullptr in Zone: " << zone->getZoneName()
+						<< " -- destroying orphaned shuttle " << strongShuttle->getObjectID();
+
+				strongShuttle->destroyObjectFromWorld(true);
+				strongShuttle->destroyObjectFromDatabase(true);
+
 				return;
 			}
 
