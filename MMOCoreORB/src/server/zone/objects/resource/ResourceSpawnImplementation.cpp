@@ -29,6 +29,30 @@ void ResourceSpawnImplementation::addAttribute(const String& attribute, int valu
 	spawnAttributes.put(attribute, value);
 }
 
+// A resource class tag should always be a short stf-style key. Anything this
+// long is a bug (accidental accumulation, memory corruption, etc.) rather
+// than legitimate content -- refuse it here instead of persisting a value
+// that would later abort the whole server when it's saved to the database.
+static const int MAX_RESOURCE_CLASS_LENGTH = 256;
+
+void ResourceSpawnImplementation::addClass(const String& newclass) {
+	if (newclass.length() > MAX_RESOURCE_CLASS_LENGTH) {
+		error("addClass() given an oversized string (" + String::valueOf(newclass.length()) + " chars) -- refusing to store it, resource may be misconfigured");
+		return;
+	}
+
+	spawnClasses.add(newclass);
+}
+
+void ResourceSpawnImplementation::addStfClass(const String& newclass) {
+	if (newclass.length() > MAX_RESOURCE_CLASS_LENGTH) {
+		error("addStfClass() given an oversized string (" + String::valueOf(newclass.length()) + " chars) -- refusing to store it, resource may be misconfigured");
+		return;
+	}
+
+	stfSpawnClasses.add(newclass);
+}
+
 int ResourceSpawnImplementation::getAttributeAndValue(String& attribute,
 		int index) const {
 

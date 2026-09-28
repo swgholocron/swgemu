@@ -137,14 +137,10 @@ class ResourceSpawn extends SceneObject {
 	 * @param class string added to spawn
 	 */
 	@preLocked
-	public void addClass(final string newclass) {
-		spawnClasses.add(newclass);
-	}
+	public native void addClass(final string newclass);
 
 	@preLocked
-	public void addStfClass(final string newclass) {
-		stfSpawnClasses.add(newclass);
-	}
+	public native void addStfClass(final string newclass);
 
 	@preLocked
 	public native void addAttribute(final string attribute, int value);
