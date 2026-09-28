@@ -494,6 +494,36 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 			// Bio-Engineer Testing
 			} else if (templatePath.contains("dna_set:")) {
 				bluefrog->giveDnaTestingSet(player, templatePath.subString(8));
+
+			// Holocron Travel Service -- custom destinations not reachable via the
+			// standard ticket terminal. Flat 5000cr fare, gated on combat/funds,
+			// same pattern used for the stock starport travel points.
+			} else if (templatePath == "coruscant_imperial_city_travel" || templatePath == "hoth_starport_travel"
+					|| templatePath == "kashyyyk_kachirho_travel" || templatePath == "nalhutta_huttcity_travel"
+					|| templatePath == "taanab_starhunter_travel") {
+
+				if (player->isInCombat()) {
+					player->sendSystemMessage("You cannot travel while in combat.");
+				} else if (player->getBankCredits() < 5000) {
+					player->sendSystemMessage("You need 5,000 credits in your bank account to travel there.");
+				} else {
+					player->subtractBankCredits(5000);
+					player->sendSystemMessage("Thank you for your travels.");
+
+					if (templatePath == "coruscant_imperial_city_travel") {
+						player->switchZone("coruscant", -114, 40, 3227);
+					} else if (templatePath == "hoth_starport_travel") {
+						player->switchZone("hoth", 0, 0, -2000);
+					} else if (templatePath == "kashyyyk_kachirho_travel") {
+						player->switchZone("kashyyyk", -500, 18.03, -100);
+					} else if (templatePath == "nalhutta_huttcity_travel") {
+						player->switchZone("nalhutta", -1000, 8, 1000);
+					} else if (templatePath == "taanab_starhunter_travel") {
+						player->switchZone("taanab", 3673, 31.7, -5425);
+					}
+				}
+
+				return;
 			} else {
 				if (templatePath.length() > 0) {
 					SkillManager::instance()->awardSkill(templatePath, player, true, true, true);
