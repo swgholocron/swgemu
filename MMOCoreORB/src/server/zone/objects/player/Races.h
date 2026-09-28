@@ -49,7 +49,34 @@ const static char* Species[] = {
     "nightsister", // nightsister female
     "smc", // singing mountain clan witch female
     "aqualish", // aqualish female
-    "bith" // bith female
+    "bith", // bith female
+    // --- Extra playable species, batch 2 ---
+    "abyssin", // abyssin male
+    "arcona", // arcona male
+    "cerean", // cerean male
+    "duros", // duros male
+    "gungan", // gungan male
+    "iktotchi", // iktotchi male
+    "jenet", // jenet male
+    "kel_dor", // kel dor male
+    "kubaz", // kubaz male
+    "sanyassan", // sanyassan male
+    "sanyassan", // sanyassan female
+    "chadra_fan", // chadra fan male
+    "chadra_fan", // chadra fan female
+    "droid", // NK3 droid
+    "dug", // dug male
+    "ewok", // ewok male
+    "ewok", // ewok female
+    "feeorin", // feeorin male
+    "geonosian", // geonosian male
+    "ortolan", // ortolan male
+    "togorian", // togorian male
+    "toydarian", // toydarian male
+    "mirialan", // mirialan male
+    "mirialan", // mirialan female
+    "zeltron", // zeltron male
+    "zeltron" // zeltron female
 };
 
 const static int TemplateSpecies[] = {
@@ -94,7 +121,34 @@ const static int TemplateSpecies[] = {
 		0x38, // nightsister
 		0x3b, // smc
 		0, // aqualish (reuses human skeleton)
-		0 // bith (reuses human skeleton)
+		0, // bith (reuses human skeleton)
+		// --- Extra playable species, batch 2 ---
+		8, // abyssin
+		0x0a, // arcona
+		0, // cerean
+		0x14, // duros
+		0x1d, // gungan
+		0, // iktotchi
+		0, // jenet
+		0, // kel dor
+		0x27, // kubaz
+		0x28, // sanyassan male
+		0x28, // sanyassan female
+		0x0e, // chadra fan male
+		0x0e, // chadra fan female
+		0, // NK3 droid
+		0x13, // dug male
+		0x16, // ewok male
+		0x16, // ewok female
+		0x17, // feeorin male
+		0, // geonosian male
+		0x2b, // ortolan male
+		4, // togorian male
+		0x35, // toydarian male
+		0, // mirialan male
+		0, // mirialan female
+		0, // zeltron male
+		0 // zeltron female
 };
 
 const static char* Gender[] = {
@@ -139,7 +193,34 @@ const static char* Gender[] = {
     "female", // nightsister
     "female", // smc
     "female", // aqualish
-    "female" // bith
+    "female", // bith
+    // --- Extra playable species, batch 2 ---
+    "male", // abyssin
+    "male", // arcona
+    "male", // cerean
+    "male", // duros
+    "male", // gungan
+    "male", // iktotchi
+    "male", // jenet
+    "male", // kel dor
+    "male", // kubaz
+    "male", // sanyassan male
+    "female", // sanyassan female
+    "male", // chadra fan male
+    "female", // chadra fan female
+    "male", // NK3 droid
+    "male", // dug male
+    "male", // ewok male
+    "female", // ewok female
+    "male", // feeorin male
+    "male", // geonosian male
+    "male", // ortolan male
+    "male", // togorian male
+    "male", // toydarian male
+    "male", // mirialan male
+    "female", // mirialan female
+    "male", // zeltron male
+    "female" // zeltron female
 };
 
 const static char* RaceStrs[] = {
@@ -184,7 +265,34 @@ const static char* RaceStrs[] = {
     "object/creature/player/shared_nightsister_female.iff",
     "object/creature/player/shared_smc_female.iff",
     "object/creature/player/shared_aqualish_female.iff",
-    "object/creature/player/shared_bith_female.iff"
+    "object/creature/player/shared_bith_female.iff",
+    // --- Extra playable species, batch 2 ---
+    "object/creature/player/shared_abyssin_male.iff",
+    "object/creature/player/shared_arcona_male.iff",
+    "object/creature/player/shared_cerean_male.iff",
+    "object/creature/player/shared_duros_male.iff",
+    "object/creature/player/shared_gungan_male.iff",
+    "object/creature/player/shared_iktotchi_male.iff",
+    "object/creature/player/shared_jenet_male.iff",
+    "object/creature/player/shared_kel_dor_male.iff",
+    "object/creature/player/shared_kubaz_male.iff",
+    "object/creature/player/shared_sanyassan_male.iff",
+    "object/creature/player/shared_sanyassan_female.iff",
+    "object/creature/player/shared_chadra_fan_male.iff",
+    "object/creature/player/shared_chadra_fan_female.iff",
+    "object/creature/player/shared_droid_male.iff",
+    "object/creature/player/shared_dug_male.iff",
+    "object/creature/player/shared_ewok_male.iff",
+    "object/creature/player/shared_ewok_female.iff",
+    "object/creature/player/shared_feeorin_male.iff",
+    "object/creature/player/shared_geonosian_male.iff",
+    "object/creature/player/shared_ortolan_male.iff",
+    "object/creature/player/shared_togorian_male.iff",
+    "object/creature/player/shared_toydarian_male.iff",
+    "object/creature/player/shared_mirialan_male.iff",
+    "object/creature/player/shared_mirialan_female.iff",
+    "object/creature/player/shared_zeltron_male.iff",
+    "object/creature/player/shared_zeltron_female.iff"
 };
 
 const static char* CCRaceStrs[] = {
@@ -229,7 +337,34 @@ const static char* CCRaceStrs[] = {
     "object/creature/player/nightsister_female.iff",
     "object/creature/player/smc_female.iff",
     "object/creature/player/aqualish_female.iff",
-    "object/creature/player/bith_female.iff"
+    "object/creature/player/bith_female.iff",
+    // --- Extra playable species, batch 2 ---
+    "object/creature/player/abyssin_male.iff",
+    "object/creature/player/arcona_male.iff",
+    "object/creature/player/cerean_male.iff",
+    "object/creature/player/duros_male.iff",
+    "object/creature/player/gungan_male.iff",
+    "object/creature/player/iktotchi_male.iff",
+    "object/creature/player/jenet_male.iff",
+    "object/creature/player/kel_dor_male.iff",
+    "object/creature/player/kubaz_male.iff",
+    "object/creature/player/sanyassan_male.iff",
+    "object/creature/player/sanyassan_female.iff",
+    "object/creature/player/chadra_fan_male.iff",
+    "object/creature/player/chadra_fan_female.iff",
+    "object/creature/player/droid_male.iff",
+    "object/creature/player/dug_male.iff",
+    "object/creature/player/ewok_male.iff",
+    "object/creature/player/ewok_female.iff",
+    "object/creature/player/feeorin_male.iff",
+    "object/creature/player/geonosian_male.iff",
+    "object/creature/player/ortolan_male.iff",
+    "object/creature/player/togorian_male.iff",
+    "object/creature/player/toydarian_male.iff",
+    "object/creature/player/mirialan_male.iff",
+    "object/creature/player/mirialan_female.iff",
+    "object/creature/player/zeltron_male.iff",
+    "object/creature/player/zeltron_female.iff"
 };
 
 static uint32 SharedRace[] = {
@@ -274,7 +409,34 @@ static uint32 SharedRace[] = {
     0xC56D9790, // nightsister
     0x82A138F9, // smc
     0xDE63F629, // aqualish
-    0xB2C9CBE0 // bith
+    0xB2C9CBE0, // bith
+    // --- Extra playable species, batch 2 ---
+    0xB0960636, // abyssin
+    0xA2A87F6E, // arcona
+    0x62EAF6FB, // cerean
+    0xA9BFEBF0, // duros
+    0x3A7F5790, // gungan
+    0xF9B11C30, // iktotchi
+    0x48B04347, // jenet
+    0x66DCE6EE, // kel dor
+    0x6BB072FA, // kubaz
+    0x57A4EC3E, // sanyassan male
+    0x34E79C2B, // sanyassan female
+    0xF9504963, // chadra fan male
+    0xC6B70584, // chadra fan female
+    0xDE6FB2E5, // NK3 droid
+    0x696718D6, // dug male
+    0x4B39AD7D, // ewok male
+    0xBE49D88E, // ewok female
+    0x60EDEA05, // feeorin male
+    0x0D506AEA, // geonosian male
+    0x65FBE4A7, // ortolan male
+    0xA4478797, // togorian male
+    0x3E751C09, // toydarian male
+    0xD7349684, // mirialan male
+    0xE9CC7F2D, // mirialan female
+    0xE8975526, // zeltron male
+    0x5B779FE7 // zeltron female
 };
 
 static unsigned int attributeLimits[10][19] = {
@@ -295,35 +457,35 @@ static unsigned int attributeLimits[10][19] = {
 class Races {
 public:
 	inline const static char* getRace(int raceid) {
-		if (raceid < 0 || raceid > 39)
+		if (raceid < 0 || raceid > 65)
 			return "";
 
 		return RaceStrs[raceid];
 	}
 
 	inline static int getSpeciesID(int raceid) {
-		if (raceid < 0 || raceid > 39)
+		if (raceid < 0 || raceid > 65)
 			return 0;
 
 		return TemplateSpecies[raceid];
 	}
 
 	inline const static char* getSpecies(int raceid) {
-		if (raceid < 0 || raceid > 39)
+		if (raceid < 0 || raceid > 65)
 			return "";
 
 		return Species[raceid];
 	}
 
 	inline const static char* getGender(int raceid) {
-		if (raceid < 0 || raceid > 39)
+		if (raceid < 0 || raceid > 65)
 			return "";
 
 		return Gender[raceid];
 	}
 
 	inline static uint32 getRaceCRC(int raceid) {
-		if (raceid < 0 || raceid > 39)
+		if (raceid < 0 || raceid > 65)
 			return 0;
 
 		return SharedRace[raceid];
@@ -331,7 +493,7 @@ public:
 
 	inline static const char* getCompleteRace(uint32 sharedRaceCRC) {
 		int race = -1;
-		for (int i = 0; i < 40; ++i) {
+		for (int i = 0; i < 66; ++i) {
 			if (SharedRace[i] == sharedRaceCRC) {
 				race = i;
 				break;
@@ -345,7 +507,7 @@ public:
 	}
 
 	inline static int getRaceID(const String& name) {
-    	for (int i = 0; i < 40; i++) {
+    	for (int i = 0; i < 66; i++) {
         	if (strcmp(name.toCharArray(), CCRaceStrs[i]) == 0)
             	return i;
     	}
