@@ -734,3 +734,21 @@ includeFile("events/ServerEventAutomation.lua")
 includeFile("../custom_scripts/screenplays/screenplays.lua")
 includeFile("tools/mission_level_choice.lua")
 includeFile("tools/mission_direction_choice.lua")
+
+-- Custom world bosses
+includeFile("custom_world_bosses/custom_krayt_queen.lua")
+includeFile("custom_world_bosses/custom_jawa_boss.lua")
+includeFile("custom_world_bosses/custom_nerf_boss.lua")
+includeFile("custom_world_bosses/custom_exar_kun_boss.lua")
+
+-- Always-on world bosses ported from Flurry (Discord webhook calls stripped --
+-- that integration doesn't exist in our engine -- and replaced with the
+-- equivalent broadcastToGalaxy call)
+includeFile("events/worldboss_one.lua")
+includeFile("events/worldboss_two.lua")
+includeFile("events/worldboss_three.lua")
+includeFile("events/worldboss_four.lua")
+includeFile("events/worldboss_five.lua")
+includeFile("events/worldboss_six.lua")
+includeFile("events/worldboss_seven.lua")
+--includeFile("events/ns_tamer.lua") -- disabled until mandalore is built out as a zone
