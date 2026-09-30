@@ -143,10 +143,25 @@ void StructureMaintenanceTask::run() {
 }
 
 void StructureMaintenanceTask::destroyStructureWithReason(StructureObject* structure, const String& reason) {
+	StringBuffer identity;
+
+	identity << "oid " << structure->getObjectID() << ", owner " << structure->getOwnerObjectID();
+
+	if (structure->getObjectTemplate() != nullptr) {
+		identity << ", template " << structure->getObjectTemplate()->getTemplateFileName();
+	}
+
+	String zoneName = "the void";
+	if (structure->getZone() != nullptr) {
+		zoneName = structure->getZone()->getZoneName();
+	}
+
+	identity << ", at (" << (int)structure->getPositionX() << ", " << (int)structure->getPositionY() << ") on " << zoneName;
+
 #if DEBUG_STRUCTURE_TASK_NO_DESTROY
-	structure->info("Will not be destroyed because DEBUG_STRUCTURE_TASK_NO_DESTROY is set, should destroy because " + reason, true);
+	structure->info("Will not be destroyed because DEBUG_STRUCTURE_TASK_NO_DESTROY is set, should destroy [" + identity.toString() + "] because " + reason, true);
 #else // DEBUG_STRUCTURE_TASK_NO_DESTROY
-	structure->info("Destroying because " + reason);
+	structure->info("Destroying [" + identity.toString() + "] because " + reason, true);
 
 	// Force a synchronous export because the objects will be deleted before we can export them!
 	TransactionLog trx(TrxCode::DESTROYSTRUCTURE, nullptr, structure);
