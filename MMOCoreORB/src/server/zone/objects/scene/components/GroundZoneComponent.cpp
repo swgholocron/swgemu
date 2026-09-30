@@ -396,7 +396,14 @@ void GroundZoneComponent::removeObjectFromZone(SceneObject* sceneObject, Zone* z
 		}
 	}
 
-	locker.release();
+	// Keep the zone locked through the close-objects cleanup below instead of
+	// releasing it here. Octree::safeInRange (run from updateZone) mutates a
+	// neighbor's CloseObjectsVector while holding this same zone lock; releasing
+	// it early let a concurrent updateZone re-add this object to a neighbor's
+	// close-objects list (or read a stale entry from it) in the window between
+	// the octree removal above and the bidirectional cleanup below, leaving a
+	// dangling TreeEntry* in that neighbor's list once this object is actually
+	// freed -- the cause of a SIGSEGV in TreeEntry::compareTo from AI ticks.
 
 	SortedVector<ManagedReference<TreeEntry*> > closeSceneObjects;
 
@@ -436,6 +443,8 @@ void GroundZoneComponent::removeObjectFromZone(SceneObject* sceneObject, Zone* z
 				obj->removeInRangeObject(sceneObject);
 		}
 	}
+
+	locker.release();
 
 	TangibleObject* tano = sceneObject->asTangibleObject();
 
