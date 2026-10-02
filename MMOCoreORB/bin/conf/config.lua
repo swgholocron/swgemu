@@ -189,7 +189,8 @@ Core3 = {
 		"mtg_patch_021.tre",
 		"mtg_patch_022.tre",
 		"mtg_patch_023.tre",
-		"mtg_planets.tre"
+		"mtg_planets.tre",
+		"holocron2.tre"
 	},
 
 	------Status Server Config------
