@@ -10,6 +10,7 @@
 
 #include "server/zone/objects/player/sui/SuiCallback.h"
 #include "server/zone/objects/player/sessions/DestroyStructureSession.h"
+#include "server/zone/objects/structure/StructureObject.h"
 
 class DestroyStructureRequestSuiCallback : public SuiCallback {
 public:
@@ -26,6 +27,14 @@ public:
 
 		if (cancelPressed) {
 			session->cancelSession();
+			return;
+		}
+
+		StructureObject* structureObject = session->getStructureObject();
+
+		// Harvesters and Generators skip the destroy-code confirmation step.
+		if (structureObject != nullptr && (structureObject->isHarvesterObject() || structureObject->isGeneratorObject())) {
+			session->destroyStructure();
 			return;
 		}
 

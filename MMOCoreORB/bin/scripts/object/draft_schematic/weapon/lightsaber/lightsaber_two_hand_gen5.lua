@@ -42,7 +42,17 @@
 
 
 object_draft_schematic_weapon_lightsaber_lightsaber_two_hand_gen5 = object_draft_schematic_weapon_lightsaber_shared_lightsaber_two_hand_gen5:new {
-    factoryCrateType = "object/factory/factory_crate_weapon.iff"
+	templateType = DRAFTSCHEMATIC,
+
+	-- Jedi crafting tool tab (2048) + Jedi skills, same as the vanilla lightsaber schematics.
+	craftingToolTab = 2048, -- (See DraftSchematicObjectTemplate.h)
+	factoryCrateType = "object/factory/factory_crate_weapon.iff",
+	xpType = "jedi_general",
+	xp = 0,
+	assemblySkill = "jedi_saber_assembly",
+	experimentingSkill = "jedi_saber_experimentation",
+	customizationSkill = "jedi_customization",
+	factoryCrateSize = 0,
 }
 
 ObjectTemplates:addTemplate(object_draft_schematic_weapon_lightsaber_lightsaber_two_hand_gen5, "object/draft_schematic/weapon/lightsaber/lightsaber_two_hand_gen5.iff")

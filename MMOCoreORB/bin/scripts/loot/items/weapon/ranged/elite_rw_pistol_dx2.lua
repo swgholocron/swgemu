@@ -4,7 +4,7 @@ elite_rw_pistol_dx2 = {
 	minimumLevel = 0,
 	maximumLevel = -1,
 	customObjectName = "pistol dx2",
-	directObjectTemplate = "object/weapon/ranged/pistol/pistol_dx2.iff",
+	directObjectTemplate = "object/weapon/ranged/pistol/pistol_dx2_elite.iff",
 	craftingValues = {
 	},
 	customizationStringNames = {},

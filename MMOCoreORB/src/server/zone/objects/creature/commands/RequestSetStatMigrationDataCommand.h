@@ -83,21 +83,11 @@ public:
 			return GENERALERROR;
 		}
 
-		// Player is in an allowed zone and is allowed to migrate stats.
-		auto zone = creature->getZone();
-		String zoneName = zone != nullptr ? zone->getZoneName() : String();
+		// Stat migration is allowed on any planet and does not require an image designer.
+		session->migrateStats();
 
-		bool allowedZone = zoneName == "tutorial" || zoneName == "tatooine" || zoneName == "corellia" ||
-				zoneName == "dantooine" || zoneName == "dathomir" || zoneName == "endor" ||
-				zoneName == "lok" || zoneName == "naboo" || zoneName == "rori" ||
-				zoneName == "talus" || zoneName == "yavin4";
-
-		if (allowedZone || privilegedPlayer) {
-			session->migrateStats();
-
-			if (privilegedPlayer) {
-				creature->sendSystemMessage("Stat Migration Permitted due to Staff Privileges.");
-			}
+		if (privilegedPlayer) {
+			creature->sendSystemMessage("Stat Migration Permitted due to Staff Privileges.");
 		}
 
 		return SUCCESS;

@@ -42,7 +42,34 @@
 
 
 object_tangible_beta_beta_terminal_wound = object_tangible_beta_shared_beta_terminal_wound:new {
+	gameObjectType = 16400,
 
+	maxCondition = 0,
+
+	templateType = CHARACTERBUILDERTERMINAL,
+
+	-- "Medical Services" terminal, ported from Project Phoenix. Action keys match the ones
+	-- SuiManager::handleCharacterBuilderSelectItem already handles. Phoenix labels the buff
+	-- "10,000 Credits" but never charges for it, so the label here doesn't promise a price.
+	suiBoxTitle = "Medical Services",
+	suiBoxText = "Welcome Citizen! Please enjoy these helpful medical services.",
+
+	itemList = {
+		"Buff Character", "enhance_character",
+		"Cleanse Character", "cleanse_character",
+		"Reset Buffs", "reset_buffs",
+		"Apply DOTs", "apply_all_dots",
+		"Clear DOTs", "clear_dots",
+		"Skills",
+		{
+			"Learn Languages", "language",
+			"Master Politician", "social_politician_master",
+			"WARNING UNLEARN ALL SKILLS WARNING",
+			{
+				"Last chance to cancel, no undoing this!!", "unlearn_all_skills",
+			}
+		}
+	}
 }
 
 ObjectTemplates:addTemplate(object_tangible_beta_beta_terminal_wound, "object/tangible/beta/beta_terminal_wound.iff")

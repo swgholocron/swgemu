@@ -44,15 +44,15 @@
 object_tangible_component_weapon_lightsaber_lightsaber_refined_crystal_pack = object_tangible_component_weapon_lightsaber_shared_lightsaber_refined_crystal_pack:new {
 
 
-	numberExperimentalProperties = {1, 1},
-	experimentalProperties = {"XX", "XX"},
-	experimentalWeights = {1, 1},
-	experimentalGroupTitles = {"null", "null"},
-	experimentalSubGroupTitles = {"null", "null"},
-	experimentalMin = {0, 0},
-	experimentalMax = {0, 0},
-	experimentalPrecision = {0, 0},
-	experimentalCombineType = {0, 0},
+	numberExperimentalProperties = {1, 1, 1, 1},
+	experimentalProperties = {"XX", "XX", "UT", "UT"},
+	experimentalWeights = {1, 1, 1, 1},
+	experimentalGroupTitles = {"null", "null", "expDamage", "expDamage"},
+	experimentalSubGroupTitles = {"null", "null", "mindamage", "maxdamage"},
+	experimentalMin = {0, 0, 10, 10},
+	experimentalMax = {0, 0, 25, 25},
+	experimentalPrecision = {0, 0, 0, 0},
+	experimentalCombineType = {0, 0, 1, 1},
 }
 
 ObjectTemplates:addTemplate(object_tangible_component_weapon_lightsaber_lightsaber_refined_crystal_pack, "object/tangible/component/weapon/lightsaber/lightsaber_refined_crystal_pack.iff")

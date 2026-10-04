@@ -41,7 +41,7 @@
 --this exception also makes it possible to release a modified version
 
 
-object_weapon_ranged_pistol_dx2 = object_weapon_ranged_pistol_dx2_shared:new {
+object_weapon_ranged_pistol_dx2_elite = object_weapon_ranged_pistol_dx2_shared:new {
 	playerRaces = {
 		"object/creature/player/bothan_male.iff",
 		"object/creature/player/bothan_female.iff",
@@ -97,4 +97,4 @@ object_weapon_ranged_pistol_dx2 = object_weapon_ranged_pistol_dx2_shared:new {
 	woundsRatio = 10,
 }
 
-ObjectTemplates:addTemplate(object_weapon_ranged_pistol_dx2, "object/weapon/ranged/pistol/pistol_dx2.iff")
+ObjectTemplates:addTemplate(object_weapon_ranged_pistol_dx2_elite, "object/weapon/ranged/pistol/pistol_dx2_elite.iff")

@@ -159,7 +159,10 @@ dathomir = {
 
 	planetTravelPoints = {
 		{name = "Trade Outpost", x = 618.89258, z = 6.039608, y = 3092.0142, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
-		{name = "Science Outpost", x = -49.021923, z = 18, y = -1584.7278, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3}
+		{name = "Science Outpost", x = -49.021923, z = 18, y = -1584.7278, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
+		-- Ported from Project Phoenix. Must stay at the same coordinates as the shuttleport building in planetObjects below,
+		-- since the shuttle NPC inside that building is what links to this travel point.
+		{name = "Village Shuttleport", x = 5219.5, z = 79.38, y = -4050.03, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3}
 	},
 
 	jtlLaunchPoint = {"space_dathomir", -6900, 2750, -4000},
@@ -210,7 +213,12 @@ dathomir = {
 	planetObjects = {
 		{templateFile = "object/tangible/terminal/terminal_character_builder.iff", ox = 0, oy = 0.701463, oz = 0, ow = 0.712705, x = 592.612, z = 6, y = 3089.84, parentid = 0},
 		{templateFile = "object/tangible/terminal/terminal_character_builder.iff", ox = 0, oy = 0.314904, oz = 0, ow = 0.949123, x = -67.6585, z = 18, y = -1595.3, parentid = 0},
-		{templateFile = "object/tangible/terminal/terminal_character_builder.iff", ox = 0, oy = 0.314904, oz = 0, ow = 0.949123, x = 5289.6, z = 78.5, y = -4146.1, parentid = 0}
+		{templateFile = "object/tangible/terminal/terminal_character_builder.iff", ox = 0, oy = 0.314904, oz = 0, ow = 0.949123, x = 5289.6, z = 78.5, y = -4146.1, parentid = 0},
+		-- Village Shuttleport building (ticket terminal, ticket collector and shuttle are its child objects). Ported from Project Phoenix.
+		{templateFile = "object/building/player/city/shuttleport_naboo.iff", ox = 0, oy = 0.965926, oz = 0, ow = 0.258819, x = 5219.5, z = 79.38, y = -4050.03, parentid = 0},
+		-- Village services next to the shuttleport (Medical Services terminal + mission terminal), ported from Project Phoenix.
+		{templateFile = "object/tangible/beta/beta_terminal_wound.iff", ox = 0, oy = 0.962139, oz = 0, ow = 0.272558, x = 5237.31, z = 78.5, y = -4058.72, parentid = 0},
+		{templateFile = "object/tangible/terminal/terminal_mission.iff", ox = 0, oy = -0.962139, oz = 0, ow = -0.272558, x = 5239.13, z = 78.5, y = -4057.93, parentid = 0}
 	}
 }
 

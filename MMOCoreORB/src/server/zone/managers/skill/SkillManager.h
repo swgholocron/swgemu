@@ -85,6 +85,13 @@ public:
 	void surrenderAllSkills(CreatureObject* creature, bool notifyClient = true, bool removeForceProgression = true, bool removePilot = false);
 
 	/**
+	 * Re-sums the jedi_force_power_max / jedi_force_power_regen skill mods granted by every skill the
+	 * creature has, restores any that are missing, then recalculates and refills the Force pool.
+	 * Caller must hold the creature's lock.
+	 */
+	void awardForceFromSkills(CreatureObject* creature);
+
+	/**
 	 * Checks if the player can learn the skill (fulfills skill prerequisites, enough skill points and enough XP).
 	 * @param skillName the name of the skill to check if the player can learn.
 	 * @param creature the player creature.

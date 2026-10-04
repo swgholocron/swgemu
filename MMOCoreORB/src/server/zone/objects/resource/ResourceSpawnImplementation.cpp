@@ -266,7 +266,7 @@ Reference<ResourceContainer*> ResourceSpawnImplementation::createResource(int un
    	if (units != 0)
    		newResource->setQuantity(units);
 
-   	newResource->setCustomObjectName(getFamilyName(), false);
+   	newResource->setCustomObjectName(spawnName, false);
 
    	++containerReferenceCount;
 

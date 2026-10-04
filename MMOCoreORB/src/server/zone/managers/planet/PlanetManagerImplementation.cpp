@@ -712,8 +712,9 @@ bool PlanetManagerImplementation::isTravelToLocationPermitted(const String& depa
 	if (arrivalZone == zone)
 		return true;
 
-	//Check to see if interplanetary travel is allowed between both points.
-	if (!isInterplanetaryTravelAllowed(departurePoint) || !arrivalPlanetManager->isInterplanetaryTravelAllowed(arrivalPoint))
+	// Interplanetary travel only requires a starport at the departure end; the arrival can be any
+	// point that allows incoming travel (including shuttleports).
+	if (!isInterplanetaryTravelAllowed(departurePoint))
 		return false;
 
 	return true;
@@ -721,7 +722,24 @@ bool PlanetManagerImplementation::isTravelToLocationPermitted(const String& depa
 
 void PlanetManagerImplementation::sendPlanetTravelPointListResponse(CreatureObject* player) {
 	PlanetTravelPointListResponse* ptplr = new PlanetTravelPointListResponse(zone->getZoneName());
-	planetTravelPointList->insertToMessage(ptplr, getNearestPlanetTravelPoint(player));
+
+	// A player standing at a starport may travel to any point on another planet, so report every
+	// point on that planet as a valid interplanetary destination for the client's travel window.
+	bool reportAllAsInterplanetary = false;
+	Zone* playerZone = player->getZone();
+
+	if (playerZone != nullptr && playerZone != zone) {
+		ManagedReference<PlanetManager*> playerPlanetManager = playerZone->getPlanetManager();
+
+		if (playerPlanetManager != nullptr) {
+			PlanetTravelPoint* departure = playerPlanetManager->getNearestPlanetTravelPoint(player, 128.f);
+			reportAllAsInterplanetary = departure != nullptr && departure->isInterplanetary();
+		}
+	}
+
+	info(true) << player->getFirstName() << " requested travel points for " << zone->getZoneName() << " (from " << (playerZone != nullptr ? playerZone->getZoneName() : String("?")) << ", all-interplanetary=" << reportAllAsInterplanetary << ")";
+
+	planetTravelPointList->insertToMessage(ptplr, getNearestPlanetTravelPoint(player), reportAllAsInterplanetary);
 
 	player->sendMessage(ptplr);
 }

@@ -87,6 +87,17 @@ void AttachmentImplementation::updateCraftingValues(CraftingValues* values, bool
 
 		skillModifiers.put(modName, ((mod <= 0) ? 1 : mod));
 	}
+
+	StringBuffer name;
+
+	for (int i = 0; i < skillModifiers.size(); ++i) {
+		if (i > 0)
+			name << ", ";
+
+		name << "@stat_n:" << skillModifiers.elementAt(i).getKey() << " +" << skillModifiers.elementAt(i).getValue();
+	}
+
+	setCustomObjectName(name.toString(), true);
 }
 
 void AttachmentImplementation::fillAttributeList(AttributeListMessage* msg, CreatureObject* object) {

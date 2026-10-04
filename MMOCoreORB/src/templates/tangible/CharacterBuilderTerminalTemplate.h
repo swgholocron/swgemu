@@ -15,6 +15,8 @@ class CharacterBuilderTerminalTemplate : public SharedTangibleObjectTemplate {
 	Reference<CharacterBuilderMenuNode*> rootNode;
 	Vector<int> glowyBadgeIds;
 	Vector<String> villageBranchUnlocks;
+	String suiBoxTitle;
+	String suiBoxText;
 
 public:
 	CharacterBuilderTerminalTemplate() : rootNode(nullptr) {
@@ -29,6 +31,9 @@ public:
 
 	void readObject(LuaObject* templateData) {
 		SharedTangibleObjectTemplate::readObject(templateData);
+
+		suiBoxTitle = templateData->getStringField("suiBoxTitle");
+		suiBoxText = templateData->getStringField("suiBoxText");
 
 		LuaObject luaGlowyBadges = templateData->getObjectField("glowyBadgeIds");
 
@@ -67,6 +72,14 @@ public:
 
     inline const Vector<int>& getGlowyBadgeIds() const {
         return glowyBadgeIds;
+    }
+
+    inline const String& getSuiBoxTitle() const {
+        return suiBoxTitle;
+    }
+
+    inline const String& getSuiBoxText() const {
+        return suiBoxText;
     }
 
     inline const Vector<String>& getVillageBranchUnlocks() const {

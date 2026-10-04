@@ -35,7 +35,7 @@ public:
 		return point;
 	}
 
-	void insertToMessage(BaseMessage* message, PlanetTravelPoint* origin) {
+	void insertToMessage(BaseMessage* message, PlanetTravelPoint* origin, bool reportAllAsInterplanetary = false) {
 		rlock();
 
 		int totalPoints = size();
@@ -105,7 +105,7 @@ public:
 
 		for (int i = 0; i < totalPoints; ++i) {
 			if (incomingAllowed.get(i))
-				message->insertByte((byte) VectorMap<String, Reference<PlanetTravelPoint*> >::get(i)->isInterplanetary());
+				message->insertByte((byte) (reportAllAsInterplanetary || VectorMap<String, Reference<PlanetTravelPoint*> >::get(i)->isInterplanetary()));
 		}
 
 #ifdef PLATFORM_WIN

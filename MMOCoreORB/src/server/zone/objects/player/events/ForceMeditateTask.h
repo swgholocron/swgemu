@@ -35,6 +35,10 @@ public:
 			if (!player->isMeditating())
 				return;
 
+			// Replay the meditation swirl (and its companion effects) every cycle so it persists while meditating.
+			player->playEffect("clienteffect/pl_force_meditate_self.cef", "");
+			player->playEffect("clienteffect/death_trooper_anti_virus.cef");
+			player->playEffect("clienteffect/medic_cure_affliction.cef");
 
 			if (fmeditateTask != nullptr)
 				fmeditateTask->reschedule(5000);

@@ -91,7 +91,13 @@ void MissionObjectImplementation::setMissionTitle(const String& file, const Stri
 
 	Locker clocker(waypointToMission, _this.getReferenceUnsafeStaticCast());
 
-	waypointToMission->setCustomObjectName(missionTitle.getFullPath(), false);
+	// An empty file means id holds a literal, already-composed title (e.g. a
+	// dynamic "Destroy the X" string) rather than an STF reference -- use it
+	// as-is instead of wrapping it in the "@file:id" STF-lookup syntax.
+	if (file.isEmpty())
+		waypointToMission->setCustomObjectName(id, false);
+	else
+		waypointToMission->setCustomObjectName(missionTitle.getFullPath(), false);
 
 	clocker.release();
 

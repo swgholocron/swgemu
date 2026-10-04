@@ -840,5 +840,9 @@
 
 
 
+#include "DragFromShadowsCommand.h"
+#include "ForceCloakCommand.h"
+#include "RecalcForceCommand.h"
+
 #endif /* COMMANDSNEW_H_ */
 

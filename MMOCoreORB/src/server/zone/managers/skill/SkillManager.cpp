@@ -1007,3 +1007,50 @@ void SkillManager::getPlayerDroidCommands(PlayerObject* ghost, Vector<String>& p
 			playerDroidCommands.add(droidCommands.get(i));
 	}
 }
+
+void SkillManager::awardForceFromSkills(CreatureObject* creature) {
+	if (creature == nullptr)
+		return;
+
+	ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
+
+	if (ghost == nullptr)
+		return;
+
+	int forceMax = 0;
+	int forceRegen = 0;
+
+	const SkillList* skillList = creature->getSkillList();
+
+	for (int i = 0; i < skillList->size(); ++i) {
+		Skill* skill = skillList->get(i);
+
+		if (skill == nullptr)
+			continue;
+
+		const VectorMap<String, int>* skillModifiers = skill->getSkillModifiers();
+
+		for (int j = 0; j < skillModifiers->size(); ++j) {
+			const String& modName = skillModifiers->elementAt(j).getKey();
+
+			if (modName == "jedi_force_power_max") {
+				forceMax += skillModifiers->elementAt(j).getValue();
+			} else if (modName == "jedi_force_power_regen") {
+				forceRegen += skillModifiers->elementAt(j).getValue();
+			}
+		}
+	}
+
+	int currentRegen = creature->getSkillMod("jedi_force_power_regen");
+	int currentMax = creature->getSkillMod("jedi_force_power_max");
+
+	// Only ever restore missing mods, never remove any (robes, buffs, etc. may add their own).
+	if (currentRegen < forceRegen)
+		creature->addSkillMod(SkillModManager::PERMANENTMOD, "jedi_force_power_regen", forceRegen - currentRegen, true);
+
+	if (currentMax < forceMax)
+		creature->addSkillMod(SkillModManager::PERMANENTMOD, "jedi_force_power_max", forceMax - currentMax, true);
+
+	ghost->recalculateForcePower();
+	ghost->setForcePower(ghost->getForcePowerMax(), true);
+}

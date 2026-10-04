@@ -56,6 +56,14 @@ void CharacterBuilderTerminalImplementation::sendInitialChoices(CreatureObject* 
 	ManagedReference<SuiCharacterBuilderBox*> sui = new SuiCharacterBuilderBox(player, rootNode);
 	sui->setUsingObject(_this.getReferenceUnsafeStaticCast());
 
+	// Terminals such as the Medical Services terminal supply their own window title and text.
+	CharacterBuilderTerminalTemplate* terminalData = dynamic_cast<CharacterBuilderTerminalTemplate*>(TemplateManager::instance()->getTemplate(getServerObjectCRC()));
+
+	if (terminalData != nullptr && terminalData->getSuiBoxTitle().length() > 0) {
+		sui->setPromptTitle(terminalData->getSuiBoxTitle());
+		sui->setPromptText(terminalData->getSuiBoxText());
+	}
+
 	player->sendMessage(sui->generateMessage());
 	player->getPlayerObject()->addSuiBox(sui);
 }
