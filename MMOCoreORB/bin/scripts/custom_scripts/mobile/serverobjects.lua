@@ -2,3 +2,6 @@
 -- Guardian, Carax Nightwraith, Grim Sage Soulserpent, Malevolent Gurk,
 -- Meatlump King, Nightsister Tamer).
 includeFile("worldboss/serverobjects.lua")
+
+-- Halloween event creatures + outfits (ported from Flurry)
+includeFile("../custom_scripts/mobile/halloween/serverobjects.lua")

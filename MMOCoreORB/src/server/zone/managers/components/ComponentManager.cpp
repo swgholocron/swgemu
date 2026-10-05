@@ -58,6 +58,7 @@
 #include "server/zone/objects/tangible/components/ForceCrystalMenuComponent.h"
 #include "server/zone/objects/tangible/components/RobeObjectMenuComponent.h"
 #include "server/zone/objects/tangible/components/generic/ArtCrateMenuComponent.h"
+#include "server/zone/objects/tangible/components/generic/HalloweenMenuComponent.h"
 #include "server/zone/objects/tangible/components/WeaponObjectMenuComponent.h"
 #include "server/zone/objects/tangible/components/LightsaberObjectMenuComponent.h"
 #include "server/zone/objects/tangible/components/VehicleCustomKitObjectMenuComponent.h"
@@ -204,6 +205,7 @@ ComponentManager::ComponentManager() {
 	components.put("CloningTerminalMenuComponent", new CloningTerminalMenuComponent());
 
 	components.put("ArtCrateMenuComponent", new ArtCrateMenuComponent());
+	components.put("HalloweenMenuComponent", new HalloweenMenuComponent());
 
 	components.put("GroundZoneContainerComponent", new GroundZoneContainerComponent());
 	components.put("SpaceZoneContainerComponent", new SpaceZoneContainerComponent());

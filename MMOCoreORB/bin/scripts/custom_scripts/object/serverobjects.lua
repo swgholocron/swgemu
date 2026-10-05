@@ -347,3 +347,6 @@ includeFile("../custom_scripts/object/tangible/loot_schematic/vehicle_elite/swoo
 includeFile("../custom_scripts/object/tangible/loot_schematic/vehicle_elite/swoop_red.lua")
 includeFile("../custom_scripts/object/tangible/loot_schematic/vehicle_elite/swoop_silver.lua")
 
+
+-- Halloween event (ported from Flurry)
+includeFile("../custom_scripts/object/halloween/serverobjects.lua")

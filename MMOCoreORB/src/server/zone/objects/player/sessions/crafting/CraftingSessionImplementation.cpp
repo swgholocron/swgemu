@@ -30,6 +30,9 @@
 #include "templates/params/RangedIntCustomizationVariable.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
 
+// Server-wide fixed crafting time (seconds), replaces complexity * 2.
+static const int CRAFTING_TIME_SECONDS = 2;
+
 // #define DEBUG_CRAFTING_SESSION
 // #define DEBUG_EXPERIMENTATION
 
@@ -1387,11 +1390,11 @@ void CraftingSessionImplementation::createPrototype(int clientCounter, bool crea
 		int xp = manufactureSchematic->getDraftSchematic()->getXpAmount();
 
 		if (createItem) {
-			startCreationTasks(manufactureSchematic->getComplexity() * 2, false);
+			startCreationTasks(CRAFTING_TIME_SECONDS, false);
 
 		} else {
 			// This is for practicing
-			startCreationTasks(manufactureSchematic->getComplexity() * 2, true);
+			startCreationTasks(CRAFTING_TIME_SECONDS, true);
 			xp = round(xp * 1.05f);
 		}
 

@@ -615,3 +615,6 @@ includeFile("../loot/groups/eliteVehicleDeeds.lua")
 includeFile("../loot/groups/eliteWalkerDeeds.lua")
 includeFile("../loot/groups/eliteSwoopSchematics.lua")
 
+
+-- Halloween event loot (ported from Flurry)
+includeFile("../custom_scripts/loot/halloween/serverobjects.lua")

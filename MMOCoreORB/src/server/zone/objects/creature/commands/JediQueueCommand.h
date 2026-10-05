@@ -16,6 +16,8 @@
 #include "server/zone/objects/creature/buffs/SingleUseBuff.h"
 #include "server/zone/objects/player/PlayerObject.h"
 #include "server/zone/managers/frs/FrsManager.h"
+#include "server/zone/packets/object/PlayClientEffectObjectMessage.h"
+#include "server/zone/packets/object/StopClientEffectObjectByLabelMessage.h"
 
 class JediQueueCommand : public QueueCommand {
 
@@ -76,6 +78,12 @@ public:
 		// first and foremost, we need to toggle this buff off if we already have it
 		if (creature->hasBuff(buffCRC)) {
 			creature->removeBuff(buffCRC);
+
+			// The client keeps playing the buff's looping effect unless told to stop it.
+			if (!clientEffect.isEmpty()) {
+				creature->broadcastMessage(new StopClientEffectObjectByLabelMessage(creature, getClientEffectLabel()), true);
+			}
+
 			return SUCCESS;
 		}
 
@@ -86,6 +94,10 @@ public:
 			return res;
 
         return doBuff(creature);
+	}
+
+	String getClientEffectLabel() const {
+		return "jedi_" + name;
 	}
 
 	int doBuff(CreatureObject* creature) const {
@@ -105,7 +117,7 @@ public:
 
 		// Client Effect.
 		if (!clientEffect.isEmpty()) {
-			creature->playEffect(clientEffect, "");
+			creature->broadcastMessage(new PlayClientEffectObjectMessage(creature, clientEffect, "", getClientEffectLabel()), true);
 		}
 
 		// Return.
