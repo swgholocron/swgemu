@@ -29,6 +29,7 @@ round-trip verified against real client .tre files. Layout:
 
 Usage:
   tre_tool.py build <src_dir> <out.tre>              -- pack a staging directory into an archive
+  tre_tool.py reindex <in.tre> <out.tre>              -- fix an archive's record table order/checksums (client-searchable)
   tre_tool.py list <archive.tre>                      -- list every file in an archive
   tre_tool.py extract <archive.tre> <name> <out_path> -- pull one file out of an archive
 """
@@ -40,6 +41,18 @@ import sys
 import zlib
 
 RECORD_SIZE = 24
+
+
+def swg_name_crc(name):
+    """The checksum stock SWG archives store for each record: CRC-32/BZIP2 (the same hash as the
+    server's String::hashCode) of the lower-cased archive path. The client locates files by binary
+    searching the record table on this value, so it must match and the table must be sorted by it."""
+    crc = 0xFFFFFFFF
+    for byte in name.lower().encode("utf-8"):
+        crc ^= byte << 24
+        for _ in range(8):
+            crc = ((crc << 1) ^ 0x04C11DB7) & 0xFFFFFFFF if crc & 0x80000000 else (crc << 1) & 0xFFFFFFFF
+    return (~crc) & 0xFFFFFFFF
 
 
 # ---------------------------------------------------------------- writing --
@@ -74,7 +87,7 @@ def build_tre(file_list, out_path, compress_level=6):
             comp_type = 0
             payload = raw
 
-        checksum = zlib.crc32(archive_path.encode("utf-8")) & 0xFFFFFFFF
+        checksum = swg_name_crc(archive_path)
         md5 = hashlib.md5(raw).digest()
 
         records.append({
@@ -97,6 +110,12 @@ def build_tre(file_list, out_path, compress_level=6):
         records[i]["nameOffset"] = len(name_block_raw)
         name_block_raw += name.encode("utf-8") + b"\x00"
     name_block_raw = bytes(name_block_raw)
+
+    # The client binary-searches the record table by checksum, so records (and their md5s) go out
+    # sorted by it. File payloads and names keep their original order; offsets are per record.
+    order = sorted(range(len(records)), key=lambda i: records[i]["checksum"])
+    records = [records[i] for i in order]
+    md5s = [md5s[i] for i in order]
 
     # Build the file block: packed array of 24-byte records.
     file_block_raw = bytearray()
@@ -152,6 +171,62 @@ def build_tre(file_list, out_path, compress_level=6):
             out.write(m)
 
     return total_records, os.path.getsize(out_path)
+
+
+def reindex_tre(in_path, out_path, compress_level=6):
+    """Rewrite an archive's record table in the stock layout (checksum = swg_name_crc(name), records
+    and md5s sorted by it) without recompressing any file payload. Archives built by older versions of
+    this tool used zlib.crc32 / path order, which the client's binary search cannot use."""
+    with open(in_path, "rb") as f:
+        raw = f.read()
+
+    if raw[:4] != b"EERT" or raw[4:8] != b"5000":
+        raise ValueError(f"{in_path}: not a version 0005 TREE archive")
+
+    (total, data_offset, fb_type, fb_size, nb_type, nb_size, nb_usize) = struct.unpack_from("<IIIIIII", raw, 8)
+
+    payload = raw[36:data_offset]
+
+    pos = data_offset
+    fb = raw[pos:pos + fb_size]
+    pos += fb_size
+    nb_comp = raw[pos:pos + nb_size]
+    pos += nb_size
+    md5_block = raw[pos:pos + 16 * total]
+    if len(md5_block) != 16 * total or pos + 16 * total != len(raw):
+        raise ValueError(f"{in_path}: unexpected trailer layout")
+
+    file_block = zlib.decompress(fb) if fb_type == 2 else fb
+    name_block = zlib.decompress(nb_comp) if nb_type == 2 else nb_comp
+
+    entries = []
+    for i in range(total):
+        rec = file_block[i * RECORD_SIZE:(i + 1) * RECORD_SIZE]
+        _, usize, offset, ctype, csize, noff = struct.unpack("<IIIIII", rec)
+        name = name_block[noff:name_block.index(b"\x00", noff)].decode("utf-8", "replace")
+        entries.append((swg_name_crc(name), usize, offset, ctype, csize, noff, md5_block[16 * i:16 * i + 16], name))
+
+    entries.sort(key=lambda e: e[0])
+
+    new_fb = b"".join(struct.pack("<IIIIII", e[0], e[1], e[2], e[3], e[4], e[5]) for e in entries)
+    new_md5 = b"".join(e[6] for e in entries)
+
+    new_fb_comp = zlib.compress(new_fb, compress_level)
+    if len(new_fb_comp) >= len(new_fb):
+        new_fb_comp, new_fb_type = new_fb, 0
+    else:
+        new_fb_type = 2
+
+    header = b"EERT" + b"5000" + struct.pack("<IIIIIII", total, data_offset, new_fb_type, len(new_fb_comp), nb_type, nb_size, nb_usize)
+
+    with open(out_path, "wb") as out:
+        out.write(header)
+        out.write(payload)
+        out.write(new_fb_comp)
+        out.write(nb_comp)
+        out.write(new_md5)
+
+    return total, os.path.getsize(out_path)
 
 
 def collect_from_dir(src_dir):
@@ -247,6 +322,10 @@ def main():
     p_build.add_argument("src_dir")
     p_build.add_argument("out_tre")
 
+    p_reindex = sub.add_parser("reindex", help="rewrite an archive's record table in the stock (client-searchable) order")
+    p_reindex.add_argument("archive")
+    p_reindex.add_argument("out_tre")
+
     p_list = sub.add_parser("list", help="list every file in a .tre archive")
     p_list.add_argument("archive")
     p_list.add_argument("--grep", help="only show names containing this substring")
@@ -264,6 +343,10 @@ def main():
             print(f"no files found under {args.src_dir}", file=sys.stderr)
             sys.exit(1)
         n, size = build_tre(files, args.out_tre)
+        print(f"wrote {args.out_tre}: {n} records, {size} bytes")
+
+    elif args.cmd == "reindex":
+        n, size = reindex_tre(args.archive, args.out_tre)
         print(f"wrote {args.out_tre}: {n} records, {size} bytes")
 
     elif args.cmd == "list":

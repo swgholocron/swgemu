@@ -1,7 +1,10 @@
 -- Halloween event object templates ported from Flurry (event_perk items, static
 -- decorations, skeleton mobiles, particles). Client assets live in holocron.tre.
 
-object_mobile_shared_halloween_skeleton_1 = SharedCreatureObjectTemplate:new {	clientTemplateFileName = "object/mobile/shared_halloween_skeleton_1.iff"
+-- The client never creates the stock shared_halloween_skeleton_1 object (server logs a clean spawn, but the
+-- client shows nothing). shared_skeleton_static.iff is the vanilla twin: same galactic_moon_man appearance,
+-- NPC-based parent. Only the hash sent to the client changes; the registration key below is unchanged.
+object_mobile_shared_halloween_skeleton_1 = SharedCreatureObjectTemplate:new {	clientTemplateFileName = "object/mobile/shared_skeleton_static.iff"
 }
 
 ObjectTemplates:addClientTemplate(object_mobile_shared_halloween_skeleton_1, "object/mobile/shared_halloween_skeleton_1.iff")

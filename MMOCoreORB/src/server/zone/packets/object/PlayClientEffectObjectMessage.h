@@ -19,16 +19,6 @@ public:
 		insertLong(obj->getObjectID());
 	}
 
-	// Labelled variant, so the effect can later be cancelled with StopClientEffectObjectByLabelMessage.
-	PlayClientEffectObjectMessage(SceneObject* obj, const String& file, const String& aux, const String& label) : BaseMessage() {
-		insertShort(0x05);
-		insertInt(0x8855434A);  // CRC
-		insertAscii(file.toCharArray());
-		insertAscii(aux.toCharArray());
-		insertLong(obj->getObjectID());
-		insertAscii(label.toCharArray());
-	}
-
 };
 
 #endif /*PLAYCLIENTEFFECTOBJECTMESSAGE_H_*/

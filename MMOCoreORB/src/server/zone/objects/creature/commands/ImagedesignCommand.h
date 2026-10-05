@@ -27,11 +27,6 @@ public:
 		if (!creature->isPlayerCreature())
 			return GENERALERROR;
 
-		if (!creature->hasSkill("social_entertainer_novice")) {
-			creature->sendSystemMessage("@ui_imagedesigner:noskill"); // You don't have any image designer skills
-			return GENERALERROR;
-		}
-
 		//Disabled again for public use until bugs can be worked out.
 		//return SUCCESS;
 
@@ -43,6 +38,12 @@ public:
 			playerTarget = designer;
 		else
 			playerTarget = cast<CreatureObject*>( object.get());
+
+		// Designing yourself (needed for stat migration) is open to everyone; designing another player needs the skill.
+		if (playerTarget != designer && !creature->hasSkill("social_entertainer_novice")) {
+			creature->sendSystemMessage("@ui_imagedesigner:noskill"); // You don't have any image designer skills
+			return GENERALERROR;
+		}
 
 		Locker clocker(playerTarget, creature);
 

@@ -16,8 +16,7 @@
 #include "server/zone/objects/creature/buffs/SingleUseBuff.h"
 #include "server/zone/objects/player/PlayerObject.h"
 #include "server/zone/managers/frs/FrsManager.h"
-#include "server/zone/packets/object/PlayClientEffectObjectMessage.h"
-#include "server/zone/packets/object/StopClientEffectObjectByLabelMessage.h"
+#include "server/zone/objects/player/events/JediBuffEffectTask.h"
 
 class JediQueueCommand : public QueueCommand {
 
@@ -26,6 +25,7 @@ protected:
 	int duration;
 	uint32 animationCRC;
 	String clientEffect;
+	bool repeatClientEffect;
 	float speedMod;
 	int visMod;
 	int buffClass;
@@ -52,6 +52,7 @@ public:
 		duration = 0;
 		animationCRC = 0;
 		clientEffect = "";
+		repeatClientEffect = false;
 		buffClass = BASE_BUFF;
 		speedMod = 0;
 		visMod = 10;
@@ -79,9 +80,9 @@ public:
 		if (creature->hasBuff(buffCRC)) {
 			creature->removeBuff(buffCRC);
 
-			// The client keeps playing the buff's looping effect unless told to stop it.
-			if (!clientEffect.isEmpty()) {
-				creature->broadcastMessage(new StopClientEffectObjectByLabelMessage(creature, getClientEffectLabel()), true);
+			// The replayed client effect (if any) stops with the buff.
+			if (repeatClientEffect) {
+				creature->removePendingTask(JediBuffEffectTask::getEffectTaskName());
 			}
 
 			return SUCCESS;
@@ -94,10 +95,6 @@ public:
 			return res;
 
         return doBuff(creature);
-	}
-
-	String getClientEffectLabel() const {
-		return "jedi_" + name;
 	}
 
 	int doBuff(CreatureObject* creature) const {
@@ -117,7 +114,15 @@ public:
 
 		// Client Effect.
 		if (!clientEffect.isEmpty()) {
-			creature->broadcastMessage(new PlayClientEffectObjectMessage(creature, clientEffect, "", getClientEffectLabel()), true);
+			creature->playEffect(clientEffect, "");
+
+			// Keep the (short) effect alive only while the buff lasts.
+			if (repeatClientEffect) {
+				creature->removePendingTask(JediBuffEffectTask::getEffectTaskName());
+
+				Reference<JediBuffEffectTask*> effectTask = new JediBuffEffectTask(creature, buffCRC, clientEffect);
+				creature->addPendingTask(JediBuffEffectTask::getEffectTaskName(), effectTask, JediBuffEffectTask::REPLAY_MS);
+			}
 		}
 
 		// Return.

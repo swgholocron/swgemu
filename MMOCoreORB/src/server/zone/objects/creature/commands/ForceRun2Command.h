@@ -14,6 +14,9 @@ public:
 		// BuffCRC's, first one is used.
 		buffCRC = BuffCRC::JEDI_FORCE_RUN_2;
 
+		// The force run aura is a fixed-length client effect; replay it only while the buff is active.
+		repeatClientEffect = true;
+
 		// If these are active they will block buff use
 		blockingCRCs.add(BuffCRC::JEDI_FORCE_RUN_1);
 		blockingCRCs.add(BuffCRC::JEDI_FORCE_RUN_3);

@@ -79,6 +79,13 @@ void ImageDesignSessionImplementation::startImageDesign(CreatureObject* designer
 		designerTentID = 0;
 	}
 
+	// A non-zero tent id is what enables the stat migration option in the client's image designer window.
+	// When designing yourself, enable it anywhere (no salon or image designer needed).
+	if (designer == targetPlayer && designerTentID == 0) {
+		designerTentID = designer->getObjectID();
+		targetTentID = designer->getObjectID();
+	}
+
 	designer->addActiveSession(SessionFacadeType::IMAGEDESIGN, _this.getReferenceUnsafeStaticCast());
 
 	String holoemote;
