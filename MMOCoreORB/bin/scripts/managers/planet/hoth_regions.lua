@@ -32,7 +32,10 @@ hoth_regions = {
 	-- outposts
 	{"@hoth_region_names:hothstarport", 0, -2000, {CIRCLE, 512}, CITY + NOSPAWNAREA + NAVAREA},
 	{"hoth_zone_1", -5900, 3300, {CIRCLE, 720}, NOSPAWNAREA},
-	{"hoth_zone_2_nav", 4800, -500, {RECTANGLE, 6200, 2400}, NAVAREA},
+	-- Disabled: this 1400 x 2900 m navigation area fails to build here. Every tile logs "dtStatusFailed" (one line per
+	-- tile, thousands in a row) and the navmesh never completes. Hoth had no navigation areas before this port, so
+	-- leaving it off costs nothing.
+	--{"hoth_zone_2_nav", 4800, -500, {RECTANGLE, 6200, 2400}, NAVAREA},
 	{"hoth_zone_2_nospawn", 5200, 400, {CIRCLE, 2000}, NOSPAWNAREA},
 
 	-- spawns
