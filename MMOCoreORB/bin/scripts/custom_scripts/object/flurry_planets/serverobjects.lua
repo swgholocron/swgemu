@@ -23,3 +23,4 @@ object_mobile_som_sher_kar = object_mobile_som_shared_sher_kar:new {
 
 ObjectTemplates:addTemplate(object_mobile_som_sher_kar, "object/mobile/som/sher_kar.iff")
 includeFile("../custom_scripts/object/flurry_planets/hoth_kashyyyk.lua")
+includeFile("../custom_scripts/object/flurry_planets/kashyyyk_doors.lua")
