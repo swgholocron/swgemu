@@ -2,11 +2,13 @@
 --
 -- Kept: the full-planet no-build zone, the Scavenger Starport city region, navigation areas and no-spawn zones.
 --
--- Disabled (commented out below): the three SPAWNAREA entries. They reference spawn groups
--- (hoth_northwest_elite, hoth_northeast_hard, hoth_world) that are not defined in mobile/spawn on this
--- server, and SpawnAreaImplementation::buildSpawnList does not null-check a missing group, so enabling
--- them without the groups would crash the server. Define the groups in mobile/spawn/hoth.lua first,
--- then uncomment the matching entries.
+-- Enabled: the world spawner, using the hoth_world group (ported from Flurry into
+-- custom_scripts/mobile/flurry_planets/spawn).
+--
+-- Still disabled (commented out below): the northwest elite and northeast hard areas. They reference spawn
+-- groups (hoth_northwest_elite, hoth_northeast_hard) that are not defined on this server, and
+-- SpawnAreaImplementation::buildSpawnList does not null-check a missing group, so enabling them without the
+-- groups would crash the server. Define the groups first, then uncomment the matching entries.
 --
 -- Planet Region Definitions
 --
@@ -41,5 +43,5 @@ hoth_regions = {
 	--{"hoth_northeast_hard", 1000, 1000, {RECTANGLE, 7680, 7680}, SPAWNAREA, {"hoth_northeast_hard"}, 512},
 
 	-- General World: Easier creatures, heavy GCW
-	--{"hoth_world_spawner_01", 0, 0, {RECTANGLE, 0, 0}, SPAWNAREA + WORLDSPAWNAREA, {"hoth_world"}, 1024},
+	{"hoth_world_spawner_01", 0, 0, {RECTANGLE, 0, 0}, SPAWNAREA + WORLDSPAWNAREA, {"hoth_world"}, 1024},
 }

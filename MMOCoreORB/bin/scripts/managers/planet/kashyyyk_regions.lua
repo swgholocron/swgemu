@@ -3,11 +3,13 @@
 -- Kept: no-build zones, no-spawn zones, navigation areas and the three NPC city regions
 -- (Wawaatt, New Trandosha, Azure Veil Mine).
 --
--- Disabled (commented out below): every SPAWNAREA entry. They reference spawn groups
--- (kashyyyk_world, kashyyyk_hard, kashyyyk_boss_*, kashyyyk_forest, kashyyyk_rryatt) that are
--- not defined in mobile/spawn on this server, and SpawnAreaImplementation::buildSpawnList does
--- not null-check a missing group, so enabling them without the groups would crash the server.
--- Define the groups in mobile/spawn/kashyyyk.lua first, then uncomment the matching entries.
+-- Enabled: the three kashyyyk_world spawn areas, using the kashyyyk_world group (ported from Flurry into
+-- custom_scripts/mobile/flurry_planets/spawn).
+--
+-- Still disabled (commented out below): the hard, boss, forest and rryatt spawn areas. They reference spawn
+-- groups (kashyyyk_hard, kashyyyk_boss_*, kashyyyk_forest, kashyyyk_rryatt) that are not defined on this
+-- server, and SpawnAreaImplementation::buildSpawnList does not null-check a missing group, so enabling them
+-- without the groups would crash the server. Define the groups first, then uncomment the matching entries.
 --
 -- Planet Region Definitions
 --
@@ -28,9 +30,9 @@ kashyyyk_regions = {
 	-- No Build Zones
 	{"basic", -1, 1, {CIRCLE, 50}, NOBUILDZONEAREA},
 	-- world spawns
-	--{"kashyyyk_world1", -2240, -3232, {CIRCLE, 1600}, SPAWNAREA, {"kashyyyk_world"}, 2048},
-	--{"kashyyyk_world2", -1248, -8000, {RECTANGLE, 8000, -3008}, SPAWNAREA, {"kashyyyk_world"}, 2048},
-	--{"kashyyyk_world3", -8000, -3008, {RECTANGLE, 8000, 8000}, SPAWNAREA, {"kashyyyk_world"}, 2048},
+	{"kashyyyk_world1", -2240, -3232, {CIRCLE, 1600}, SPAWNAREA, {"kashyyyk_world"}, 2048},
+	{"kashyyyk_world2", -1248, -8000, {RECTANGLE, 8000, -3008}, SPAWNAREA, {"kashyyyk_world"}, 2048},
+	{"kashyyyk_world3", -8000, -3008, {RECTANGLE, 8000, 8000}, SPAWNAREA, {"kashyyyk_world"}, 2048},
 	-- hard spawn areas
 	--{"kashyyyk_hard1", -5000, 5000, {CIRCLE, 2300}, SPAWNAREA, {"kashyyyk_hard"}, 1024},
 	--{"kashyyyk_hard2", 64, -5216, {CIRCLE, 1568}, SPAWNAREA, {"kashyyyk_hard"}, 512},
