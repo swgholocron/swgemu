@@ -92,6 +92,11 @@ object_weapon_sword_lightsaber_polearm_gen6 = object_weapon_sword_lightsaber_pol
 	attackSpeed = 0,
 	woundsRatio = 45,
 	noTrade = 1,
+
+	-- Crystal/pearl container: same 4-slot saber inventory the stock gen4 sabers use.
+	childObjects = {
+		{templateFile = "object/tangible/inventory/lightsaber_inventory_4.iff", x = 0, z = 0, y = 0, ox = 0, oy = 0, oz = 0, ow = 0, cellid = -1, containmentType = 4}
+	},
 }
 
 ObjectTemplates:addTemplate(object_weapon_sword_lightsaber_polearm_gen6, "object/weapon/melee/polearm/crafted_saber/sword_lightsaber_polearm_gen6.iff")

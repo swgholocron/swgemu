@@ -5,3 +5,6 @@ includeFile("worldboss/serverobjects.lua")
 
 -- Halloween event creatures + outfits (ported from Flurry)
 includeFile("../custom_scripts/mobile/halloween/serverobjects.lua")
+
+-- Taanab / Nalhutta / Mustafar creatures, lairs and world spawn groups (ported from Flurry)
+includeFile("../custom_scripts/mobile/flurry_planets/serverobjects.lua")

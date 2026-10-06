@@ -80,4 +80,5 @@ factionList = {
 	{ "tusken_raider", true, "alkhara,jawa", "", 1.0 },
 	{ "valarian", true, "jabba", "", 1.0 },
 	{ "halloween", true, "", "", 1.0 },
+	{ "norulac_raiders", true, "", "", 1.0 },
 }

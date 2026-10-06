@@ -89,6 +89,11 @@ object_weapon_sword_lightsaber_adeen = object_weapon_sword_lightsaber_adeen_shar
 	maxRangeAccuracy = 5,
 	attackSpeed = 4.5,
 	woundsRatio = 45,
+
+	-- Crystal/pearl container: same 4-slot saber inventory the stock gen4 sabers use.
+	childObjects = {
+		{templateFile = "object/tangible/inventory/lightsaber_inventory_4.iff", x = 0, z = 0, y = 0, ox = 0, oy = 0, oz = 0, ow = 0, cellid = -1, containmentType = 4}
+	},
 }
 
 ObjectTemplates:addTemplate(object_weapon_sword_lightsaber_adeen, "object/weapon/melee/sword_lightsaber_adeen.iff")

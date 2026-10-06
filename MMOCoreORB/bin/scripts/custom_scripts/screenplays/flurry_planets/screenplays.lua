@@ -1,0 +1,11 @@
+-- Coruscant / Nalhutta / Taanab NPC screenplays ported from Flurry (Flurry itself shipped them disabled).
+includeFile("../custom_scripts/screenplays/flurry_planets/coruscant/coruscant.lua")
+includeFile("../custom_scripts/screenplays/flurry_planets/nalhutta/nalhutta_huttcity.lua")
+includeFile("../custom_scripts/screenplays/flurry_planets/nalhutta/nalhutta_volcano.lua")
+includeFile("../custom_scripts/screenplays/flurry_planets/taanab/taanab_cave.lua")
+includeFile("../custom_scripts/screenplays/flurry_planets/taanab/taanab_downed_ship.lua")
+includeFile("../custom_scripts/screenplays/flurry_planets/taanab/taanab_great_herd.lua")
+includeFile("../custom_scripts/screenplays/flurry_planets/taanab/taanab_hex_farms.lua")
+includeFile("../custom_scripts/screenplays/flurry_planets/taanab/taanab_mine.lua")
+includeFile("../custom_scripts/screenplays/flurry_planets/taanab/taanab_pandath.lua")
+includeFile("../custom_scripts/screenplays/flurry_planets/taanab/taanab_starhunterstation.lua")
