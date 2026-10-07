@@ -2,6 +2,7 @@ local ObjectManager = require("managers.object.object_manager")
 local QuestManager = require("managers.quest.quest_manager")
 
 SuiPhase1AccessTerminal = {
+	requiredComponents = 1,
 	terminalComponents = { "@quest_item_n:fs_craft_puzzle_config_processor", "@quest_item_n:fs_craft_puzzle_gyro_receiver",
 		"@quest_item_n:fs_craft_puzzle_signal_amp", "@quest_item_n:fs_craft_puzzle_solid_state_array" },
 
@@ -33,7 +34,8 @@ function SuiPhase1AccessTerminal:openAccessTerminal(pPlayer, pTerminal)
 	local completed = true
 	local arrayStatus = "@quest/force_sensitive/fs_crafting:sui_access_terminal_online"
 
-	for i = 1, 4, 1 do
+	-- Only the first component has to be online to finish the quest (stock: all four)
+	for i = 1, self.requiredComponents, 1 do
 		if (status[i] ~= 1) then
 			completed = false
 			arrayStatus = "@quest/force_sensitive/fs_crafting:sui_access_terminal_offline"

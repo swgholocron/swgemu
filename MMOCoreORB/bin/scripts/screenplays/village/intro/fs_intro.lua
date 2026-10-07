@@ -12,8 +12,8 @@ FsIntro = ScreenPlay:new {
 	VILLAGE = 8,
 
 	stepDelay = {
-		[1] = { 43200, 129600 }, -- Old man visit, 12-36 hours
-		[3] = { 3600, 43200 } -- Sith shadow attack, 1 hour to 12 hours
+		[1] = { 300, 600 }, -- Old man visit, 5-10 minutes (stock: 12-36 hours)
+		[3] = { 300, 600 } -- Sith shadow attack, 5-10 minutes (stock: 1-12 hours)
 	}
 }
 
@@ -57,15 +57,12 @@ function FsIntro:startStepDelay(pPlayer, step)
 	self:setCurrentStep(pPlayer, step)
 	local stepDelay = getRandomNumber(stepData[1], stepData[2])
 
+	-- Repeat old man visits add an extra random 5-10 minutes (stock: +1 day on the 2nd visit, visits x 1 day from the 3rd).
 	if (step == 1) then
 		local oldManVisits = tonumber(readScreenPlayData(pPlayer, "VillageJediProgression", "FsIntroOldManVisits"))
 
-		if oldManVisits ~= nil then
-			if (oldManVisits == 2) then
-				stepDelay = stepDelay + (1 * 24 * 60 * 60)
-			elseif (oldManVisits >= 3) then
-				stepDelay = stepDelay + (oldManVisits * 24 * 60 * 60)
-			end
+		if (oldManVisits ~= nil and oldManVisits >= 2) then
+			stepDelay = stepDelay + getRandomNumber(300, 600)
 		end
 	end
 

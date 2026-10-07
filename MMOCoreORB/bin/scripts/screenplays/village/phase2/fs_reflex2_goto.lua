@@ -9,8 +9,8 @@ FsReflex2Goto = GoToLocation:new {
 	waypointDescription = "@quest/quest_journal/fs_quests_reflex2:s_01",
 	spawnPoint = { x = 0, y = 0 },
 	randomLocation = true,
-	randomMinDistance = 900,
-	randomMaxDistance = 1100,
+	randomMinDistance = 225,
+	randomMaxDistance = 275,
 	spawnPlanet = "endor",
 	spawnRadius = 8,
 }

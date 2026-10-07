@@ -19,15 +19,15 @@ function villageSivarraPhase1ConvoHandler:getInitialScreen(pPlayer, pNpc, pConvT
 	end
 
 	local curedCount = FsMedicPuzzle:getCuredVillagerCount(pPlayer)
-	if (curedCount >= 15 and QuestManager.hasActiveQuest(pPlayer, QuestManager.quests.FS_MEDIC_PUZZLE_QUEST_03)) then
+	if (curedCount >= 4 and QuestManager.hasActiveQuest(pPlayer, QuestManager.quests.FS_MEDIC_PUZZLE_QUEST_03)) then
 		return convoTemplate:getScreen("intro_completed_third_set")
-	elseif (curedCount >= 10 and QuestManager.hasActiveQuest(pPlayer, QuestManager.quests.FS_MEDIC_PUZZLE_QUEST_02)) then
+	elseif (curedCount >= 3 and QuestManager.hasActiveQuest(pPlayer, QuestManager.quests.FS_MEDIC_PUZZLE_QUEST_02)) then
 		return convoTemplate:getScreen("intro_completed_second_set")
-	elseif (curedCount >= 5 and QuestManager.hasActiveQuest(pPlayer, QuestManager.quests.FS_MEDIC_PUZZLE_QUEST_01)) then
+	elseif (curedCount >= 1 and QuestManager.hasActiveQuest(pPlayer, QuestManager.quests.FS_MEDIC_PUZZLE_QUEST_01)) then
 		return convoTemplate:getScreen("intro_completed_first_set")
-	elseif ((QuestManager.hasActiveQuest(pPlayer, QuestManager.quests.FS_MEDIC_PUZZLE_QUEST_03) and curedCount < 15) or
-		(QuestManager.hasActiveQuest(pPlayer, QuestManager.quests.FS_MEDIC_PUZZLE_QUEST_02) and curedCount < 10) or
-		(QuestManager.hasActiveQuest(pPlayer, QuestManager.quests.FS_MEDIC_PUZZLE_QUEST_01) and curedCount < 5)) then
+	elseif ((QuestManager.hasActiveQuest(pPlayer, QuestManager.quests.FS_MEDIC_PUZZLE_QUEST_03) and curedCount < 4) or
+		(QuestManager.hasActiveQuest(pPlayer, QuestManager.quests.FS_MEDIC_PUZZLE_QUEST_02) and curedCount < 3) or
+		(QuestManager.hasActiveQuest(pPlayer, QuestManager.quests.FS_MEDIC_PUZZLE_QUEST_01) and curedCount < 1)) then
 		return convoTemplate:getScreen("intro_in_progress")
 	elseif (not CreatureObject(pPlayer):hasSkill("science_medic_master")) then
 		return convoTemplate:getScreen("intro_not_master_medic")

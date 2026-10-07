@@ -7,9 +7,9 @@ require("utils.helpers")
 
 VillageJediManagerTownship = ScreenPlay:new {
 	VILLAGE_TOTAL_NUMBER_OF_PHASES = 4,
-	phaseChangeTimeOfDay = { hour = 18, min = 0 }, -- Hour of day, server military time, to change the phase. Comment out to disable
+	-- phaseChangeTimeOfDay = { hour = 18, min = 0 }, -- stock: change at this server hour. Disabled: phases are 1 hour long, so a time of day makes no sense
 
-	VILLAGE_PHASE_DURATION = 3 * 7 * 24 * 60 * 60 * 1000 -- 3 weeks
+	VILLAGE_PHASE_DURATION = 60 * 60 * 1000 -- 1 hour (stock is 3 weeks)
 }
 
 -- Set the current Village Phase for the first time.
@@ -35,6 +35,18 @@ function VillageJediManagerTownship.setCurrentPhaseInit()
 		end
 
 		if (eventTimeLeft < 0) then
+			return
+		end
+
+		-- A phase change that was scheduled under a longer duration (eg. the stock 3 weeks) is pulled in to the configured duration
+		if (eventTimeLeft > VillageJediManagerTownship.VILLAGE_PHASE_DURATION + 60 * 1000) then
+			local timeToSchedule = (VillageJediManagerTownship.getNextPhaseChangeTime(false) - os.time()) * 1000
+
+			if (timeToSchedule < 60 * 1000) then
+				timeToSchedule = 60 * 1000
+			end
+
+			rescheduleServerEvent("VillagePhaseChange", timeToSchedule)
 			return
 		end
 
@@ -149,6 +161,11 @@ function VillageJediManagerTownship:switchToNextPhase(manualSwitch)
 	VillageJediManagerTownship.setLastPhaseChangeTime(nextPhaseChange)
 
 	local timeToSchedule = (VillageJediManagerTownship.getNextPhaseChangeTime(false) - os.time()) * 1000
+
+	-- With short phases the computed time can already be in the past (eg. after downtime); never schedule less than a minute out
+	if (timeToSchedule < 60 * 1000) then
+		timeToSchedule = 60 * 1000
+	end
 
 	if (hasServerEvent("VillagePhaseChange")) then
 		rescheduleServerEvent("VillagePhaseChange", timeToSchedule)

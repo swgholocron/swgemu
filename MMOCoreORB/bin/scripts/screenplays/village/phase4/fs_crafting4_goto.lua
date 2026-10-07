@@ -9,8 +9,8 @@ FsCrafting4Goto = GoToLocation:new {
 	waypointDescription = "Downed Satellite",
 	spawnPlanet = "", -- Setting to "" uses current player planet
 	randomLocation = true,
-	randomMinDistance = 900,
-	randomMaxDistance = 1800,
+	randomMinDistance = 225,
+	randomMaxDistance = 450,
 	spawnRadius = 32,
 }
 

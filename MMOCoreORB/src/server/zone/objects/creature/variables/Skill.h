@@ -100,6 +100,11 @@ public:
 		row->getValue(6, hidden);
 		row->getValue(7, moneyRequired);
 		row->getValue(8, pointsRequired);
+
+		// Village learned (Force Sensitive branch) skills cost no skill points.
+		if (skillName.beginsWith("force_sensitive"))
+			pointsRequired = 0;
+
 		row->getValue(9, skillsRequiredCount);
 		row->getValue(10, skillsRequired);
 		row->getValue(11, preclusionSkills);

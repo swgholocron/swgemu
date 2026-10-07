@@ -96,6 +96,30 @@
 
 float CreatureObjectImplementation::DEFAULTRUNSPEED = 5.376f;
 
+// The stock (non-custom) vehicles run 50% faster than their template speed. Custom vehicles live under
+// object/mobile/vehicle_elite and keep their own speeds.
+static constexpr float ORIGINAL_VEHICLE_SPEED_SCALE = 1.5f;
+
+static bool isOriginalVehicleTemplate(uint32 crc) {
+	static const uint32 originals[] = {
+		STRING_HASHCODE("object/mobile/vehicle/speederbike.iff"),
+		STRING_HASHCODE("object/mobile/vehicle/speederbike_flash.iff"),
+		STRING_HASHCODE("object/mobile/vehicle/speederbike_swoop.iff"),
+		STRING_HASHCODE("object/mobile/vehicle/landspeeder_av21.iff"),
+		STRING_HASHCODE("object/mobile/vehicle/landspeeder_x31.iff"),
+		STRING_HASHCODE("object/mobile/vehicle/landspeeder_x34.iff"),
+		STRING_HASHCODE("object/mobile/vehicle/landspeeder_xp38.iff"),
+		STRING_HASHCODE("object/mobile/vehicle/jetpack.iff")
+	};
+
+	for (uint32 original : originals) {
+		if (original == crc)
+			return true;
+	}
+
+	return false;
+}
+
 void CreatureObjectImplementation::initializeTransientMembers() {
 	TangibleObjectImplementation::initializeTransientMembers();
 
@@ -110,6 +134,14 @@ void CreatureObjectImplementation::initializeTransientMembers() {
 	}
 
 	creditObject->setOwner(asCreatureObject());
+
+	// Vehicles loaded from the database keep a stored run speed; re-derive it from the template.
+	if (isVehicleObject() && isOriginalVehicleTemplate(getServerObjectCRC())) {
+		const auto creoTemplate = dynamic_cast<SharedCreatureObjectTemplate*>(getObjectTemplate());
+
+		if (creoTemplate != nullptr && creoTemplate->getSpeed().size() > 0)
+			runSpeed = creoTemplate->getSpeed().get(0) * ORIGINAL_VEHICLE_SPEED_SCALE;
+	}
 
 	lastActionCounter = 0x40000000;
 
@@ -257,6 +289,9 @@ void CreatureObjectImplementation::loadTemplateData(SharedObjectTemplate* templa
 	if (speedTempl.size() > 0) {
 		runSpeed = speedTempl.get(0);
 		walkSpeed = speedTempl.get(1);
+
+		if (isVehicleObject() && isOriginalVehicleTemplate(getServerObjectCRC()))
+			runSpeed *= ORIGINAL_VEHICLE_SPEED_SCALE;
 	} else {
 		runSpeed = 0;
 		walkSpeed = 0;

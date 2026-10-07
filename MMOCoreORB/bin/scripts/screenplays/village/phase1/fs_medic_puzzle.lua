@@ -86,11 +86,11 @@ end
 function FsMedicPuzzle:getPatientsLeftToTreat(pPlayer)
 	local count = self:getCuredVillagerCount(pPlayer)
 	if QuestManager.hasActiveQuest(pPlayer, QuestManager.quests.FS_MEDIC_PUZZLE_QUEST_03) then
-		return 15 - count
+		return 4 - count
 	elseif QuestManager.hasActiveQuest(pPlayer, QuestManager.quests.FS_MEDIC_PUZZLE_QUEST_02) then
-		return 10 - count
+		return 3 - count
 	elseif QuestManager.hasActiveQuest(pPlayer, QuestManager.quests.FS_MEDIC_PUZZLE_QUEST_01) then
-		return 5 - count
+		return 1 - count
 	end
 end
 

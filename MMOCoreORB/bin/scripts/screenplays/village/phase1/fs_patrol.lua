@@ -7,11 +7,14 @@ FsPatrol = Patrol:new {
 	taskName = "FsPatrol",
 	-- Patrol properties
 	waypointName = "@quest/force_sensitive/fs_patrol:patrol_point",
-	numPoints = 8,
+	numPoints = 4, -- points per patrol (stock: 8), spread evenly around the patrol circle
 	areaSize = 48,
 	originX = 5313,
 	originY = -4161,
 	forceSpawn = true,
+	-- Patrols needed: the first set unlocks the branch, the second finishes the quest (stock: 10 + 10)
+	firstSetPatrols = 3,
+	totalPatrols = 5,
 	enemyList = { "sith_shadow_mercenary", "sith_shadow_thug", "sith_shadow_pirate", "sith_shadow_outlaw" }
 }
 
@@ -118,7 +121,7 @@ function FsPatrol:onPlayerKilled(pPlayer)
 	local completedCount = tonumber(QuestManager.getStoredVillageValue(pPlayer, "FsPatrolCompletedCount"))
 	local playerID = SceneObject(pPlayer):getObjectID()
 
-	if (completedCount >= 0 and completedCount < 20 and readData(playerID .. ":failedPatrol") ~= 1) then
+	if (completedCount >= 0 and completedCount < self.totalPatrols and readData(playerID .. ":failedPatrol") ~= 1) then
 		CreatureObject(pPlayer):sendSystemMessage("@quest/force_sensitive/fs_patrol:failed_death")
 		self:failPatrol(pPlayer)
 	end

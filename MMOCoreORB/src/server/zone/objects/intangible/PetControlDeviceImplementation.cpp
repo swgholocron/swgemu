@@ -299,7 +299,10 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player, bool ini
 		server->getZoneServer()->getPlayerManager()->handleAbortTradeMessage(player);
 	}
 
-	if (player->getCurrentCamp() == nullptr && player->getCityRegion() == nullptr && !ghost->isPrivileged() && !isBombDroid) {
+	// Calling a pet or droid is instant everywhere (the old 15 second field delay is disabled).
+	constexpr bool delayedPetCall = false;
+
+	if (delayedPetCall && player->getCurrentCamp() == nullptr && player->getCityRegion() == nullptr && !ghost->isPrivileged() && !isBombDroid) {
 		Reference<CallPetTask*> callPet = new CallPetTask(_this.getReferenceUnsafeStaticCast(), player, "call_pet");
 
 		StringIdChatParameter message("pet/pet_menu", "call_pet_delay"); // Calling pet in %DI seconds. Combat will terminate pet call.
@@ -602,7 +605,10 @@ void PetControlDeviceImplementation::storeObject(CreatureObject* player, bool fo
 		return;
 
 	// Store non-faction pets immediately.  Store faction pets after 60sec delay.
-	if (getPetType() != PetManager::FACTIONPET || force || (ghost != nullptr && ghost->isPrivileged())) {
+	// Pets are stored immediately; the 60 second faction pet delay is disabled.
+	constexpr bool delayedFactionPetStore = false;
+
+	if (!delayedFactionPetStore || getPetType() != PetManager::FACTIONPET || force || (ghost != nullptr && ghost->isPrivileged())) {
 		task->execute();
 	} else if (pet->getPendingTask("store_pet") == nullptr) {
 		// Cross lock the pet to add the task

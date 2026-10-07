@@ -4,7 +4,8 @@ local SpawnMobiles = require("utils.spawn_mobiles")
 
 FsCounterStrike = {
 	testMode = false, -- For testing only, sets turnin for commander to close by the base
-	maxCampsToSpawn = 20, -- Number of camps to spawn from campSpawns on phase change
+	maxCampsToSpawn = 5, -- Number of camps to spawn from campSpawns on phase change
+	campPoolSize = 5, -- Camps are only picked from the first N campSpawns, which are the ones closest to the village (2-5 km), so the escort fits in a one hour phase
 
 	-- Spawn locations for camps, names found in string file string/en/fs_quest_village.stf
 	campSpawns = {
@@ -88,11 +89,11 @@ function FsCounterStrike:pickPhaseCamps()
 	local chosenCamps = { }
 	local allCamps = { }
 
-	for i = 1, #self.campSpawns, 1 do
+	for i = 1, math.min(#self.campSpawns, self.campPoolSize), 1 do
 		table.insert(allCamps, i)
 	end
 
-	for i = 1, self.maxCampsToSpawn, 1 do
+	for i = 1, math.min(self.maxCampsToSpawn, #allCamps), 1 do
 		local randCamp = getRandomNumber(1, #allCamps)
 		table.insert(chosenCamps, allCamps[randCamp])
 		table.remove(allCamps, randCamp)

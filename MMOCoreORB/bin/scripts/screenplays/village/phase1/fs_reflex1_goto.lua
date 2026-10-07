@@ -8,8 +8,8 @@ FsReflex1Goto = GoToLocation:new {
 	-- GoToLocation properties
 	waypointDescription = "@quest/quest_journal/fs_quests_reflex1:s_01",
 	randomLocation = true,
-	randomMinDistance = 900,
-	randomMaxDistance = 1100,
+	randomMinDistance = 225,
+	randomMaxDistance = 275,
 	spawnPlanet = "dathomir",
 	spawnRadius = 8,
 }

@@ -88,7 +88,7 @@ function FsReflex2:completeSupplyFetch(pPlayer)
 	QuestManager.completeQuest(pPlayer, QuestManager.quests.FS_REFLEX_FETCH_QUEST_03)
 	self:resetTasks(pPlayer)
 
-	if (count == 6) then
+	if (count == 2) then
 		CreatureObject(pPlayer):sendSystemMessage("@quest/force_sensitive/fs_reflex:msg_phase_02_quest_finished")
 		VillageJediManagerCommon.unlockBranch(pPlayer, "force_sensitive_enhanced_reflexes_vehicle_control")
 		QuestManager.completeQuest(pPlayer, QuestManager.quests.FS_REFLEX_FETCH_QUEST_00)
@@ -113,7 +113,7 @@ function FsReflex2:completeSupplyFetch(pPlayer)
 
 	else
 		local messageString = LuaStringIdChatParameter("@quest/force_sensitive/fs_reflex:msg_phase_02_quest_continue")
-		messageString:setDI(6 - count)
+		messageString:setDI(2 - count)
 		CreatureObject(pPlayer):sendSystemMessage(messageString:_getObject())
 	end
 end

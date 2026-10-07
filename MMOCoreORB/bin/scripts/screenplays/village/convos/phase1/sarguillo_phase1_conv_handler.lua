@@ -11,22 +11,28 @@ function villageSarguilloPhase1ConvoHandler:getInitialScreen(pPlayer, pNpc, pCon
 	local completedLastPoint = readData(playerID .. ":completedCurrentPoint") == 1
 	local failedPatrol = readData(playerID .. ":failedPatrol") == 1
 	local currentQuestID = QuestManager.getCurrentVillageQuestID(pPlayer)
-	local reachedAllWaypoints = readData(playerID .. ":patrolWaypointsReached") == 8
+	local reachedAllWaypoints = readData(playerID .. ":patrolWaypointsReached") == FsPatrol.numPoints
+
+	local firstSet = FsPatrol.firstSetPatrols
+	local totalPatrols = FsPatrol.totalPatrols
+	local firstSetLastQuest = QuestManager.quests.FS_PATROL_QUEST_1 + firstSet - 1
+	local secondSetFirstQuest = QuestManager.quests.FS_PATROL_QUEST_11
+	local secondSetLastQuest = secondSetFirstQuest + (totalPatrols - firstSet) - 1
 
 	if (VillageJediManagerTownship:getCurrentPhase() ~= 1 or not VillageJediManagerCommon.isVillageEligible(pPlayer)) then
 		return convoTemplate:getScreen("intro_noteligible")
-	elseif (completedCount == 20) then
+	elseif (completedCount == totalPatrols) then
 		return convoTemplate:getScreen("intro_didallpatrols")
-	elseif (completedCount == 9 and reachedAllWaypoints and completedLastPoint and not failedPatrol) then
+	elseif (completedCount == firstSet - 1 and reachedAllWaypoints and completedLastPoint and not failedPatrol) then
 		return convoTemplate:getScreen("intro_completedfirstset")
-	elseif (completedCount == 19 and reachedAllWaypoints and completedLastPoint and not failedPatrol) then
+	elseif (completedCount == totalPatrols - 1 and reachedAllWaypoints and completedLastPoint and not failedPatrol) then
 		return convoTemplate:getScreen("intro_completedsecondset")
-	elseif (completedCount == 10 and currentQuestID == 90) then
+	elseif (completedCount == firstSet and currentQuestID == firstSetLastQuest) then
 		-- Player has not taken patrol 11
 		return convoTemplate:getScreen("intro_startsecondset")
-	elseif (currentQuestID >= 81 and currentQuestID <= 90) then
+	elseif (currentQuestID >= QuestManager.quests.FS_PATROL_QUEST_1 and currentQuestID <= firstSetLastQuest) then
 		return convoTemplate:getScreen("intro_firstsetinprogress")
-	elseif (currentQuestID >= 91 and currentQuestID <= 100) then
+	elseif (currentQuestID >= secondSetFirstQuest and currentQuestID <= secondSetLastQuest) then
 		return convoTemplate:getScreen("intro_secondsetinprogress")
 	elseif (VillageJediManagerCommon.hasActiveQuestThisPhase(pPlayer)) then
 		return convoTemplate:getScreen("intro_hasotherquest")
@@ -47,7 +53,7 @@ function villageSarguilloPhase1ConvoHandler:runScreenHandlers(pConvTemplate, pPl
 	local completedLastPoint = readData(playerID .. ":completedCurrentPoint") == 1
 	local completedCount = tonumber(QuestManager.getStoredVillageValue(pPlayer, "FsPatrolCompletedCount"))
 	local failedPatrol = readData(playerID .. ":failedPatrol") == 1
-	local reachedAllWaypoints = readData(playerID .. ":patrolWaypointsReached") == 8
+	local reachedAllWaypoints = readData(playerID .. ":patrolWaypointsReached") == FsPatrol.numPoints
 
 	if (screenID == "all_eight_points") then
 		VillageJediManagerCommon.setActiveQuestThisPhase(pPlayer, VILLAGE_PHASE1_SARGUILLO)
@@ -90,11 +96,11 @@ function villageSarguilloPhase1ConvoHandler:completeCurrentPatrol(pPlayer)
 	FsPatrol:completeFsPatrol(pPlayer)
 	QuestManager.setStoredVillageValue(pPlayer, "FsPatrolCompletedCount", completedCount)
 
-	if (completedCount == 10) then
-		QuestManager.completeQuest(pPlayer, QuestManager.quests.FS_PATROL_QUEST_10)
+	if (completedCount == FsPatrol.firstSetPatrols) then
+		QuestManager.completeQuest(pPlayer, QuestManager.quests["FS_PATROL_QUEST_" .. FsPatrol.firstSetPatrols])
 		VillageJediManagerCommon.unlockBranch(pPlayer, "force_sensitive_combat_prowess_ranged_accuracy")
-	elseif (completedCount == 20) then
-		QuestManager.completeQuest(pPlayer, QuestManager.quests.FS_PATROL_QUEST_20)
+	elseif (completedCount == FsPatrol.totalPatrols) then
+		QuestManager.completeQuest(pPlayer, QuestManager.quests["FS_PATROL_QUEST_" .. (10 + FsPatrol.totalPatrols - FsPatrol.firstSetPatrols)])
 		QuestManager.completeQuest(pPlayer, QuestManager.quests.FS_PATROL_QUEST_FINISH)
 		QuestManager.setCurrentVillageQuestID(pPlayer, 0)
 		VillageJediManagerCommon.setCompletedQuestThisPhase(pPlayer)

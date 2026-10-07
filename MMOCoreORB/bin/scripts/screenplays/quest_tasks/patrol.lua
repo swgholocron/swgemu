@@ -34,7 +34,7 @@ function Patrol:setupPatrolPoints(pPlayer)
 		local offsetX = getRandomNumber(-75, 75)
 		local offsetY = getRandomNumber(-75, 75)
 		local offsetTheta = getRandomNumber(-2, 2)
-		local theta = (i * 45 + offsetTheta) * 0.0175;
+		local theta = (i * (360 / self.numPoints) + offsetTheta) * 0.0175;
 
 		local x = (self.originX + offsetX) + (radius * math.cos(theta))
 		local y = (self.originY + offsetY) + (radius * math.sin(theta))

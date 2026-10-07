@@ -9,7 +9,7 @@ Situations to test:
 1P takes down shield, 2P escorts, 2P dies, 1P escorts, 1P dies (both fail)
 ]]
 FsCsCommander = {
-	commanderDespawnTime = 60 * 60 * 1000, -- Time after spawning before commander automatically despawns
+	commanderDespawnTime = 30 * 60 * 1000, -- Time after spawning before commander automatically despawns (stock: 60 minutes)
 
 	rescueSpawnTimer = { 180, 300 }, -- Min/max time until a wave of npcs attempts to save the commander
 	rescueAmount = { 1, 2 }, -- Number of rescuers to spawn
