@@ -2780,16 +2780,16 @@ void PlayerObjectImplementation::doForceRegen() {
 
 	const static uint32 tick = 5;
 
-	uint32 modifier = 1;
+	uint32 modifier = 4; // regen is tracked in quarter-steps so Force Meditate can use 6.75x
 
 	if (creature->isMeditating()) {
 		Reference<ForceMeditateTask*> medTask = creature->getPendingTask("forcemeditate").castTo<ForceMeditateTask*>();
 
 		if (medTask != nullptr)
-			modifier = 3;
+			modifier = 27; // 3x base meditate regen, +50%, +50% again (6.75x)
 	}
 
-	uint32 forceTick = tick * modifier;
+	uint32 forceTick = tick * modifier / 4;
 
 	if (forceTick > getForcePowerMax() - getForcePower()){   // If the player's Force Power is going to regen again and it's close to max,
 		setForcePower(getForcePowerMax());             // Set it to max, so it doesn't go over max.

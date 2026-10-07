@@ -59,10 +59,11 @@ public:
 		uint32 targetAttributes[9] = {0,0,0,0,0,0,0,0,0};
 
 		for (int i = 0; tokenizer.hasMoreTokens() && i < 9; ++i) {
-			uint32 value = tokenizer.getIntToken();
+			int value = tokenizer.getIntToken();
 
-			if (value < getMinAttribute(creature, i) || value > getMaxAttribute(creature, i)) {
-				warning() << "Player: " << creature->getDisplayedName() << " ID: " << creature->getObjectID() <<  " --- Suspected stat migration hacking attempt.";
+			// Species minimum/maximum limits are not enforced: players may place their points freely.
+			// Only reject values that cannot be a real attribute (negative numbers).
+			if (value < 0) {
 				return GENERALERROR;
 			}
 
@@ -72,7 +73,16 @@ public:
 
 		// Here we set the stat migration target attributes.
 		// NOTE: We aren't actually migrating the stats at this point.
-		if (targetPointsTotal == getTotalAttribPoints(creature)) {
+		// The pool to distribute is the species total or, for characters whose stats were set by other means
+		// (staff, boosted characters), whatever they currently have.
+		uint32 currentTotal = 0;
+		const DeltaVector<int>* currentHam = creature->getBaseHAM();
+
+		for (int i = 0; i < 9; ++i) {
+			currentTotal += currentHam->get(i);
+		}
+
+		if (targetPointsTotal == getTotalAttribPoints(creature) || targetPointsTotal == currentTotal) {
 			for (int i = 0; i < 9; ++i) {
 				session->setAttributeToModify(i, targetAttributes[i]);
 			}

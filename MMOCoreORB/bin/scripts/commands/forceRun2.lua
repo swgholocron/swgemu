@@ -44,7 +44,7 @@
 ForceRun2Command = {
         name = "forcerun2",
         forceCost = 400,
-        duration = 120,
+        duration = 86400, -- toggle: stays on until switched off (24h safety cap)
         --animationCRC = hashCode()
         clientEffect = "clienteffect/pl_force_run_self.cef",
         speedMod = 2.5

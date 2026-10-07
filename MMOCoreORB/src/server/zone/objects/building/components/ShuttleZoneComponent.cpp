@@ -57,6 +57,8 @@ void ShuttleZoneComponent::notifyInsertToZone(SceneObject* sceneObject, Zone* zo
 #endif
 	}
 
+	info(true) << "Shuttle " << shuttle->getObjectID() << " inserted in " << zone->getZoneName() << " at " << shuttle->getWorldPosition().toString() << " -- bind task in " << delay << " ms";
+
 	task->schedule(delay);
 }
 

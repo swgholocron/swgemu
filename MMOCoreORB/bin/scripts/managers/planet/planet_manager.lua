@@ -106,7 +106,11 @@ coruscant = {
 	gcwEnabled = 1,
 
 	planetTravelPoints = {
-		{name = "Imperial City Starport", x = -114, z = 40, y = 3227, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 6},
+		{name = "Coruscant Spaceport", x = -96, z = 40, y = 3149, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 6},
+		{name = "Spaceport District Shuttle", x = -28, z = 40, y = 3202, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
+		{name = "Collective Commerce District", x = -1851, z = 40, y = -175, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
+		{name = "Monument Square", x = 1538, z = 40, y = 779, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
+		{name = "Entertainment District", x = 2248, z = 0, y = -4546, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
 	},
 
 	badgeAreas = {
@@ -281,7 +285,7 @@ kashyyyk = {
 	gcwEnabled = 1,
 
 	planetTravelPoints = {
-		{name = "Kachirho Starport", x = -500, z = 18.03, y = -100, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 6},
+		{name = "Kachirho Starport", x = -669.73, z = 18.85, y = -148.48, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 6},
 	},
 
 	badgeAreas = {
@@ -393,7 +397,7 @@ nalhutta = {
 	gcwEnabled = 1,
 
 	planetTravelPoints = {
-		{name = "Hutt City Starport", x = -1000, z = 8, y = 1000, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 6},
+		{name = "Hutt City Starport", x = -800, z = 8, y = 1200, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 6},
 	},
 
 	badgeAreas = {
@@ -485,7 +489,8 @@ taanab = {
 	gcwEnabled = 1,
 
 	planetTravelPoints = {
-		{name = "Starhunter Station", x = 3673, z = 31.7, y = -5425, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 6},
+		{name = "Pandath", x = 2100, z = 45, y = 5400, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 6},
+		{name = "Starhunter Station", x = 3610, z = 31.7, y = -5425, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 6},
 	},
 
 	badgeAreas = {

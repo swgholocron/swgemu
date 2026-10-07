@@ -87,6 +87,8 @@ public:
 
 			auto oldShuttle = travelPoint->getShuttle();
 
+			info(true) << "Shuttle " << strongShuttle->getObjectID() << " in " << zone->getZoneName() << " nearest travel point '" << travelPoint->getPointName() << "' (" << (oldShuttle == nullptr ? "binding" : (oldShuttle == strongShuttle ? "already bound" : "point already has a shuttle -- destroying this one")) << ")";
+
 			if (oldShuttle == nullptr) {
 				travelPoint->setShuttle(strongShuttle);
 

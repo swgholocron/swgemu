@@ -130,6 +130,7 @@ public:
 		ManagedReference<CreatureObject*> arrivalShuttle = destPoint->getShuttle();
 
 		if (arrivalShuttle == nullptr) {
+			creature->sendSystemMessage("The shuttle at " + arrivalPoint + " is not in service yet. Try again in a few minutes.");
 			return GENERALERROR;
 		}
 
@@ -143,11 +144,15 @@ public:
 		}
 
 		//Check to see if this point can be reached from this location.
-		if (!pmDeparture->isTravelToLocationPermitted(departurePoint, arrivalPlanet, arrivalPoint))
+		if (!pmDeparture->isTravelToLocationPermitted(departurePoint, arrivalPlanet, arrivalPoint)) {
+			creature->sendSystemMessage("Travel from " + departurePoint + " to " + arrivalPoint + " is not permitted.");
 			return GENERALERROR;
+		}
 
-		if (roundTrip && !pmArrival->isTravelToLocationPermitted(arrivalPoint, departurePlanet, departurePoint))
+		if (roundTrip && !pmArrival->isTravelToLocationPermitted(arrivalPoint, departurePlanet, departurePoint)) {
+			creature->sendSystemMessage("A round trip is not possible: " + arrivalPoint + " has no departures to " + departurePoint + ". Try a single-trip ticket.");
 			return GENERALERROR; //If they are doing a round trip, make sure they can travel back.
+		}
 
 		int baseFare = pmDeparture->getTravelFare(departurePlanet, arrivalPlanet);
 

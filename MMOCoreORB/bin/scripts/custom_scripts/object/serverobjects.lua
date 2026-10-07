@@ -1,3 +1,6 @@
+-- Parent templates first: they must exist before the templates that derive from them load.
+includeFile("../custom_scripts/object/base_parents/serverobjects.lua")
+
 -- Object templates for vanilla creature appearances reused as custom world
 -- bosses (Flurry ported these without their own object/mobile registration,
 -- so the client meshes existed but the server had no template to spawn them).

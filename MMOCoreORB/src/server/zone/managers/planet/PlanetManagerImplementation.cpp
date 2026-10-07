@@ -737,8 +737,6 @@ void PlanetManagerImplementation::sendPlanetTravelPointListResponse(CreatureObje
 		}
 	}
 
-	info(true) << player->getFirstName() << " requested travel points for " << zone->getZoneName() << " (from " << (playerZone != nullptr ? playerZone->getZoneName() : String("?")) << ", all-interplanetary=" << reportAllAsInterplanetary << ")";
-
 	planetTravelPointList->insertToMessage(ptplr, getNearestPlanetTravelPoint(player), reportAllAsInterplanetary);
 
 	player->sendMessage(ptplr);

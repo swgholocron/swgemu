@@ -1622,6 +1622,7 @@ void SceneObjectImplementation::createChildObjects() {
 		}
 
 		if (obj == nullptr) {
+			error() << "createChildObjects: could not create child " << child->getTemplateFile() << " for " << getObjectNameStringIdName();
 			continue;
 		}
 
@@ -1693,6 +1694,7 @@ void SceneObjectImplementation::createChildObjects() {
 			}
 
 			if (!getZoneUnsafe()->transferObject(obj, -1, true)) {
+				error() << "createChildObjects: could not insert child " << child->getTemplateFile() << " into zone";
 				obj->destroyObjectFromDatabase(true);
 				continue;
 			}

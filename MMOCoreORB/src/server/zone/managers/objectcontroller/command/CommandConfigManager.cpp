@@ -69,6 +69,29 @@
 #include "templates/datatables/DataTableRow.h"
 #include "CommandList.h"
 
+
+// Server-wide Force cost reduction for every Jedi ability: costs are 75% of the scripted value.
+static constexpr float FORCE_COST_SCALE = 0.75f;
+
+static int scaleForceCost(int cost) {
+	if (cost <= 0)
+		return cost;
+
+	return Math::max(1, (int)(cost * FORCE_COST_SCALE + 0.5f));
+}
+
+static float scaleForceCostF(float cost) {
+	return cost * FORCE_COST_SCALE;
+}
+
+// Jedi combat abilities work with any lightsaber: a command restricted to one saber type accepts all of them.
+static int unrestrictJediWeaponType(int weaponType) {
+	if (weaponType & SharedWeaponObjectTemplate::JEDIWEAPON)
+		return weaponType | SharedWeaponObjectTemplate::JEDIWEAPON;
+
+	return weaponType;
+}
+
 CommandList* CommandConfigManager::slashCommands = nullptr;
 ZoneProcessServer* CommandConfigManager::server = nullptr;
 int CommandConfigManager::ERROR_CODE = 0;
@@ -645,7 +668,7 @@ void CommandConfigManager::parseVariableData(String varName, LuaObject &command,
 		else if (varName == "poolsToDamage")
 			combatCommand->setPoolsToDamage(Lua::getIntParameter(L));
 		else if (varName == "weaponType")
-			combatCommand->setWeaponType(Lua::getIntParameter(L));
+			combatCommand->setWeaponType(unrestrictJediWeaponType(Lua::getIntParameter(L)));
 		else if (varName == "healthCostMultiplier")
 			combatCommand->setHealthCostMultiplier(Lua::getFloatParameter(L));
 		else if (varName == "actionCostMultiplier")
@@ -653,9 +676,9 @@ void CommandConfigManager::parseVariableData(String varName, LuaObject &command,
 		else if (varName == "mindCostMultiplier")
 			combatCommand->setMindCostMultiplier(Lua::getFloatParameter(L));
 		else if (varName == "forceCostMultiplier")
-			combatCommand->setForceCostMultiplier(Lua::getFloatParameter(L));
+			combatCommand->setForceCostMultiplier(scaleForceCostF(Lua::getFloatParameter(L)));
 		else if (varName == "forceCost")
-			combatCommand->setForceCost(Lua::getFloatParameter(L));
+			combatCommand->setForceCost(scaleForceCostF(Lua::getFloatParameter(L)));
 		else if (varName == "frsLightForceCostModifier")
 			combatCommand->setFrsLightForceCostModifier(Lua::getFloatParameter(L));
 		else if (varName == "frsDarkForceCostModifier")
@@ -737,7 +760,7 @@ void CommandConfigManager::parseVariableData(String varName, LuaObject &command,
 	} else if (slashCommand->isJediQueueCommand()) {
 		JediQueueCommand* jediCommand = cast<JediQueueCommand*>(slashCommand);
 		if (varName == "forceCost")
-			jediCommand->setForceCost(Lua::getIntParameter(L));
+			jediCommand->setForceCost(scaleForceCost(Lua::getIntParameter(L)));
 		else if(varName == "buffClass")
 			jediCommand->setBuffClass(Lua::getIntParameter(L));
 		else if(varName == "visMod")
@@ -777,21 +800,21 @@ void CommandConfigManager::parseVariableData(String varName, LuaObject &command,
 			else if (varName == "woundAttributesToHeal")
 				healCommand->setWoundAttributesToHeal(Lua::getUnsignedIntParameter(L));
 			else if (varName == "forceCostMultiplier")
-				healCommand->setForceCostMultiplier(Lua::getFloatParameter(L));
+				healCommand->setForceCostMultiplier(scaleForceCostF(Lua::getFloatParameter(L)));
 			else if (varName == "range")
 				healCommand->setRange(Lua::getIntParameter(L));
 			else if (varName == "healBleedingCost")
-				healCommand->setHealBleedingCost(Lua::getUnsignedIntParameter(L));
+				healCommand->setHealBleedingCost(scaleForceCost(Lua::getUnsignedIntParameter(L)));
 			else if (varName == "healFireCost")
-				healCommand->setHealFireCost(Lua::getUnsignedIntParameter(L));
+				healCommand->setHealFireCost(scaleForceCost(Lua::getUnsignedIntParameter(L)));
 			else if (varName == "healDiseaseCost")
-				healCommand->setHealDiseaseCost(Lua::getUnsignedIntParameter(L));
+				healCommand->setHealDiseaseCost(scaleForceCost(Lua::getUnsignedIntParameter(L)));
 			else if (varName == "healPoisonCost")
-				healCommand->setHealPoisonCost(Lua::getUnsignedIntParameter(L));
+				healCommand->setHealPoisonCost(scaleForceCost(Lua::getUnsignedIntParameter(L)));
 			else if (varName == "healBattleFatigue")
 				healCommand->setHealBattleFatigue(Lua::getUnsignedIntParameter(L));
 			else if (varName == "healStateCost")
-				healCommand->setHealStateCost(Lua::getUnsignedIntParameter(L));
+				healCommand->setHealStateCost(scaleForceCost(Lua::getUnsignedIntParameter(L)));
 			else if (varName == "statesToHeal")
 				healCommand->setStatesToHeal(Lua::getUnsignedIntParameter(L));
 			else if (varName == "bleedHealIterations")
