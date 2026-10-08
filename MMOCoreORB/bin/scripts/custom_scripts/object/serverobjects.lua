@@ -356,3 +356,5 @@ includeFile("../custom_scripts/object/halloween/serverobjects.lua")
 
 -- Taanab / Mustafar creature object templates (ported from Flurry)
 includeFile("../custom_scripts/object/flurry_planets/serverobjects.lua")
+includeFile("../custom_scripts/object/infinity_dwb/serverobjects.lua")
+includeFile("../custom_scripts/object/flurry_loot/serverobjects.lua")

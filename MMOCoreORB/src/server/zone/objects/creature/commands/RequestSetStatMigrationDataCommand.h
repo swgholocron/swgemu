@@ -61,9 +61,11 @@ public:
 		for (int i = 0; tokenizer.hasMoreTokens() && i < 9; ++i) {
 			int value = tokenizer.getIntToken();
 
-			// Species minimum/maximum limits are not enforced: players may place their points freely.
-			// Only reject values that cannot be a real attribute (negative numbers).
-			if (value < 0) {
+			// Every stat must stay within the species minimum / maximum. Staff characters (whose stats are
+			// set by other means) are exempt so they can still use the window.
+			if (value < 0 || (!privilegedPlayer && ((uint32) value < getMinAttribute(creature, i) || (uint32) value > getMaxAttribute(creature, i)))) {
+				warning() << "Player: " << creature->getDisplayedName() << " ID: " << creature->getObjectID() << " --- stat migration value out of the allowed range.";
+				creature->sendSystemMessage("Each stat must stay within its minimum and maximum.");
 				return GENERALERROR;
 			}
 
@@ -71,18 +73,17 @@ public:
 			targetPointsTotal += value;
 		}
 
-		// Here we set the stat migration target attributes.
-		// NOTE: We aren't actually migrating the stats at this point.
-		// The pool to distribute is the species total or, for characters whose stats were set by other means
-		// (staff, boosted characters), whatever they currently have.
+		// All points must be spent: players redistribute their species total between stats. Staff may also use
+		// whatever total they currently hold.
 		uint32 currentTotal = 0;
-		const DeltaVector<int>* currentHam = creature->getBaseHAM();
 
 		for (int i = 0; i < 9; ++i) {
-			currentTotal += currentHam->get(i);
+			currentTotal += creature->getBaseHAM(i);
 		}
 
-		if (targetPointsTotal == getTotalAttribPoints(creature) || targetPointsTotal == currentTotal) {
+		bool totalOk = targetPointsTotal == getTotalAttribPoints(creature) || (privilegedPlayer && targetPointsTotal == currentTotal);
+
+		if (totalOk) {
 			for (int i = 0; i < 9; ++i) {
 				session->setAttributeToModify(i, targetAttributes[i]);
 			}

@@ -5,13 +5,13 @@ black_sun_assassin = Creature:new {
 	mobType = MOB_NPC,
 	socialGroup = "death_watch",
 	faction = "",
-	level = 107,
+	level = 230,
 	chanceHit = 1.75,
 	damageMin = 670,
 	damageMax = 1050,
 	baseXp = 10081,
-	baseHAM = 29000,
-	baseHAMmax = 36000,
+	baseHAM = 79000,
+	baseHAMmax = 96000,
 	armor = 2,
 	resists = {55,55,70,45,75,80,55,45,-1},
 	meatType = "",
@@ -33,16 +33,56 @@ black_sun_assassin = Creature:new {
 	lootGroups = {
 		{
 			groups = {
-				{group = "junk", chance = 6500000},
-				{group = "pistols", chance = 750000},
-				{group = "rifles", chance = 750000},
-				{group = "carbines", chance = 750000},
-				{group = "bounty_hunter_armor", chance = 200000},
-				{group = "jetpack_base", chance = 50000},
-				{group = "wearables_common", chance = 500000},
-				{group = "wearables_uncommon", chance = 500000}
-			}
-		}
+				{group = "pistols", chance = 3300000},
+				{group = "rifles", chance = 3400000},
+				{group = "carbines", chance = 3300000},
+			},
+			lootChance = 7500000,
+		},
+		{
+			groups = {
+				{group = "junk", chance = 3400000},
+				{group = "wearables_common", chance = 3300000},
+				{group = "wearables_uncommon", chance = 3300000},
+			},
+			lootChance = 7500000,
+		},
+		{
+			groups = {
+				{group = "jetpack_base", chance = 10000000},
+			},
+			lootChance = 1500000
+		},
+		{
+			groups = {
+				{group = "bounty_hunter_armor", chance = 10000000},
+			},
+			lootChance = 2500000
+		},
+		{
+			groups = {
+				{group = "bounty_hunter_armor", chance = 10000000},
+			},
+			lootChance = 2500000
+		},
+		{
+			groups = {
+				{group = "bounty_hunter_armor", chance = 10000000},
+			},
+			lootChance = 2500000
+		},
+		{
+			groups = {
+				{group = "armor_attachments", chance = 10000000},
+			},
+			lootChance = 1000000
+		},
+		{
+			groups = {
+				{group = "clothing_attachments", chance = 10000000},
+			},
+			lootChance = 500000
+		},
 	},
 
 	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)

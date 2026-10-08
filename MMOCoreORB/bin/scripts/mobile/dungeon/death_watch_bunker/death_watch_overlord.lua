@@ -4,15 +4,15 @@ death_watch_overlord = Creature:new {
 	socialGroup = "death_watch",
 	mobType = MOB_NPC,
 	faction = "",
-	level = 221,
+	level = 315,
 	chanceHit = 19,
 	damageMin = 1245,
 	damageMax = 2200,
 	baseXp = 20948,
 	baseHAM = 350000,
-	baseHAMmax = 350000,
+	baseHAMmax = 550000,
 	armor = 3,
-	resists = {80,80,90,80,45,45,100,70,-1},
+	resists = {80,80,90,80,45,45,80,70,25},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -42,6 +42,43 @@ death_watch_overlord = Creature:new {
 				{group = "death_watch_bunker_overlord_quest", chance  = 9500000}
 			},
 			lootChance = 5000000
+		},
+		{
+			groups = {
+				{group = "clothing_attachments", chance = 10000000},
+			},
+			lootChance = 500000
+		},
+		{
+			groups = {
+				{group = "armor_attachments", chance = 10000000},
+			},
+			lootChance = 2000000
+		},
+		{
+			groups = {
+				{group = "death_watch_bunker_lootbox", chance = 10000000},
+			},
+			lootChance = 3500000
+		},
+		{
+			groups =
+			{
+				{group = "power_crystals", chance = 10000000},
+			},
+			lootChance = 3000000,
+		},
+		{--- Musty Bunker Group
+			groups = {
+				{group = "musty_house_group", chance =  10000000},    -- 15% * 100% = 15%
+			},
+			lootChance = 1500000
+		},
+		{--- Mandalorian Armor Segment Group
+			groups = {
+				{group = "armor_segment_mandalorian", chance =  10000000},    -- 10 * 100% = 10
+			},
+			lootChance = 1000000
 		}
 	},
 

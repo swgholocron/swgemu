@@ -44,3 +44,28 @@ object_tangible_wearables_base_base_jedicloak = object_tangible_wearables_base_s
 }
 
 ObjectTemplates:addTemplate(object_tangible_wearables_base_base_jedicloak, "object/tangible/wearables/base/base_jedicloak.iff")
+
+-- Loot and vehicle-component bases (the stock shared vehicles and the ported crates / loot items derive from these)
+object_tangible_loot_base_shared_loot_base = SharedTangibleObjectTemplate:new {
+	clientTemplateFileName = "object/tangible/loot/base/shared_loot_base.iff"
+}
+
+ObjectTemplates:addClientTemplate(object_tangible_loot_base_shared_loot_base, "object/tangible/loot/base/shared_loot_base.iff")
+
+object_tangible_loot_base_loot_base = object_tangible_loot_base_shared_loot_base:new {
+
+}
+
+ObjectTemplates:addTemplate(object_tangible_loot_base_loot_base, "object/tangible/loot/base/loot_base.iff")
+
+object_tangible_component_vehicle_base_shared_base_vehicle = SharedTangibleObjectTemplate:new {
+	clientTemplateFileName = "object/tangible/component/vehicle/base/shared_base_vehicle.iff"
+}
+
+ObjectTemplates:addClientTemplate(object_tangible_component_vehicle_base_shared_base_vehicle, "object/tangible/component/vehicle/base/shared_base_vehicle.iff")
+
+object_tangible_component_vehicle_base_base_vehicle = object_tangible_component_vehicle_base_shared_base_vehicle:new {
+
+}
+
+ObjectTemplates:addTemplate(object_tangible_component_vehicle_base_base_vehicle, "object/tangible/component/vehicle/base/base_vehicle.iff")

@@ -5,15 +5,15 @@ death_watch_bloodguard = Creature:new {
 	mobType = MOB_NPC,
 	socialGroup = "death_watch",
 	faction = "",
-	level = 121,
+	level = 261,
 	chanceHit = 4,
 	damageMin = 745,
 	damageMax = 1200,
 	baseXp = 11390,
-	baseHAM = 50000,
-	baseHAMmax = 50000,
+	baseHAM = 75000,
+	baseHAMmax = 95000,
 	armor = 2,
-	resists = {55,55,70,60,30,30,100,40,-1},
+	resists = {55,55,70,60,30,30,75,40,15},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -33,13 +33,30 @@ death_watch_bloodguard = Creature:new {
 	lootGroups = {
 		{
 			groups = {
-				{group = "death_watch_bunker_commoners",   chance = 6300000},
-				{group = "death_watch_bunker_lieutenants", chance = 3500000},
-				{group = "death_watch_bunker_ingredient_protective",  chance = 100000},
-				{group = "death_watch_bunker_ingredient_binary",  chance = 100000}
+				{group = "death_watch_bunker_commoners", chance = 6000000},
+				{group = "death_watch_bunker_lieutenants", chance = 4000000}
 			},
-			lootChance = 1500000
-		}
+			lootChance = 3500000
+		},
+		{
+			groups = {
+				{group = "death_watch_bunker_commoners", chance = 6000000},
+				{group = "death_watch_bunker_lieutenants", chance = 4000000}
+			},
+			lootChance = 3500000
+		},
+		{
+			groups = {
+				{group = "clothing_attachments", chance = 10000000},
+			},
+			lootChance = 500000
+		},
+		{
+			groups = {
+				{group = "armor_attachments", chance = 10000000},
+			},
+			lootChance = 1000000
+		},
 	},
 
 	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)

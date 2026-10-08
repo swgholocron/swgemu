@@ -1,4 +1,7 @@
 includeFile("groups/armor_attachments.lua")
+includeFile("groups/stap_speeder.lua")
+includeFile("groups/musty_house_group.lua")
+includeFile("groups/armor_segment_mandalorian.lua")
 includeFile("groups/clothing_attachments.lua")
 includeFile("groups/coa_encoded_disk_fragments.lua")
 includeFile("groups/coa2_decoder_components.lua")

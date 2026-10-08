@@ -651,6 +651,8 @@ void ServerCore::signalShutdown(ShutdownFlags flags) {
 }
 
 void ServerCore::initialize() {
+	Time loadStartTime;
+
 	StatisticsManager::instance()->markCoreStart(Thread::getProcessID());
 
 	info(true) << "Server start, pid: "
@@ -823,6 +825,23 @@ void ServerCore::initialize() {
 		StatisticsManager::instance()->markCoreInitialized();
 
 		info("initialized", true);
+
+		{
+			uint64 loadMs = loadStartTime.miliDifference();
+			uint64 totalSeconds = loadMs / 1000;
+			uint64 minutes = totalSeconds / 60;
+			uint64 seconds = totalSeconds % 60;
+
+			StringBuffer onlineMsg;
+			onlineMsg << "Server is now online. The load time took ";
+
+			if (minutes > 0)
+				onlineMsg << minutes << (minutes == 1 ? " minute " : " minutes ");
+
+			onlineMsg << seconds << (seconds == 1 ? " second" : " seconds") << " (" << (loadMs / 1000.0f) << " s).";
+
+			info(onlineMsg.toString(), true);
+		}
 
 		System::flushStreams();
 

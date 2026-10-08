@@ -28,7 +28,15 @@ public:
 		insertShort(0x09);
 		insertInt(0xEFAC38C4);  // CRC
 
+		// The pool to spend is the species total (staff holding more keep their current total).
 		int totalLimit = PlayerCreationManager::instance()->getTotalAttributeLimit(creo->getSpeciesName());
+		int currentTotal = 0;
+
+		for (int i = 0; i < 9; ++i)
+			currentTotal += creo->getBaseHAM(i);
+
+		if (currentTotal > totalLimit)
+			totalLimit = currentTotal;
 
 		for (int i = 0; i < 9; ++i) {
 			int val = stats->getAttribtueToModify(i);

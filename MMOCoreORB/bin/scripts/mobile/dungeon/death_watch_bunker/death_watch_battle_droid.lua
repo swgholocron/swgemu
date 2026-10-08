@@ -3,15 +3,15 @@ death_watch_battle_droid = Creature:new {
 	socialGroup = "death_watch",
 	faction = "",
 	mobType = MOB_ANDROID,
-	level = 134,
+	level = 234,
 	chanceHit = 5.5,
 	damageMin = 795,
 	damageMax = 1300,
 	baseXp = 12612,
-	baseHAM = 56000,
-	baseHAMmax = 68000,
+	baseHAM = 86000,
+	baseHAMmax = 98000,
 	armor = 2,
-	resists = {75,75,100,60,100,25,40,85,-1},
+	resists = {65,65,80,50,80,25,40,65,15},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -36,7 +36,19 @@ death_watch_battle_droid = Creature:new {
 			groups = {
 				{group = "death_watch_bunker_commoners", chance = 10000000}
 			},
-			lootChance = 500000
+			lootChance = 2500000
+		},
+		{
+			groups = {
+				{group = "death_watch_bunker_commoners", chance = 10000000}
+			},
+			lootChance = 2500000
+		},
+		{
+			groups = {
+				{group = "death_watch_bunker_commoners", chance = 10000000}
+			},
+			lootChance = 2500000
 		}
 	},
 

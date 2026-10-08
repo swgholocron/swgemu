@@ -39,18 +39,18 @@ DeathWatchBunkerScreenPlay = ScreenPlay:new {
 
 	targetItems = {
 		--Armorsmith Crafting Terminal
-		{ "object/tangible/wearables/armor/mandalorian/armor_mandalorian_chest_plate.iff",
-			"object/tangible/wearables/armor/mandalorian/armor_mandalorian_shoes.iff",
-			"object/tangible/wearables/armor/mandalorian/armor_mandalorian_bicep_l.iff",
-			"object/tangible/wearables/armor/mandalorian/armor_mandalorian_bicep_r.iff" },
+		{ "object/tangible/loot/loot_schematic/death_watch_mandalorian_chest_plate_schematic.iff",
+			"object/tangible/loot/loot_schematic/death_watch_mandalorian_shoes_schematic.iff",
+			"object/tangible/loot/loot_schematic/death_watch_mandalorian_bicep_l_schematic.iff",
+			"object/tangible/loot/loot_schematic/death_watch_mandalorian_bicep_r_schematic.iff" },
 		--Droid Engineer Crafting Terminal
-		{ "object/tangible/wearables/armor/mandalorian/armor_mandalorian_helmet.iff",
-			"object/tangible/wearables/armor/mandalorian/armor_mandalorian_bracer_l.iff",
-			"object/tangible/wearables/armor/mandalorian/armor_mandalorian_bracer_r.iff" },
+		{ "object/tangible/loot/loot_schematic/death_watch_mandalorian_helmet_schematic.iff",
+			"object/tangible/loot/loot_schematic/death_watch_mandalorian_bracer_l_schematic.iff",
+			"object/tangible/loot/loot_schematic/death_watch_mandalorian_bracer_r_schematic.iff" },
 		--Tailor Crafting Terminal
-		{ "object/tangible/wearables/armor/mandalorian/armor_mandalorian_leggings.iff",
-			"object/tangible/wearables/armor/mandalorian/armor_mandalorian_gloves.iff",
-			"object/tangible/wearables/armor/mandalorian/armor_mandalorian_belt.iff" },
+		{ "object/tangible/loot/loot_schematic/death_watch_mandalorian_leggings_schematic.iff",
+			"object/tangible/loot/loot_schematic/death_watch_mandalorian_gloves_schematic.iff",
+			"object/tangible/loot/loot_schematic/death_watch_mandalorian_belt_schematic.iff" },
 		-- Jetpack Crafting Terminal
 		{ "object/tangible/deed/vehicle_deed/jetpack_deed.iff" },
 	},
@@ -632,6 +632,9 @@ function DeathWatchBunkerScreenPlay:respawnHaldo(creatureObject)
 end
 
 function DeathWatchBunkerScreenPlay:boxLooted(pSceneObject, pCreature)
+	if pSceneObject == nil or pCreature == nil then
+		return 0
+	end
 
 	local objectID = SceneObject(pSceneObject):getObjectID()
 
@@ -686,7 +689,11 @@ function DeathWatchBunkerScreenPlay:despawnMobile(pMobile)
 		return
 	end
 
-	SceneObject(pMobile):destroyObjectFromWorld()
+	if SceneObject(pMobile):isAiAgent() then
+		AiAgent(pMobile):doDespawn()
+	else
+		SceneObject(pMobile):destroyObjectFromWorld()
+	end
 end
 
 function DeathWatchBunkerScreenPlay:refillContainer(pSceneObject)
@@ -1598,11 +1605,10 @@ function DeathWatchBunkerScreenPlay:despawnCellMobiles(pCell)
 		return
 	end
 
-	local cellSize = SceneObject(pCell):getContainerObjectsSize()
-	for i = 0, cellSize - 1, 1 do
+	for i = SceneObject(pCell):getContainerObjectsSize() - 1, 0, -1 do
 		local pObject = SceneObject(pCell):getContainerObject(i)
 		if pObject ~= nil then
-			if SceneObject(pObject):isCreatureObject() then
+			if SceneObject(pObject):isAiAgent() and not SceneObject(pObject):isOwned() then
 				local template = SceneObject(pObject):getTemplateObjectPath()
 
 				if string.find(template, "death_watch") ~= nil or string.find(template, "battle_droid") ~= nil then
