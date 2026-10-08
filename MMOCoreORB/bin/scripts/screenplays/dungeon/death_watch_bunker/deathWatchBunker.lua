@@ -223,6 +223,13 @@ function DeathWatchBunkerScreenPlay:spawnMobiles()
 			end
 		end
 	end
+
+	-- Boba Fett outside the bunker entrance (ported from Flurry)
+	local pBoba = spawnMobile("endor", "boba_fett", -1, -4675.93, 12.6924, 4335.44, 0.724897, 0)
+
+	if (pBoba ~= nil) then
+		writeData("dwb:bobaFett", SceneObject(pBoba):getObjectID())
+	end
 end
 
 function DeathWatchBunkerScreenPlay:spawnObjects()

@@ -46,6 +46,23 @@ function VillageJediManager:checkForceStatusCommand(pPlayer)
 	Glowing:checkForceStatusCommand(pPlayer)
 end
 
+-- Handling of the resetOldMan command. Only valid while the player is on the village intro (old man and sith shadow
+-- visits) or the village outro (old man and Mellichae), not before the intro or after the outro is completed.
+-- @param pPlayer pointer to the creature object of the player who performed the command
+function VillageJediManager:resetOldManCommand(pPlayer)
+	if (pPlayer == nil) then
+		return
+	end
+
+	if (FsIntro:isOnIntro(pPlayer)) then
+		FsIntro:resetOldMan(pPlayer)
+	elseif (FsOutro:isOnOutro(pPlayer)) then
+		FsOutro:resetOldMan(pPlayer)
+	else
+		CreatureObject(pPlayer):sendSystemMessage("This command is not valid at this time")
+	end
+end
+
 -- Handling of the onPlayerLoggedIn event. The progression of the player will be checked and observers will be registered.
 -- @param pPlayer pointer to the creature object of the player who logged in.
 function VillageJediManager:onPlayerLoggedIn(pPlayer)

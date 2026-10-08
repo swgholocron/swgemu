@@ -287,6 +287,45 @@ function FsIntro:removeSecondDatapad(pPlayer)
 	end
 end
 
+-- Player requested /resetoldman. Stops whatever part of the intro is running, takes back the crystal and datapads
+-- and starts the old man visits again from the beginning.
+function FsIntro:resetOldMan(pPlayer)
+	if (pPlayer == nil) then
+		return
+	end
+
+	VillageJediManagerCommon.endEncounterQuietly(OldManIntroEncounter, pPlayer)
+	VillageJediManagerCommon.endEncounterQuietly(SithShadowEncounter, pPlayer)
+
+	if (SithShadowIntroTheater:hasTaskStarted(pPlayer)) then
+		SithShadowIntroTheater:finish(pPlayer)
+	end
+
+	if (GoToDathomir:hasTaskStarted(pPlayer)) then
+		GoToDathomir:finish(pPlayer)
+	end
+
+	-- Also resets the old man quests
+	OldManIntroEncounter:removeForceCrystalFromPlayer(pPlayer)
+
+	self:removeFirstDatapad(pPlayer)
+	self:removeSecondDatapad(pPlayer)
+
+	QuestManager.resetQuest(pPlayer, QuestManager.quests.TWO_MILITARY)
+	QuestManager.resetQuest(pPlayer, QuestManager.quests.LOOT_DATAPAD_1)
+	QuestManager.resetQuest(pPlayer, QuestManager.quests.GOT_DATAPAD)
+	QuestManager.resetQuest(pPlayer, QuestManager.quests.FS_THEATER_CAMP)
+	QuestManager.resetQuest(pPlayer, QuestManager.quests.LOOT_DATAPAD_2)
+	QuestManager.resetQuest(pPlayer, QuestManager.quests.GOT_DATAPAD_2)
+	QuestManager.resetQuest(pPlayer, QuestManager.quests.FS_VILLAGE_ELDER)
+
+	writeScreenPlayData(pPlayer, "VillageJediProgression", "FsIntroOldManVisits", 0)
+
+	self:startStepDelay(pPlayer, self.OLDMANWAIT)
+
+	CreatureObject(pPlayer):sendSystemMessage("The old man has been reset. He will visit you again soon.")
+end
+
 function FsIntro:startOldMan(pPlayer)
 	if (pPlayer == nil) then
 		return

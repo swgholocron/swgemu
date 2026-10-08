@@ -17,6 +17,7 @@
 #include "server/zone/objects/player/PlayerObject.h"
 #include "server/zone/managers/frs/FrsManager.h"
 #include "server/zone/objects/player/events/JediBuffEffectTask.h"
+#include "server/zone/objects/player/events/JediBuffDrainTask.h"
 
 class JediQueueCommand : public QueueCommand {
 
@@ -26,6 +27,7 @@ protected:
 	uint32 animationCRC;
 	String clientEffect;
 	bool repeatClientEffect;
+	int forceDrainPerSecond; // Force taken every second while moving with the buff active (0 = none)
 	float speedMod;
 	int visMod;
 	int buffClass;
@@ -53,6 +55,7 @@ public:
 		animationCRC = 0;
 		clientEffect = "";
 		repeatClientEffect = false;
+		forceDrainPerSecond = 0;
 		buffClass = BASE_BUFF;
 		speedMod = 0;
 		visMod = 10;
@@ -83,6 +86,10 @@ public:
 			// The replayed client effect (if any) stops with the buff.
 			if (repeatClientEffect) {
 				creature->removePendingTask(JediBuffEffectTask::getEffectTaskName());
+			}
+
+			if (forceDrainPerSecond > 0) {
+				creature->removePendingTask(JediBuffDrainTask::getDrainTaskName());
 			}
 
 			return SUCCESS;
@@ -123,6 +130,14 @@ public:
 				Reference<JediBuffEffectTask*> effectTask = new JediBuffEffectTask(creature, buffCRC, clientEffect);
 				creature->addPendingTask(JediBuffEffectTask::getEffectTaskName(), effectTask, JediBuffEffectTask::REPLAY_MS);
 			}
+		}
+
+		// Ongoing Force drain while the buff is active and the player is moving.
+		if (forceDrainPerSecond > 0) {
+			creature->removePendingTask(JediBuffDrainTask::getDrainTaskName());
+
+			Reference<JediBuffDrainTask*> drainTask = new JediBuffDrainTask(creature, buffCRC, forceDrainPerSecond);
+			creature->addPendingTask(JediBuffDrainTask::getDrainTaskName(), drainTask, JediBuffDrainTask::TICK_MS);
 		}
 
 		// Return.

@@ -183,6 +183,7 @@
 #include "server/zone/objects/creature/commands/DragFromShadowsCommand.h"
 #include "server/zone/objects/creature/commands/ForceCloakCommand.h"
 #include "server/zone/objects/creature/commands/RecalcForceCommand.h"
+#include "server/zone/objects/creature/commands/ResetOldManCommand.h"
 
 
 using namespace server::zone::managers::objectcontroller::command;
@@ -331,4 +332,5 @@ void CommandConfigManager::registerCommands4() {
 	commandFactory.registerCommand<DragFromShadowsCommand>(String("dragfromshadows").toLowerCase());
 	commandFactory.registerCommand<ForceCloakCommand>(String("forceCloak").toLowerCase());
 	commandFactory.registerCommand<RecalcForceCommand>(String("recalcForce").toLowerCase());
+	commandFactory.registerCommand<ResetOldManCommand>(String("resetOldMan").toLowerCase());
 }

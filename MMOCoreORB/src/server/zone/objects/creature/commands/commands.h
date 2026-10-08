@@ -843,6 +843,7 @@
 #include "DragFromShadowsCommand.h"
 #include "ForceCloakCommand.h"
 #include "RecalcForceCommand.h"
+#include "ResetOldManCommand.h"
 
 #endif /* COMMANDSNEW_H_ */
 

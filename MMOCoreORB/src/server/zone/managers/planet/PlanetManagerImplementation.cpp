@@ -181,6 +181,30 @@ void PlanetManagerImplementation::loadLuaConfig() {
 
 		LuaObject planetTravelPointsTable = luaObject.getObjectField("planetTravelPoints");
 		planetTravelPointList->readLuaObject(&planetTravelPointsTable);
+
+		// Travel points flagged autoHeight take their height from the terrain instead of a hand-typed z
+		if (planetTravelPointsTable.isValidTable()) {
+			for (int i = 1; i <= planetTravelPointsTable.getTableSize(); ++i) {
+				lua_State* L = planetTravelPointsTable.getLuaState();
+				lua_rawgeti(L, -1, i);
+
+				LuaObject travelPointEntry(L);
+
+				if (travelPointEntry.getByteField("autoHeight")) {
+					Reference<PlanetTravelPoint*> ptp = planetTravelPointList->get(travelPointEntry.getStringField("name"));
+
+					if (ptp != nullptr) {
+						float terrainZ = zone->getHeight(travelPointEntry.getFloatField("x"), travelPointEntry.getFloatField("y"));
+						ptp->setTerrainHeight(terrainZ);
+
+						info(true) << "Travel point '" << ptp->getPointName() << "' placed at terrain height " << terrainZ;
+					}
+				}
+
+				travelPointEntry.pop();
+			}
+		}
+
 		planetTravelPointsTable.pop();
 
 		try {
@@ -290,6 +314,17 @@ void PlanetManagerImplementation::loadPlanetObjects(LuaObject* luaObject) {
 			float x = planetObject.getFloatField("x");
 			float y = planetObject.getFloatField("y");
 			float z = planetObject.getFloatField("z");
+
+			// Objects flagged autoHeight are dropped onto the terrain (and the slope under them is logged so a bad spot is easy to spot)
+			if (planetObject.getByteField("autoHeight")) {
+				z = zone->getHeight(x, y);
+
+				TerrainManager* terrain = getTerrainManager();
+				float slope = (terrain != nullptr) ? terrain->getHighestHeightDifference(x - 12.f, y - 12.f, x + 12.f, y + 12.f, 3) : 0.f;
+
+				info(true) << "Planet object " << templateFile << " placed at (" << x << ", " << y << ") terrain height " << z << ", height difference across a 24 m footprint: " << slope;
+			}
+
 			float ox = planetObject.getFloatField("ox");
 			float oy = planetObject.getFloatField("oy");
 			float oz = planetObject.getFloatField("oz");

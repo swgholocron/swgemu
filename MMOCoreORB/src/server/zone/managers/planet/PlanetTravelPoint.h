@@ -89,6 +89,12 @@ public:
 		landingRange = luaObject->getFloatField("landingRange");
 	}
 
+	// Used for points flagged autoHeight in planet_manager.lua: snap the arrival/departure height to the terrain
+	void setTerrainHeight(float terrainZ) {
+		arrivalVector.set(arrivalVector.getX(), terrainZ, arrivalVector.getY());
+		departureVector = arrivalVector;
+	}
+
 	// Called by the shuttles and transports to set the shuttle object for the nearest travel point
 	void setShuttle(CreatureObject* shuttle) {
 		shuttleObject = shuttle;

@@ -2650,6 +2650,7 @@ int PlayerManagerImplementation::awardExperience(CreatureObject* player, const S
 		buffMultiplier += player->getSkillModFromBuffs("xp_increase") / 100.f;
 
 	int xp = 0;
+	int requestedXp = 0;
 
 	trx.addState("applyModifiers", applyModifiers);
 
@@ -2659,9 +2660,25 @@ int PlayerManagerImplementation::awardExperience(CreatureObject* player, const S
 		trx.addState("localMultiplier", localMultiplier);
 		trx.addState("globalExpMultiplier", globalExpMultiplier);
 
-		xp = playerObject->addExperience(trx, xpType, (int) (amount * speciesModifier * buffMultiplier * localMultiplier * globalExpMultiplier));
+		requestedXp = (int) (amount * speciesModifier * buffMultiplier * localMultiplier * globalExpMultiplier);
 	} else {
-		xp = playerObject->addExperience(trx, xpType, (int)amount);
+		requestedXp = (int) amount;
+	}
+
+	xp = playerObject->addExperience(trx, xpType, requestedXp);
+
+	// Force Sensitive characters convert experience that overflowed the cap of another type into Jedi experience.
+	if (requestedXp > 0 && xpType != "jedi_general" && xpType != "force_rank_xp" && !xpType.beginsWith("prestige_")
+			&& (playerObject->isJedi() || player->hasSkill("force_title_jedi_novice"))) {
+		int overflowXp = requestedXp - Math::max(xp, 0);
+
+		if (overflowXp > 0) {
+			awardExperience(player, "jedi_general", overflowXp, false, 1.f, false);
+
+			StringBuffer overflowMsg;
+			overflowMsg << overflowXp << " experience over your " << xpType << " limit was converted to Jedi experience.";
+			player->sendSystemMessage(overflowMsg.toString());
+		}
 	}
 
 	player->notifyObservers(ObserverEventType::XPAWARDED, player, xp);

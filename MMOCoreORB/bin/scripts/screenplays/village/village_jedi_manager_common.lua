@@ -259,4 +259,22 @@ function VillageJediManagerCommon.getLearnedForceSensitiveBranches(pPlayer)
 	return branchesLearned
 end
 
+-- Ends a running encounter for the player without running its taskFinish, which would schedule the next step.
+-- Used by the /resetoldman command, which schedules the next visit itself.
+-- @param encounter the encounter task (e.g. OldManIntroEncounter).
+-- @param pPlayer pointer to the creature object of the player.
+function VillageJediManagerCommon.endEncounterQuietly(encounter, pPlayer)
+	if (pPlayer == nil or not encounter:hasTaskStarted(pPlayer)) then
+		return
+	end
+
+	local SpawnMobiles = require("utils.spawn_mobiles")
+
+	SpawnMobiles.despawnMobiles(pPlayer, encounter.taskName, false)
+	encounter:setTaskFinished(pPlayer)
+
+	dropObserver(LOGGEDIN, encounter.taskName, "onLoggedIn", pPlayer)
+	dropObserver(LOGGEDOUT, encounter.taskName, "onLoggedOut", pPlayer)
+end
+
 return VillageJediManagerCommon

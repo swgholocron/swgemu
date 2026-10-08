@@ -1811,6 +1811,11 @@ void PlayerObjectImplementation::notifyOnline() {
 	// Checks for DoTs that should have expired during server downtime and removes them
 	playerCreature->getDamageOverTimeList()->validateDots(playerCreature);
 
+	// Force Run drains Force through a task that does not survive a logout or restart, so it ends on login.
+	playerCreature->removeBuff(BuffCRC::JEDI_FORCE_RUN_1);
+	playerCreature->removeBuff(BuffCRC::JEDI_FORCE_RUN_2);
+	playerCreature->removeBuff(BuffCRC::JEDI_FORCE_RUN_3);
+
 	if (getForcePowerMax() > 0 && getForcePower() < getForcePowerMax())
 		activateForcePowerRegen();
 

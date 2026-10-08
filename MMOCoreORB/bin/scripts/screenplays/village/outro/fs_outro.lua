@@ -87,6 +87,27 @@ function FsOutro:startOldMan(pPlayer)
 	createEvent(stepDelay * 1000, "FsOutro", "doOldManSpawn", pPlayer, "")
 end
 
+-- Player requested /resetoldman. Stops whatever part of the outro is running and starts the old man visits again.
+function FsOutro:resetOldMan(pPlayer)
+	if (pPlayer == nil) then
+		return
+	end
+
+	VillageJediManagerCommon.endEncounterQuietly(OldManOutroEncounter, pPlayer)
+
+	if (MellichaeOutroTheater:hasTaskStarted(pPlayer)) then
+		MellichaeOutroTheater:finish(pPlayer)
+	end
+
+	QuestManager.resetQuest(pPlayer, QuestManager.quests.OLD_MAN_FINAL)
+	QuestManager.resetQuest(pPlayer, QuestManager.quests.FS_THEATER_FINAL)
+
+	self:setCurrentStep(pPlayer, self.OLDMANWAIT)
+	self:startOldMan(pPlayer)
+
+	CreatureObject(pPlayer):sendSystemMessage("The old man has been reset. He will visit you again soon.")
+end
+
 function FsOutro:onLoggedOut(pPlayer)
 	if (not self:isOnOutro(pPlayer)) then
 		return

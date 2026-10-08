@@ -232,7 +232,10 @@ endor = {
 
 	planetTravelPoints = {
 		{name = "Smuggler Outpost", x = -950.59241, z = 73, y = 1553.4125, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
-		{name = "Research Outpost", x = 3201.6599, z = 24, y = -3499.76, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3}
+		{name = "Research Outpost", x = 3201.6599, z = 24, y = -3499.76, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
+		-- Shuttleport west of the Death Watch Bunker entrance, inside the bunker's no-spawn circle (see endor_regions.lua).
+		-- Must stay at the same x/y as its building in planetObjects below; autoHeight snaps z to the terrain.
+		{name = "Death Watch Bunker Shuttleport", x = -4750, z = 0, y = 4300, autoHeight = 1, interplanetaryTravelAllowed = 0, incomingTravelAllowed = 1, landingRange = 3}
 	},
 
 	jtlLaunchPoint = {"space_endor", -5300, -1500, 5250},
@@ -262,6 +265,8 @@ endor = {
 	planetObjects = {
 		{templateFile = "object/tangible/terminal/terminal_character_builder.iff", ox = 0, oy = 0.932952, oz = 0, ow = -0.360002, x = -963.537, z = 73, y = 1556.86, parentid = 0},
 		{templateFile = "object/tangible/terminal/terminal_character_builder.iff", ox = 0, oy = 0.723459, oz = 0, ow = -0.690367, x = 3240.5, z = 24, y = -3484.79, parentid = 0},
+		-- Death Watch Bunker Shuttleport building (ticket terminal, ticket collector and shuttle are its child objects)
+		{templateFile = "object/building/player/city/shuttleport_naboo.iff", ox = 0, oy = 0.965926, oz = 0, ow = 0.258819, x = -4750, z = 0, y = 4300, autoHeight = 1, parentid = 0},
 	}
 }
 
@@ -656,7 +661,11 @@ yavin4 = {
 	planetTravelPoints = {
 		{name = "Yavin IV Labor Outpost", x = -6921.6733, z = 73, y = -5726.5161, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
 		{name = "Yavin IV Mining Outpost", x = -267.23914, z = 35, y = 4896.3013, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
-		{name = "Yavin IV Imperial Outpost", x = 4054.1, z = 37, y = -6216.9, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 0, landingRange = 3}
+		{name = "Yavin IV Imperial Outpost", x = 4054.1, z = 37, y = -6216.9, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 0, landingRange = 3},
+		-- Enclave shuttleports, each ~70 m from its enclave and clear of the enclave's static pillars and rocks. Both sit inside the
+		-- 577 m no-spawn circles (yavin4_regions.lua). Must stay at the same x/y as the buildings in planetObjects below.
+		{name = "Light Jedi Enclave Shuttleport", x = -5530, z = 0, y = 4845, autoHeight = 1, interplanetaryTravelAllowed = 0, incomingTravelAllowed = 1, landingRange = 3},
+		{name = "Dark Jedi Enclave Shuttleport", x = 5010, z = 0, y = 345, autoHeight = 1, interplanetaryTravelAllowed = 0, incomingTravelAllowed = 1, landingRange = 3}
 	},
 
 	jtlLaunchPoint = {"space_yavin4", -5600, -5200, -5200},
@@ -681,7 +690,10 @@ yavin4 = {
 	planetObjects = {
 		{templateFile = "object/tangible/terminal/terminal_character_builder.iff", ox = 0, oy = -0.705623, oz = 0, ow = 0.708587, x = -6917.18, z = 73, y = -5732.25, parentid = 0},
 		{templateFile = "object/tangible/terminal/terminal_character_builder.iff", ox = 0, oy = 0.723339, oz = 0, ow = -0.690493, x = 4057.69, z = 37, y = -6217.54, parentid = 0},
-		{templateFile = "object/tangible/terminal/terminal_character_builder.iff", ox = 0, oy = 0.00721678, oz = 0, ow = 0.999974, x = -293.367, z = 35, y = 4854.52, parentid = 0}
+		{templateFile = "object/tangible/terminal/terminal_character_builder.iff", ox = 0, oy = 0.00721678, oz = 0, ow = 0.999974, x = -293.367, z = 35, y = 4854.52, parentid = 0},
+		-- Light and Dark Jedi Enclave shuttleport buildings
+		{templateFile = "object/building/player/city/shuttleport_naboo.iff", ox = 0, oy = 0.965926, oz = 0, ow = 0.258819, x = -5530, z = 0, y = 4845, autoHeight = 1, parentid = 0},
+		{templateFile = "object/building/player/city/shuttleport_naboo.iff", ox = 0, oy = 0.965926, oz = 0, ow = 0.258819, x = 5010, z = 0, y = 345, autoHeight = 1, parentid = 0}
 	}
 }
 

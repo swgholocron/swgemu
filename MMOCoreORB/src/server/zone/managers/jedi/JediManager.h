@@ -99,6 +99,13 @@ public:
 	void checkForceStatusCommand(CreatureObject* creature);
 
 	/**
+	 * Reset old man command.
+	 * Calls the resetOldManCommand in the lua manager.
+	 * @param creature the creature that performed the command.
+	 */
+	void resetOldManCommand(CreatureObject* creature);
+
+	/**
 	 * Get the name of the currently active lua jedi manager.
 	 * @return the name of the currently active lua jedi manager.
 	 */

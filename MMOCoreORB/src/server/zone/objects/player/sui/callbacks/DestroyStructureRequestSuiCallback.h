@@ -30,15 +30,8 @@ public:
 			return;
 		}
 
-		StructureObject* structureObject = session->getStructureObject();
-
-		// Harvesters and Generators skip the destroy-code confirmation step.
-		if (structureObject != nullptr && (structureObject->isHarvesterObject() || structureObject->isGeneratorObject())) {
-			session->destroyStructure();
-			return;
-		}
-
-		session->sendDestroyCode();
+		// The yes/no prompt is the only confirmation: no destroy code is required for any structure.
+		session->destroyStructure();
 	}
 };
 
