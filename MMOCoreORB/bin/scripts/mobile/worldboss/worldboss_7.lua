@@ -123,6 +123,12 @@ worldboss_7 = Creature:new {
 				{group = "clothing_attachments", chance = 10000000},
 			},
 			lootChance = 10000000
+		},
+		{
+			groups = {
+				{group = "g_jedi_robes", chance = 10000000}
+			},
+			lootChance = 1000000
 		}
         },
 	weapons = {"blood_razer_weapons"},

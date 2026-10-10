@@ -27,7 +27,9 @@ protected:
 	uint32 animationCRC;
 	String clientEffect;
 	bool repeatClientEffect;
-	int forceDrainPerSecond; // Force taken every second while moving with the buff active (0 = none)
+	float forceDrainPercent; // % of max Force taken every second while moving with the buff active (0 = none)
+	float forceCostPercent; // activation cost as a % of max Force (0 = use the flat forceCost)
+	int forceCostMinimum; // lowest activation cost when forceCostPercent is used
 	float speedMod;
 	int visMod;
 	int buffClass;
@@ -55,7 +57,9 @@ public:
 		animationCRC = 0;
 		clientEffect = "";
 		repeatClientEffect = false;
-		forceDrainPerSecond = 0;
+		forceDrainPercent = 0;
+		forceCostPercent = 0;
+		forceCostMinimum = 0;
 		buffClass = BASE_BUFF;
 		speedMod = 0;
 		visMod = 10;
@@ -88,7 +92,7 @@ public:
 				creature->removePendingTask(JediBuffEffectTask::getEffectTaskName());
 			}
 
-			if (forceDrainPerSecond > 0) {
+			if (forceDrainPercent > 0) {
 				creature->removePendingTask(JediBuffDrainTask::getDrainTaskName());
 			}
 
@@ -133,10 +137,10 @@ public:
 		}
 
 		// Ongoing Force drain while the buff is active and the player is moving.
-		if (forceDrainPerSecond > 0) {
+		if (forceDrainPercent > 0) {
 			creature->removePendingTask(JediBuffDrainTask::getDrainTaskName());
 
-			Reference<JediBuffDrainTask*> drainTask = new JediBuffDrainTask(creature, buffCRC, forceDrainPerSecond);
+			Reference<JediBuffDrainTask*> drainTask = new JediBuffDrainTask(creature, buffCRC, forceDrainPercent);
 			creature->addPendingTask(JediBuffDrainTask::getDrainTaskName(), drainTask, JediBuffDrainTask::TICK_MS);
 		}
 
@@ -257,11 +261,26 @@ public:
 	}
 
 
-	int getFrsModifiedForceCost(CreatureObject* creature) const {
+	// Flat forceCost, or a percentage of the player's max Force (with a minimum) when forceCostPercent is set.
+	int getBaseForceCost(CreatureObject* creature) const {
+		if (forceCostPercent <= 0)
+			return forceCost;
+
 		ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
 
 		if (ghost == nullptr)
 			return forceCost;
+
+		int cost = (int)((ghost->getForcePowerMax() * forceCostPercent / 100.f) + .5f);
+
+		return cost < forceCostMinimum ? forceCostMinimum : cost;
+	}
+
+	int getFrsModifiedForceCost(CreatureObject* creature) const {
+		ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
+
+		if (ghost == nullptr)
+			return getBaseForceCost(creature);
 
 		Locker locker(creature);
 
@@ -282,9 +301,9 @@ public:
 		}
 
 		if (manipulationMod == 0 || frsModifier == 0)
-			return forceCost;
+			return getBaseForceCost(creature);
 
-		return forceCost + (int)((manipulationMod * frsModifier) + .5);
+		return getBaseForceCost(creature) + (int)((manipulationMod * frsModifier) + .5);
 	}
 
 	float getFrsModifiedExtraForceCost(CreatureObject* creature, float val) const {

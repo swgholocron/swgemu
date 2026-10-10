@@ -5,6 +5,8 @@
 #ifndef FINDMYTRAINERCOMMAND_H_
 #define FINDMYTRAINERCOMMAND_H_
 
+#include "server/zone/objects/player/GreyJedi.h"
+
 class FindMyTrainerCommand : public QueueCommand {
 public:
 	FindMyTrainerCommand(const String& name, ZoneProcessServer* server) : QueueCommand(name, server) {
@@ -25,12 +27,32 @@ public:
 		if (ghost == nullptr)
 			return GENERALERROR;
 
-		if (ghost->getJediState() < 2 || !creature->hasSkill("force_title_jedi_rank_02"))
-			return GENERALERROR;
-
 		auto zoneServer = server->getZoneServer();
 
 		if (zoneServer == nullptr)
+			return GENERALERROR;
+
+		// Grey Jedi are trained by the Grey Jedi trainers in the Dathomir village.
+		if (GreyJedi::hasGreyJediSkill(creature)) {
+			ManagedReference<WaypointObject*> greyWaypoint = (zoneServer->createObject(0xc456e788, 1)).castTo<WaypointObject*>();
+
+			if (greyWaypoint == nullptr)
+				return GENERALERROR;
+
+			Locker greyLocker(greyWaypoint);
+
+			greyWaypoint->setPlanetCRC(String("dathomir").hashCode());
+			greyWaypoint->setPosition(5296.f, 0, -4125.f);
+			greyWaypoint->setCustomObjectName("Grey Jedi Trainers", false);
+
+			ghost->addWaypoint(greyWaypoint, true, true);
+
+			creature->sendSystemMessage("@jedi_spam:waypoint_created_to_trainer");
+
+			return SUCCESS;
+		}
+
+		if (ghost->getJediState() < 2 || !creature->hasSkill("force_title_jedi_rank_02"))
 			return GENERALERROR;
 
 		String planet = ghost->getTrainerZoneName();

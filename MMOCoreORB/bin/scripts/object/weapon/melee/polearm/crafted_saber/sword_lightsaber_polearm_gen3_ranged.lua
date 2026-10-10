@@ -116,7 +116,7 @@ object_weapon_melee_polearm_crafted_saber_sword_lightsaber_polearm_gen3_ranged =
 	minDamage = 195,
 	maxDamage = 285,
 
-	attackSpeed = 5.1,
+	attackSpeed = 4.5,
 
 	woundsRatio = 25,
 

@@ -109,6 +109,12 @@ custom_exar_kun_boss = Creature:new {
 		},
 			lootChance = 1000000
 		},
+		{
+			groups = {
+				{group = "g_jedi_robes", chance = 10000000}
+			},
+			lootChance = 1000000
+		}
 },
 	weapons = {"dark_jedi_weapons_gen4"},
 	conversationTemplate = "",

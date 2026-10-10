@@ -245,6 +245,24 @@ void ZoneServerImplementation::startGroundZones() {
 
 	int totalZones = enabledZones.size();
 
+	// Create the space zone task queues now, before any task is scheduled. Creating a queue while the server is
+	// running races with TaskManagerImpl::executeTask() looking queues up by name, which lost scheduled tasks with
+	// "custom queue tatooine not found" when the space zones were created.
+	auto enabledSpaceQueues = configManager->getEnabledSpaceZones();
+
+	for (int i = 0; i < enabledSpaceQueues.size(); ++i) {
+		String spaceName = enabledSpaceQueues.get(i);
+
+		String capName = spaceName.replaceFirst("_", "");
+		capName[0] = toupper(capName[0]);
+		capName[5] = toupper(capName[5]);
+
+		int spaceThreads = configManager->getInt("Core3.SpaceZone.ThreadsDefault", 1);
+		spaceThreads = configManager->getInt("Core3.SpaceZone.Threads" + capName, spaceThreads);
+
+		Core::getTaskManager()->initializeCustomQueue(spaceName, spaceThreads, true);
+	}
+
 	info(true) << "Total Enabled Ground Zones: " << totalZones;
 
 	for (int i = 0; i < totalZones; ++i) {

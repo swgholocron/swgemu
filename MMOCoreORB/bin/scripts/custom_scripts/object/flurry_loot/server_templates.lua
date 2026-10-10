@@ -3098,8 +3098,7 @@ object_tangible_wearables_robe_robe_jedi_black_01 = object_tangible_wearables_ro
 
 
 	objectMenuComponent = "RobeObjectMenuComponent",
-				certificationsRequired = { "combat_jedi_novice",
-							"force_title_jedi_rank_02" },
+				certificationsRequired = {},
 	attributeListComponent = "JediRobeAttributeListComponent",
 
 }
@@ -3307,8 +3306,7 @@ object_tangible_wearables_robe_robe_jedi_black_02 = object_tangible_wearables_ro
 
 
 	objectMenuComponent = "RobeObjectMenuComponent",
-				certificationsRequired = { "combat_jedi_novice",
-							"force_title_jedi_rank_02" },
+				certificationsRequired = {},
 	attributeListComponent = "JediRobeAttributeListComponent",
 
 }
@@ -3508,14 +3506,19 @@ object_tangible_wearables_robe_robe_jedi_gray_01 = object_tangible_wearables_rob
 	experimentalCombineType = {0, 0, 0, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 
 
-				skillMods = {
+				maxCondition = 100,
+	volume = 1,
+	jediRobe = true,
+
+	skillMods = {
 				    {"jedi_force_power_max", 250},
 				    {"jedi_force_power_regen", 10}
 				},
 
+	noTrade = 1,
+
 	objectMenuComponent = "RobeObjectMenuComponent",
-				certificationsRequired = { "combat_jedi_novice",
-							"force_title_jedi_rank_02" },
+				certificationsRequired = {"combat_jedi_novice", "force_title_jedi_rank_02"},
 	attributeListComponent = "JediRobeAttributeListComponent",
 
 }
@@ -3715,15 +3718,20 @@ object_tangible_wearables_robe_robe_jedi_gray_02 = object_tangible_wearables_rob
 	experimentalCombineType = {0, 0, 0, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 
 
-				skillMods = {
+				maxCondition = 100,
+	volume = 1,
+	jediRobe = true,
+
+	skillMods = {
 				    {"jedi_force_power_max", 250},
 				    {"jedi_force_power_regen", 10}
 				},
 
 
+	noTrade = 1,
+
 	objectMenuComponent = "RobeObjectMenuComponent",
-				certificationsRequired = { "combat_jedi_novice",
-							"force_title_jedi_rank_02" },
+				certificationsRequired = {},
 	attributeListComponent = "JediRobeAttributeListComponent",
 
 }
@@ -3929,8 +3937,7 @@ object_tangible_wearables_robe_robe_jedi_tan_01 = object_tangible_wearables_robe
 
 
 	objectMenuComponent = "RobeObjectMenuComponent",
-				certificationsRequired = { "combat_jedi_novice",
-							"force_title_jedi_rank_02" },
+				certificationsRequired = {},
 	attributeListComponent = "JediRobeAttributeListComponent",
 
 }
@@ -4137,8 +4144,7 @@ object_tangible_wearables_robe_robe_jedi_tan_02 = object_tangible_wearables_robe
 
 
 	objectMenuComponent = "RobeObjectMenuComponent",
-				certificationsRequired = { "combat_jedi_novice",
-							"force_title_jedi_rank_02" },
+				certificationsRequired = {},
 	attributeListComponent = "JediRobeAttributeListComponent",
 
 }

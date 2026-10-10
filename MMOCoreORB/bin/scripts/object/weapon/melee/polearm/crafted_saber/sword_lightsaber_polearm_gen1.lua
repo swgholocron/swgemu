@@ -116,7 +116,7 @@ object_weapon_melee_polearm_crafted_saber_sword_lightsaber_polearm_gen1 = object
 	minDamage = 105,
 	maxDamage = 195,
 
-	attackSpeed = 5.1,
+	attackSpeed = 4.5,
 
 	woundsRatio = 15,
 

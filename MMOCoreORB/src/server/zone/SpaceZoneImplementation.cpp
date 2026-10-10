@@ -34,7 +34,8 @@ SpaceZoneImplementation::SpaceZoneImplementation(ZoneProcessServer* serv, const 
 		info(true) << "SpaceZone " << capName << " using " << numThreads << " threads.";
 	}
 
-	Core::getTaskManager()->initializeCustomQueue(zoneName, numThreads, true);
+	// The zone's task queue is created by ZoneServerImplementation::startGroundZones() before any task is scheduled.
+	// Creating it here, while the server is running, races with task lookups by queue name.
 
 	timerTask = new ShipObjectTimerTask(zoneName);
 	timerTask->schedule(60000);

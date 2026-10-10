@@ -96,6 +96,12 @@ custom_jawa_boss = Creature:new {
    },
       			       	 lootChance = 5000000
    },
+		{
+			groups = {
+				{group = "g_jedi_robes", chance = 10000000}
+			},
+			lootChance = 1000000
+		}
   
     
     			

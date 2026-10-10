@@ -113,8 +113,8 @@ object_weapon_melee_sword_crafted_saber_sword_lightsaber_one_handed_gen2_ranged 
 	maxRange = 32,
 	maxRangeAccuracy = 5,
 
-	minDamage = 80,
-	maxDamage = 170,
+	minDamage = 125,
+	maxDamage = 215,
 
 	attackSpeed = 4.5,
 

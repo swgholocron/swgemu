@@ -431,57 +431,81 @@ void PlanetManagerImplementation::buildRegionNavAreas() {
 	String zoneName = zone->getZoneName();
 	info("Loading planet navAreas from navareas.db for zone: " + zoneName);
 
-	ObjectDatabaseManager* dbManager = ObjectDatabaseManager::instance();
-	ObjectDatabase* navAreasDatabase = dbManager->loadObjectDatabase("navareas", true, 0xFFFF, false);
+	// navareas.db is large and every zone used to scan all of it. Scan it once and remember which zone each
+	// nav area belongs to; every zone then only loads its own.
+	static Mutex navAreaScanMutex;
+	static bool navAreaScanDone = false;
+	static VectorMap<String, Vector<uint64>> navAreaIDsByZone;
 
-	if (navAreasDatabase != nullptr) {
-		int i = 0;
+	Vector<uint64> zoneNavAreaIDs;
+	Time navAreaTimer;
 
-		try {
-			ObjectDatabaseIterator iterator(navAreasDatabase);
+	{
+		Locker scanLocker(&navAreaScanMutex);
 
-			uint64 objectID;
-			ObjectInputStream* objectData = new ObjectInputStream(2000);
+		if (!navAreaScanDone) {
+			ObjectDatabaseManager* dbManager = ObjectDatabaseManager::instance();
+			ObjectDatabase* navAreasDatabase = dbManager->loadObjectDatabase("navareas", true, 0xFFFF, false);
 
-			String zoneReference;
+			if (navAreasDatabase != nullptr) {
+				try {
+					ObjectDatabaseIterator iterator(navAreasDatabase);
 
-			while (iterator.getNextKeyAndValue(objectID, objectData)) {
-				if (!Serializable::getVariable<String>(STRING_HASHCODE("SceneObject.zone"), &zoneReference, objectData)) {
-					objectData->clear();
-					continue;
-				}
+					uint64 objectID;
+					ObjectInputStream* objectData = new ObjectInputStream(2000);
 
-				if (zoneName != zoneReference) {
-					objectData->clear();
-					continue;
-				}
+					String zoneReference;
+					int total = 0;
 
-				Reference<SceneObject*> object = server->getZoneServer()->getObject(objectID);
+					while (iterator.getNextKeyAndValue(objectID, objectData)) {
+						if (Serializable::getVariable<String>(STRING_HASHCODE("SceneObject.zone"), &zoneReference, objectData)) {
+							if (!navAreaIDsByZone.contains(zoneReference))
+								navAreaIDsByZone.put(zoneReference, Vector<uint64>());
 
-				if (object != nullptr) {
-					NavArea* navArea = object.castTo<NavArea*>();
+							navAreaIDsByZone.get(zoneReference).add(objectID);
+							++total;
+						}
 
-					if (navArea != nullptr) {
-						++i;
-						navMeshAreas.put(navArea->getMeshName(), navArea);
+						objectData->clear();
 					}
-				} else {
-					error("Failed to deserialize nav area with objectID: " + String::valueOf(objectID));
+
+					delete objectData;
+
+					navAreaScanDone = true;
+
+					info(true) << "Scanned navareas.db once: " << total << " nav areas in " << navAreaTimer.miliDifference() << " ms.";
+				} catch (DatabaseException& e) {
+					error("Database exception in PlanetManagerImplementation::loadNavAreas(): " + e.getMessage());
 				}
-
-				objectData->clear();
+			} else {
+				error("Could not load the navareas database.");
 			}
-
-			delete objectData;
-		} catch (DatabaseException& e) {
-			error("Database exception in PlanetManagerImplementation::loadNavAreas(): " + e.getMessage());
 		}
 
-		bool log = i > 0;
-		info(String::valueOf(i) + " nav areas loaded for " + zoneName + ".", log);
-	} else {
-		error("Could not load the navareas database.");
+		if (navAreaIDsByZone.contains(zoneName))
+			zoneNavAreaIDs = navAreaIDsByZone.get(zoneName);
 	}
+
+	int i = 0;
+
+	for (int n = 0; n < zoneNavAreaIDs.size(); ++n) {
+		uint64 objectID = zoneNavAreaIDs.get(n);
+
+		Reference<SceneObject*> object = server->getZoneServer()->getObject(objectID);
+
+		if (object != nullptr) {
+			NavArea* navArea = object.castTo<NavArea*>();
+
+			if (navArea != nullptr) {
+				++i;
+				navMeshAreas.put(navArea->getMeshName(), navArea);
+			}
+		} else {
+			error("Failed to deserialize nav area with objectID: " + String::valueOf(objectID));
+		}
+	}
+
+	info(String::valueOf(i) + " nav areas loaded for " + zoneName + ".", i > 0);
 
 	uint32 hashCode = STRING_HASHCODE("object/region_navmesh.iff");
 

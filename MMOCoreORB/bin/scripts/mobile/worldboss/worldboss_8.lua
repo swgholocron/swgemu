@@ -118,6 +118,12 @@ worldboss_8 = Creature:new {
 		},
 			lootChance = 10000000
 		},
+		{
+			groups = {
+				{group = "g_jedi_robes", chance = 10000000}
+			},
+			lootChance = 1000000
+		}
 	},
 	weapons = {"mixed_force_weapons"},
 	conversationTemplate = "",

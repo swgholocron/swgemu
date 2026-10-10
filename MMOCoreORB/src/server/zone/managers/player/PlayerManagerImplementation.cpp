@@ -6,6 +6,7 @@
  */
 
 #include "server/zone/managers/player/PlayerManager.h"
+#include "server/zone/objects/player/GreyJedi.h"
 #include <utility>
 #include <mutex>
 
@@ -4457,7 +4458,7 @@ int PlayerManagerImplementation::calculatePlayerLevel(CreatureObject* player) {
 	String weaponType = weapon->getWeaponType();
 	int skillMod = player->getSkillMod("private_" + weaponType + "_combat_difficulty");
 
-	if (player->getPlayerObject() != nullptr && player->getPlayerObject()->isJedi() && weapon->isJediWeapon())
+	if (player->getPlayerObject() != nullptr && (player->getPlayerObject()->isJedi() || GreyJedi::hasGreyJediSkill(player)) && weapon->isJediWeapon())
 		skillMod += player->getSkillMod("private_jedi_difficulty");
 
 	int level = Math::min(25, skillMod / 100 + 1);

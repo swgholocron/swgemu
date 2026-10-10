@@ -6,6 +6,7 @@
 
 #include "server/zone/ZoneProcessServer.h"
 #include "server/zone/objects/creature/CreatureObject.h"
+#include "server/zone/objects/player/GreyJedi.h"
 #include "server/zone/objects/player/sui/SuiWindowType.h"
 #include "server/zone/objects/player/sui/banktransferbox/SuiBankTransferBox.h"
 #include "server/zone/objects/player/sui/characterbuilderbox/SuiCharacterBuilderBox.h"
@@ -295,7 +296,7 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 					return;
 				}
 			} else if (templatePath == "fill_force_bar") {
-				if (ghost->isJedi()) {
+				if (ghost->isJedi() || GreyJedi::hasGreyJediSkill(player)) {
 					if (!player->isInCombat()) {
 						player->sendSystemMessage("You force bar has been filled.");
 
@@ -305,7 +306,7 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 					}
 				}
 			} else if (templatePath == "drain_force_bar") {
-				if (ghost->isJedi()) {
+				if (ghost->isJedi() || GreyJedi::hasGreyJediSkill(player)) {
 					player->sendSystemMessage("Your Force power has been depleted.");
 					ghost->setForcePower(1, true);
 				}

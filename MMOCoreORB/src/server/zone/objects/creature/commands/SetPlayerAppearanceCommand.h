@@ -67,6 +67,16 @@ public:
 
 		targetCreature->setAlternateAppearance(templateName, true);
 
+		// Remember the appearance so it is restored every time the character logs in.
+		PlayerObject* targetGhost = targetCreature->getPlayerObject();
+
+		if (targetGhost != nullptr) {
+			if (templateName == "")
+				targetGhost->deleteScreenPlayData("AlternateAppearance", "template");
+			else
+				targetGhost->setScreenPlayData("AlternateAppearance", "template", templateName);
+		}
+
 		// Required to reset a target to its normal template
 		if (templateName == "") {
 			Zone* zone = targetCreature->getZone();

@@ -94,7 +94,13 @@ event_kaadu = Creature:new {
 				{group = "tierthree", chance = 10000000}			
 		},
 			lootChance = 10000000
-		},		
+		},
+		{
+			groups = {
+				{group = "g_jedi_robes", chance = 10000000}
+			},
+			lootChance = 1000000
+		}		
 		
 	},
 	weapons = {},

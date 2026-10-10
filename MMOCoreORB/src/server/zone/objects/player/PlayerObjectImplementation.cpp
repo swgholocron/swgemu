@@ -3,6 +3,7 @@
 		See file COPYING for copying conditions. */
 
 #include "server/zone/objects/player/PlayerObject.h"
+#include "server/zone/objects/player/GreyJedi.h"
 
 #include "server/zone/managers/object/ObjectManager.h"
 #include "server/zone/managers/player/PlayerManager.h"
@@ -1810,6 +1811,18 @@ void PlayerObjectImplementation::notifyOnline() {
 
 	// Checks for DoTs that should have expired during server downtime and removes them
 	playerCreature->getDamageOverTimeList()->validateDots(playerCreature);
+
+	// Restore a permanent appearance set with /setPlayerAppearance (it is cleared from the creature on logout).
+	String savedAppearance = getScreenPlayData("AlternateAppearance", "template");
+
+	if (!savedAppearance.isEmpty()) {
+		playerCreature->setAlternateAppearance(savedAppearance, false);
+	}
+
+	// Grey Jedi who learned their first skill before the starter kit existed get it on login.
+	if (GreyJedi::hasGreyJediSkill(playerCreature)) {
+		GreyJedi::giveStarterKit(playerCreature, asPlayerObject());
+	}
 
 	// Force Run drains Force through a task that does not survive a logout or restart, so it ends on login.
 	playerCreature->removeBuff(BuffCRC::JEDI_FORCE_RUN_1);

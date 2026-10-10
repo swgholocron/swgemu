@@ -18,8 +18,11 @@ public:
 		// The force run aura is a fixed-length client effect; replay it only while the buff is active.
 		repeatClientEffect = true;
 
-		// Force taken every second while running; it stops when you stand still so Force regenerates.
-		forceDrainPerSecond = 5;
+		// Force taken every second while running, as a % of max Force (minimum 1 per second). It stops when you
+		// stand still so Force regenerates. Activation is a % of max Force too, with a minimum of 50.
+		forceDrainPercent = 0.07f;
+		forceCostPercent = 1.0f;
+		forceCostMinimum = 50;
     
         // If these are active they will block buff use
 		blockingCRCs.add(BuffCRC::JEDI_FORCE_RUN_2);

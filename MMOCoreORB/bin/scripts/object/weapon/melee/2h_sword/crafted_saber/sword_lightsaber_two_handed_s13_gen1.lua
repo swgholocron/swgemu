@@ -113,10 +113,10 @@ object_weapon_melee_2h_sword_crafted_saber_sword_lightsaber_two_handed_s13_gen1 
 	maxRange = 5,
 	maxRangeAccuracy = 5,
 
-	minDamage = 90,
-	maxDamage = 180,
+	minDamage = 105,
+	maxDamage = 195,
 
-	attackSpeed = 4.8,
+	attackSpeed = 4.5,
 
 	woundsRatio = 15,
 

@@ -20,6 +20,7 @@
 #include "server/zone/packets/creature/CreatureObjectDeltaMessage4.h"
 #include "server/zone/managers/mission/MissionManager.h"
 #include "server/zone/managers/frs/FrsManager.h"
+#include "server/zone/objects/player/GreyJedi.h"
 #include "server/zone/objects/player/sui/messagebox/SuiMessageBox.h"
 #include "server/zone/objects/player/sui/callbacks/SurrenderPilotSuiCallback.h"
 #include "templates/faction/Factions.h"
@@ -399,6 +400,11 @@ bool SkillManager::awardSkill(const String& skillName, CreatureObject* creature,
 		auto schematicsGranted = skill->getSchematicsGranted();
 		SchematicMap::instance()->addSchematics(ghost, *schematicsGranted, notifyClient);
 
+		// First and last Grey Jedi skill: starter schematics and the Grey Jedi robes.
+		if (skill->getSkillName() == GreyJedi::firstSkill() || skill->getSkillName() == GreyJedi::masterSkill()) {
+			GreyJedi::giveStarterKit(creature, ghost);
+		}
+
 		//Update maximum experience.
 		updateXpLimits(ghost);
 
@@ -710,8 +716,11 @@ void SkillManager::surrenderAllSkills(CreatureObject* creature, bool notifyClien
 
 		surrenderedPilot = (removePilot && skill->getSkillName().contains("pilot"));
 
-		if (skill->getSkillPointsRequired() > 0 || surrenderedPilot) {
-			if (!removeForceProgression and skill->getSkillName().contains("force_"))
+		// Grey Jedi boxes cost no skill points but are part of the Grey path, so "unlearn all" removes them too.
+		bool greyJediSkill = GreyJedi::isGreyJediSkillName(skill->getSkillName());
+
+		if (skill->getSkillPointsRequired() > 0 || surrenderedPilot || greyJediSkill) {
+			if (!removeForceProgression && !greyJediSkill && skill->getSkillName().contains("force_"))
 				continue;
 
 			removeSkillRelatedMissions(creature, skill);

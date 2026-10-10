@@ -7,6 +7,7 @@
 #include "engine/engine.h"
 #include "server/zone/objects/player/sui/messagebox/SuiMessageBox.h"
 #include "server/zone/objects/tangible/component/lightsaber/LightsaberCrystalComponent.h"
+#include "server/zone/objects/player/GreyJedi.h"
 #include "server/zone/packets/object/ObjectMenuResponse.h"
 #include "server/zone/objects/tangible/wearables/WearableContainerObject.h"
 #include "server/zone/packets/scene/AttributeListMessage.h"
@@ -282,7 +283,7 @@ void LightsaberCrystalComponentImplementation::fillAttributeList(AttributeListMe
 	}
 
 	PlayerObject* player = object->getPlayerObject();
-	if (object->hasSkill("force_title_jedi_rank_01") || player->isPrivileged()) {
+	if (GreyJedi::canTuneCrystals(object) || player->isPrivileged()) {
 		if (ownerID == 0) {
 			StringBuffer str;
 			str << "\\#pcontrast2 UNTUNED";
@@ -323,7 +324,7 @@ void LightsaberCrystalComponentImplementation::fillAttributeList(AttributeListMe
 }
 
 void LightsaberCrystalComponentImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuResponse, CreatureObject* player) {
-	if (ownerID == 0 && player->hasSkill("force_title_jedi_rank_01") && hasPlayerAsParent(player)) {
+	if (ownerID == 0 && GreyJedi::canTuneCrystals(player) && hasPlayerAsParent(player)) {
 		String text = "@jedi_spam:tune_crystal";
 		menuResponse->addRadialMenuItem(128, 3, text);
 	}
@@ -343,7 +344,7 @@ void LightsaberCrystalComponentImplementation::fillObjectMenuResponse(ObjectMenu
 }
 
 int LightsaberCrystalComponentImplementation::handleObjectMenuSelect(CreatureObject* player, byte selectedID) {
-	if (selectedID == 128 && player->hasSkill("force_title_jedi_rank_01") && hasPlayerAsParent(player) && ownerID == 0) {
+	if (selectedID == 128 && GreyJedi::canTuneCrystals(player) && hasPlayerAsParent(player) && ownerID == 0) {
 		ManagedReference<SuiMessageBox*> suiMessageBox = new SuiMessageBox(player, SuiWindowType::TUNE_CRYSTAL);
 
 		suiMessageBox->setPromptTitle("@jedi_spam:confirm_tune_title");
@@ -402,7 +403,7 @@ bool LightsaberCrystalComponentImplementation::hasPlayerAsParent(CreatureObject*
 }
 
 void LightsaberCrystalComponentImplementation::tuneCrystal(CreatureObject* player) {
-	if(!player->hasSkill("force_title_jedi_rank_01") || !hasPlayerAsParent(player)) {
+	if(!GreyJedi::canTuneCrystals(player) || !hasPlayerAsParent(player)) {
 		return;
 	}
 

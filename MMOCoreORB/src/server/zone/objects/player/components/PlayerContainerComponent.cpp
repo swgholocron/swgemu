@@ -14,6 +14,7 @@
 #include "server/zone/managers/player/PlayerManager.h"
 #include "server/zone/ZoneServer.h"
 #include "server/zone/managers/visibility/VisibilityManager.h"
+#include "server/zone/objects/player/GreyJedi.h"
 
 int PlayerContainerComponent::canAddObject(SceneObject* sceneObject, SceneObject* object, int containmentType, String& errorDescription) const {
 	CreatureObject* creo = dynamic_cast<CreatureObject*>(sceneObject);
@@ -71,6 +72,10 @@ int PlayerContainerComponent::canAddObject(SceneObject* sceneObject, SceneObject
 							break;
 						}
 					}
+
+					// A Grey Jedi can use or wear anything that asks for a Jedi skill.
+					if (!hasSkill && GreyJedi::meetsJediRequirement(creo, skillsRequired))
+						hasSkill = true;
 
 					if (!hasSkill) {
 						errorDescription = "@error_message:insufficient_skill"; // You lack the skill to use this item.
@@ -146,7 +151,7 @@ int PlayerContainerComponent::notifyObjectInserted(SceneObject* sceneObject, Sce
 	// Jedi stuff below.
 	auto ghost = creo->getPlayerObject();
 
-	if (ghost != nullptr && ghost->isJedi()) {
+	if (ghost != nullptr && (ghost->isJedi() || GreyJedi::hasGreyJediSkill(creo))) {
 		if (object->isRobeObject()) {
 			ghost->recalculateForcePower();
 		} else if (object->isWeaponObject()) {
@@ -204,7 +209,7 @@ int PlayerContainerComponent::notifyObjectRemoved(SceneObject* sceneObject, Scen
 	// Jedi stuff below.
 	PlayerObject* ghost = creo->getPlayerObject();
 
-	if (ghost != nullptr && ghost->isJedi()) {
+	if (ghost != nullptr && (ghost->isJedi() || GreyJedi::hasGreyJediSkill(creo))) {
 		if (object->isRobeObject()) {
 			ghost->recalculateForcePower();
 		}
