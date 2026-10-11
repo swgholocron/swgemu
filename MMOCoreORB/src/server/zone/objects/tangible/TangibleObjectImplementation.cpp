@@ -5,6 +5,7 @@
 #include "engine/engine.h"
 
 #include "server/zone/objects/tangible/TangibleObject.h"
+#include "server/zone/objects/tangible/DurabilityRules.h"
 #include "server/zone/managers/object/ObjectManager.h"
 #include "server/zone/managers/skill/SkillModManager.h"
 #include "server/zone/packets/tangible/TangibleObjectMessage3.h"
@@ -86,6 +87,10 @@ void TangibleObjectImplementation::loadTemplateData(SharedObjectTemplate* templa
 
 void TangibleObjectImplementation::notifyLoadFromDatabase() {
 	SceneObjectImplementation::notifyLoadFromDatabase();
+
+	// Items saved before durability was removed from clothing/jewelry.
+	if (conditionDamage > 0 && DurabilityRules::isDurabilityFree(getGameObjectType()))
+		conditionDamage = 0;
 
 	if (activeAreas.size() > 0) {
 		Reference<TangibleObject*> refTano = asTangibleObject();
@@ -822,8 +827,14 @@ void TangibleObjectImplementation::fillAttributeList(AttributeListMessage* alm, 
 	SceneObjectImplementation::fillAttributeList(alm, object);
 
 	if (maxCondition > 0) {
+		bool noDurability = DurabilityRules::isDurabilityFree(getGameObjectType());
+
 		StringBuffer cond;
-		cond << (maxCondition-(int)conditionDamage) << "/" << maxCondition;
+
+		// Clothing and jewelry have no durability: no condition is shown, only
+		// the no-trade note (if any) which shares this attribute line.
+		if (!noDurability)
+			cond << (maxCondition-(int)conditionDamage) << "/" << maxCondition;
 
 		auto config = ConfigManager::instance();
 
@@ -835,7 +846,8 @@ void TangibleObjectImplementation::fillAttributeList(AttributeListMessage* alm, 
 			cond << config->getNoTradeMessage();
 		}
 
-		alm->insertAttribute("condition", cond);
+		if (!noDurability || cond.length() > 0)
+			alm->insertAttribute("condition", cond);
 	}
 
 	int volumeLimit = getContainerVolumeLimit();
@@ -975,6 +987,10 @@ void TangibleObjectImplementation::setMaxCondition(int maxCond, bool notifyClien
 }
 
 void TangibleObjectImplementation::setConditionDamage(float condDamage, bool notifyClient) {
+	// Clothing and jewelry never take condition damage.
+	if (condDamage > 0 && DurabilityRules::isDurabilityFree(getGameObjectType()))
+		condDamage = 0;
+
 	if (conditionDamage == condDamage)
 		return;
 
@@ -991,7 +1007,7 @@ void TangibleObjectImplementation::setConditionDamage(float condDamage, bool not
 }
 
 int TangibleObjectImplementation::inflictDamage(TangibleObject* attacker, int damageType, float damage, bool destroy, bool notifyClient, bool isCombatAction) {
-	if (hasAntiDecayKit())
+	if (hasAntiDecayKit() || DurabilityRules::isDurabilityFree(getGameObjectType()))
 		return 0;
 
 	float newConditionDamage = conditionDamage + damage;
@@ -1020,7 +1036,7 @@ int TangibleObjectImplementation::inflictDamage(TangibleObject* attacker, int da
 }
 
 int TangibleObjectImplementation::inflictDamage(TangibleObject* attacker, int damageType, float damage, bool destroy, const String& xp, bool notifyClient, bool isCombatAction) {
-	if (hasAntiDecayKit())
+	if (hasAntiDecayKit() || DurabilityRules::isDurabilityFree(getGameObjectType()))
 		return 0;
 
 	float newConditionDamage = conditionDamage + damage;

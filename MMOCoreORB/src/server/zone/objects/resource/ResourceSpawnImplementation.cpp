@@ -53,6 +53,77 @@ void ResourceSpawnImplementation::addStfClass(const String& newclass) {
 	stfSpawnClasses.add(newclass);
 }
 
+// A String keeps its length in a leading int and short strings inline in the object. A stored resource has been
+// seen with a stray high bit in that length (0x4000B for "res_quality"), which makes any copy of it run off the end
+// of the buffer and abort the server at startup. If a length is implausible but the inline text is a short,
+// printable, terminated string, put the real length back. The layout is taken from a probe string at run time, and
+// nothing is touched if it doesn't match what we expect.
+static bool repairStringLength(const String& str) {
+	int len = str.length();
+
+	if (len >= 0 && len <= MAX_RESOURCE_CLASS_LENGTH)
+		return false;
+
+	static const String probe("x");
+	static const ptrdiff_t inlineOffset = probe.toCharArray() - (const char*) &probe;
+
+	if (inlineOffset <= 0 || inlineOffset > 16 || *((const int*) &probe) != 1)
+		return false;
+
+	const char* raw = ((const char*) &str) + inlineOffset;
+	int real = -1;
+
+	for (int i = 0; i < 16; ++i) {
+		if (raw[i] == '\0') {
+			real = i;
+			break;
+		}
+
+		if (raw[i] < 32 || raw[i] > 126)
+			return false;
+	}
+
+	if (real <= 0)
+		return false;
+
+	*((int*) &str) = real;
+
+	return true;
+}
+
+int ResourceSpawnImplementation::repairCorruptedStrings() {
+	int repaired = 0;
+
+	for (int i = 0; i < spawnAttributes.size(); ++i) {
+		if (repairStringLength(spawnAttributes.elementAt(i).getKey()))
+			++repaired;
+	}
+
+	for (int i = 0; i < spawnClasses.size(); ++i) {
+		if (repairStringLength(spawnClasses.get(i)))
+			++repaired;
+	}
+
+	for (int i = 0; i < stfSpawnClasses.size(); ++i) {
+		if (repairStringLength(stfSpawnClasses.get(i)))
+			++repaired;
+	}
+
+	if (repairStringLength(spawnType))
+		++repaired;
+
+	if (repairStringLength(spawnName))
+		++repaired;
+
+	if (repairStringLength(poolSlot))
+		++repaired;
+
+	if (repairStringLength(zoneRestriction))
+		++repaired;
+
+	return repaired;
+}
+
 int ResourceSpawnImplementation::getAttributeAndValue(String& attribute,
 		int index) const {
 

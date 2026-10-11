@@ -7,8 +7,9 @@ gungan_tier_2 = {
 	lootItems = {
 		{groupTemplate = "armor_attachments", weight = 300000},
 		{groupTemplate = "clothing_attachments", weight = 300000},
+		{groupTemplate = "weapon_attachments", weight = 300000},
 		{groupTemplate = "composite_armor", weight = 900000},
-		{groupTemplate = "junk", weight = 2200000},
+		{groupTemplate = "junk", weight = 1900000},
 		{groupTemplate = "loot_kit_parts", weight = 1400000},
 		{groupTemplate = "melee_two_handed", weight = 800000},
 		{groupTemplate = "tailor_components", weight = 1300000},

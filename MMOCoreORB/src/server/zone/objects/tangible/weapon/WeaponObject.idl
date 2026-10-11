@@ -7,6 +7,7 @@ package server.zone.objects.tangible.weapon;
 import server.zone.objects.tangible.TangibleObject;
 import server.zone.objects.scene.SceneObject;
 import server.zone.objects.creature.CreatureObject;
+include server.zone.objects.tangible.attachment.Attachment;
 import server.zone.packets.scene.AttributeListMessage;
 include server.zone.objects.manufactureschematic.craftingvalues.CraftingValues;
 include server.zone.objects.scene.SceneObjectType;
@@ -82,7 +83,17 @@ class WeaponObject extends TangibleObject {
 	@dereferenced
 	protected VectorMap<string, int> wearableSkillMods;
 
+	protected int socketCount;
+	protected boolean socketsGenerated;
+	protected int usedSocketCount;
+
+	public static final int MAXSOCKETS = 4;
+
 	public WeaponObject() {
+		socketCount = 0;
+		socketsGenerated = false;
+		usedSocketCount = 0;
+
 		certified = false;
 		armorPiercing = 0;
 
@@ -227,6 +238,43 @@ class WeaponObject extends TangibleObject {
 
 	@dirty
 	public native boolean isEquipped();
+
+	@read
+	public int getMaxSockets() {
+		return socketCount;
+	}
+
+	@read
+	public int getRemainingSockets() {
+		return socketCount - usedSocketCount;
+	}
+
+	public void setMaxSockets(int maxSockets) {
+		if (maxSockets < 0) {
+			maxSockets = 0;
+		} else if (maxSockets > MAXSOCKETS) {
+			maxSockets = MAXSOCKETS;
+		}
+
+		socketCount = maxSockets;
+		socketsGenerated = true;
+	}
+
+	/**
+	 * Crafted weapons: same socket roll armor and clothing use (crafter's assembly skill and luck).
+	 * Only ever rolls once per weapon.
+	 */
+	private native void generateSockets(CraftingValues craftingValues);
+
+	/**
+	 * Dropped weapons: same socket roll, with an equivalent crafting skill/luck derived from the level of
+	 * the loot. Only ever rolls once per weapon.
+	 */
+	public native void rollLootSockets(int level);
+
+	@preLocked
+	@arg1preLocked
+	public native void applyAttachment(CreatureObject player, Attachment attachment);
 
 	@read
 	public native int getPointBlankAccuracy(boolean withPup = true);

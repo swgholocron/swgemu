@@ -8,3 +8,8 @@ TRE/
 TRE_src/
 MMOCoreORB/import_errors.log
 Documentation/
+
+# Website pages (served by the patch server, not part of the repo)
+Website/
+bosses_secrets.html
+loot_secrets.html

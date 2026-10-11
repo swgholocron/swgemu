@@ -25,6 +25,7 @@ class Attachment extends TangibleObject {
 
 	protected static final int CLOTHINGTYPE = 1;
 	protected static final int ARMORTYPE = 2;
+	protected static final int WEAPONTYPE = 3;
 
 	public Attachment() {
 		Logger.setLoggingName("Attachment");
@@ -41,6 +42,13 @@ class Attachment extends TangibleObject {
 	public native void updateCraftingValues(CraftingValues values, boolean firstUpdate);
 
 	public native void initializeMembers();
+
+	/**
+	 * Rolls this attachment's stat mods the way a drop from a mob of the given level would.
+	 */
+	public native void generateSkillMods(int level);
+
+	private native void generateSkillModsForLevel(float level, float bonus);
 
 	/**
 	 * Reads and sets the template data from a SharedTangibleObjectTemplate LuaObject
@@ -74,6 +82,11 @@ class Attachment extends TangibleObject {
 	@dirty
 	public boolean isArmorAttachment() {
 		return super.gameObjectType == SceneObjectType.ARMORATTACHMENT;
+	}
+
+	@dirty
+	public boolean isWeaponAttachment() {
+		return super.gameObjectType == SceneObjectType.WEAPONATTACHMENT;
 	}
 
 	@dirty

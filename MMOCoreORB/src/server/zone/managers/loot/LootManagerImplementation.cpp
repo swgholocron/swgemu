@@ -39,6 +39,7 @@ void LootManagerImplementation::initialize() {
 
 	info(true) << "Loaded " << lootableArmorAttachmentMods.size() << " lootable Armor Attachment Stat Mods.";
 	info(true) << "Loaded " << lootableClothingAttachmentMods.size() << " lootable Clothing Attachment Stat Mods.";
+	info(true) << "Loaded " << lootableWeaponAttachmentMods.size() << " lootable Weapon Attachment Stat Mods.";
 	info(true) << "Loaded " << lootableArmorMods.size() << " lootable Armor Stat Mods.";
 	info(true) << "Loaded " << lootableClothingMods.size() << " lootable Clothing Stat Mods.";
 	info(true) << "Loaded " << lootableOneHandedMeleeMods.size() << " lootable One-handed Melee Stat Mods.";
@@ -154,6 +155,9 @@ bool LootManagerImplementation::loadConfigData() {
 
 	modsTable = lua->getGlobalObject("lootableClothingAttachmentStatMods");
 	loadLootableMods( &modsTable, &lootableClothingAttachmentMods );
+
+	modsTable = lua->getGlobalObject("lootableWeaponAttachmentStatMods");
+	loadLootableMods( &modsTable, &lootableWeaponAttachmentMods );
 
 	modsTable = lua->getGlobalObject("lootableArmorStatMods");
 	loadLootableMods( &modsTable, &lootableArmorMods );
@@ -430,6 +434,12 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 	if (prototype->isWeaponObject()) {
 		addStaticDots(prototype, templateObject, level);
 		addRandomDots(prototype, templateObject, level, excMod);
+
+		// Chance for attachment sockets (same roll as armor/clothing, see WeaponObject::rollLootSockets)
+		WeaponObject* lootWeapon = dynamic_cast<WeaponObject*>(prototype.get());
+
+		if (lootWeapon != nullptr)
+			lootWeapon->rollLootSockets(level);
 	}
 
 	// Add some condition damage to the looted item if it is a weapon or piece of armor
@@ -628,6 +638,11 @@ String LootManagerImplementation::getRandomLootableMod(uint32 sceneObjectType) {
 		return lootableArmorAttachmentMods.get(System::random(lootableArmorAttachmentMods.size() - 1));
 	} else if (sceneObjectType == SceneObjectType::CLOTHINGATTACHMENT) {
 		return lootableClothingAttachmentMods.get(System::random(lootableClothingAttachmentMods.size() - 1));
+	} else if (sceneObjectType == SceneObjectType::WEAPONATTACHMENT) {
+		if (lootableWeaponAttachmentMods.size() == 0)
+			return "";
+
+		return lootableWeaponAttachmentMods.get(System::random(lootableWeaponAttachmentMods.size() - 1));
 	} else if (sceneObjectType & SceneObjectType::ARMOR) {
 		return lootableArmorMods.get(System::random(lootableArmorMods.size() - 1));
 	} else if ((sceneObjectType & SceneObjectType::CLOTHING) || (sceneObjectType & SceneObjectType::JEWELRY)) {

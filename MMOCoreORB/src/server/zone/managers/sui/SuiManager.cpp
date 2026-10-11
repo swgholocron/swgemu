@@ -20,6 +20,8 @@
 #include "server/zone/managers/minigames/FishingManager.h"
 #include "server/zone/objects/player/sui/keypadbox/SuiKeypadBox.h"
 #include "server/zone/objects/player/sui/callbacks/LuaSuiCallback.h"
+#include "server/zone/objects/tangible/weapon/WeaponObject.h"
+#include "server/zone/objects/tangible/attachment/Attachment.h"
 #include "server/zone/objects/tangible/terminal/characterbuilder/CharacterBuilderTerminal.h"
 #include "templates/params/creature/CreatureAttribute.h"
 #include "templates/params/creature/CreatureState.h"
@@ -693,6 +695,20 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 			Locker locker(item);
 
 			item->createChildObjects();
+
+			// Test aid: weapons from the character builder roll for attachment sockets like a high-level drop,
+			// so the socket chance and weapon attachments are easy to check.
+			WeaponObject* builderWeapon = dynamic_cast<WeaponObject*>(item.get());
+
+			if (builderWeapon != nullptr)
+				builderWeapon->rollLootSockets(300);
+
+			// Test aid: attachments from the character builder get stats like a drop from a high-level mob
+			// (their template alone has none).
+			Attachment* builderAttachment = dynamic_cast<Attachment*>(item.get());
+
+			if (builderAttachment != nullptr)
+				builderAttachment->generateSkillMods(150);
 
 			if (item->isEventPerkDeed()) {
 				EventPerkDeed* deed = item.castTo<EventPerkDeed*>();

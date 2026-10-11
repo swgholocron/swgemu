@@ -7,10 +7,11 @@ kun_tier_2 = {
 	lootItems = {
 		{groupTemplate = "armor_attachments", weight = 900000},
 		{groupTemplate = "clothing_attachments", weight = 900000},
+		{groupTemplate = "weapon_attachments", weight = 900000},
 		{groupTemplate = "color_crystals", weight = 500000},
 		{groupTemplate = "holocron_dark", weight = 500000},
 		{groupTemplate = "holocron_light", weight = 500000},
-		{groupTemplate = "junk", weight = 3200000},
+		{groupTemplate = "junk", weight = 2300000},
 		{groupTemplate = "melee_weapons", weight = 800000},
 		{groupTemplate = "power_crystals", weight = 400000},
 		{groupTemplate = "wearables_common", weight = 600000},

@@ -173,6 +173,7 @@ public:
 	const static int COMPONENTANALYSISTOOL = 0x2040;
 	const static int SCHEMATICFRAGMENT = 0x2041;
 	const static int SHIPPAINTKIT = 0x2042;
+	const static int WEAPONATTACHMENT = 0x2043; // weapon stat-mod attachment (server-defined, reuses the clothing gem client template)
 	/// End Not in client **************
 
 	const static int TERMINAL = 0x4000;

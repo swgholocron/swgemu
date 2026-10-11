@@ -28,6 +28,14 @@ public:
 		if (zone->hasManagersStarted())
 			return;
 
+		// Zones loading their managers (terrain, templates, persistent objects, navmeshes) all at once corrupted the
+		// heap at random and crashed startup. The shared loaders are not thread safe, so load one zone at a time.
+		static Mutex loadOneZoneAtATime;
+		Locker loadLocker(&loadOneZoneAtATime);
+
+		if (zone->hasManagersStarted())
+			return;
+
 		zone->startManagers();
 	}
 };

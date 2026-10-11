@@ -7,11 +7,12 @@ nightsister_tier_5 = {
 	lootItems = {
 		{groupTemplate = "armor_attachments", weight = 400000},
 		{groupTemplate = "clothing_attachments", weight = 400000},
+		{groupTemplate = "weapon_attachments", weight = 400000},
 		{groupTemplate = "junk", weight = 900000},
 		{groupTemplate = "melee_weapons", weight = 1700000},
 		{groupTemplate = "nightsister_common", weight = 2100000},
 		{groupTemplate = "power_crystals", weight = 650000},
-		{groupTemplate = "ranged_weapons", weight = 2600000},
+		{groupTemplate = "ranged_weapons", weight = 2200000},
 		{groupTemplate = "wearables_rare", weight = 300000},
 		{groupTemplate = "wearables_scarce", weight = 300000},
 		{groupTemplate = "resource_creature", weight = 150000},

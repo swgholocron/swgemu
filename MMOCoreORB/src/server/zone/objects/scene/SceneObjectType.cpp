@@ -97,6 +97,7 @@ const String SceneObjectType::typeToString(int gameObjectType) {
 		case CLOTHINGATTACHMENT:		return "@got_n:misc_clothing_attachment";
 		case LIVESAMPLE:				return "@got_n:misc_live_sample";
 		case ARMORATTACHMENT:			return "@got_n:misc_armor_attachment";
+		case WEAPONATTACHMENT:			return "@got_n:misc_armor_attachment";
 		case COMMUNITYCRAFTINGPROJECT:	return "@got_n:misc_community_crafting_project";
 		case CRYSTAL:					return "@got_n:misc_force_crystal";
 		case DROIDPROGRAMMINGCHIP:		return "@got_n:misc_droid_programming_chip";

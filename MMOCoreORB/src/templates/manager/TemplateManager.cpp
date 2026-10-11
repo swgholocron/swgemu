@@ -842,6 +842,12 @@ IffStream* TemplateManager::openIffFile(const String& fileName) {
 }
 
 FloorMesh* TemplateManager::getFloorMesh(const String& fileName) {
+	// floorMeshMap is a plain HashTable that building templates load into from several threads at once during
+	// startup (zones loading their persistent buildings in parallel). Unsynchronized, concurrent get/put corrupted
+	// the heap and crashed the server at random during startup.
+	static Mutex floorMeshMutex;
+	Locker floorMeshLocker(&floorMeshMutex);
+
 	FloorMesh* floorMesh = floorMeshMap->get(fileName);
 
 	if (floorMesh == nullptr) {

@@ -60,10 +60,10 @@ object_weapon_melee_sword_crafted_saber_sword_lightsaber_onehanded_gen5_exar_kun
 	noTrade = 1,
    
 	-- The values below are the default values.  To be used for blue frog objects primarily
-	healthAttackCost = 0,
-	actionAttackCost = 0,
-	mindAttackCost = 0,
-	forceCost = 0,
+	healthAttackCost = 20,
+	actionAttackCost = 35,
+	mindAttackCost = 40,
+	forceCost = 40,
 
 	pointBlankRange = 0,
 	pointBlankAccuracy = 20,
@@ -76,7 +76,11 @@ object_weapon_melee_sword_crafted_saber_sword_lightsaber_onehanded_gen5_exar_kun
 
 	attackSpeed = 4.5,
 
-	woundsRatio = 45,
+	woundsRatio = 37,
+
+	maxDamage = 381,
+
+	minDamage = 281,
 }
 ObjectTemplates:addTemplate(object_weapon_melee_sword_crafted_saber_sword_lightsaber_onehanded_gen5_exar_kun, "object/weapon/melee/sword/crafted_saber/sword_lightsaber_onehanded_gen5_exar_kun.iff")
 
@@ -156,10 +160,10 @@ object_weapon_melee_polearm_crafted_saber_sword_lightsaber_polearm_gen5_exar_kun
 	-- The values below are the default values.  To be used for blue frog objects primarily
 	gameObjectType = 131090,
 
-	healthAttackCost = 0,
-	actionAttackCost = 0,
-	mindAttackCost = 0,
-	forceCost = 0,
+	healthAttackCost = 60,
+	actionAttackCost = 95,
+	mindAttackCost = 45,
+	forceCost = 48,
 
 	pointBlankRange = 0,
 	pointBlankAccuracy = 20,
@@ -170,12 +174,12 @@ object_weapon_melee_polearm_crafted_saber_sword_lightsaber_polearm_gen5_exar_kun
 	maxRange = 5,
 	maxRangeAccuracy = 5,
 
-	minDamage = 225,
-	maxDamage = 305,
+	minDamage = 281,
+	maxDamage = 381,
 
-	attackSpeed = 0,
+	attackSpeed = 4.5,
 
-	woundsRatio = 45,
+	woundsRatio = 37,
 
 	noTrade = 1,
 }

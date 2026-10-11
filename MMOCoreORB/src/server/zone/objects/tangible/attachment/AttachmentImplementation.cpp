@@ -12,6 +12,7 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/managers/loot/LootManager.h"
 #include "server/zone/managers/loot/LootValues.h"
+#include "server/zone/managers/stringid/StringIdManager.h"
 
 void AttachmentImplementation::initializeMembers() {
 	if (gameObjectType == SceneObjectType::CLOTHINGATTACHMENT) {
@@ -21,6 +22,10 @@ void AttachmentImplementation::initializeMembers() {
 	} else if (gameObjectType == SceneObjectType::ARMORATTACHMENT) {
 		setOptionsBitmask(32, true);
 		attachmentType = ARMORTYPE;
+
+	} else if (gameObjectType == SceneObjectType::WEAPONATTACHMENT) {
+		setOptionsBitmask(32, true);
+		attachmentType = WEAPONTYPE;
 	}
 }
 
@@ -45,6 +50,17 @@ void AttachmentImplementation::initializeTransientMembers() {
 }
 
 void AttachmentImplementation::updateCraftingValues(CraftingValues* values, bool firstUpdate) {
+	float level = values->hasExperimentalAttribute("creatureLevel") ? values->getCurrentValue("creatureLevel") : 1;
+	float bonus = values->hasExperimentalAttribute("modifier") ? values->getCurrentValue("modifier") : 1;
+
+	generateSkillModsForLevel(level, bonus);
+}
+
+void AttachmentImplementation::generateSkillMods(int level) {
+	generateSkillModsForLevel(level, 1.f);
+}
+
+void AttachmentImplementation::generateSkillModsForLevel(float level, float bonus) {
 	auto zoneServer = getZoneServer();
 
 	if (zoneServer == nullptr) {
@@ -57,8 +73,8 @@ void AttachmentImplementation::updateCraftingValues(CraftingValues* values, bool
 		return;
 	}
 
-	float level = values->hasExperimentalAttribute("creatureLevel") ? values->getCurrentValue("creatureLevel") : 1;
-	float bonus = values->hasExperimentalAttribute("modifier") ? values->getCurrentValue("modifier") : 1;
+	skillModifiers.removeAll();
+
 	float rank = LootValues::getLevelRankValue(level, 0.2f, 0.9f);
 
 	int chance = rank * bonus * 100.f;
@@ -85,16 +101,43 @@ void AttachmentImplementation::updateCraftingValues(CraftingValues* values, bool
 
 		String modName = lootManager->getRandomLootableMod(gameObjectType);
 
+		if (modName.isEmpty()) {
+			continue;
+		}
+
 		skillModifiers.put(modName, ((mod <= 0) ? 1 : mod));
 	}
 
 	StringBuffer name;
 
+	// Weapon attachments read "Weapon Attachment: +20 Pistol Aiming"; armor/clothing attachments "Pistol Aiming +20".
+	bool weaponAttachment = (gameObjectType == SceneObjectType::WEAPONATTACHMENT);
+
+	if (weaponAttachment)
+		name << "Weapon Attachment: ";
+
 	for (int i = 0; i < skillModifiers.size(); ++i) {
 		if (i > 0)
 			name << ", ";
 
-		name << "@stat_n:" << skillModifiers.elementAt(i).getKey() << " +" << skillModifiers.elementAt(i).getValue();
+		const String& key = skillModifiers.elementAt(i).getKey();
+
+		// Custom names are not localized by the client, so resolve the stat's display name here.
+		String statName = StringIdManager::instance()->getStringId(String("@stat_n:" + key).hashCode()).toString();
+
+		if (statName.isEmpty()) {
+			statName = key;
+
+			for (int c = 0; c < statName.length(); ++c) {
+				if (statName.charAt(c) == '_')
+					statName = statName.replaceFirst("_", " ");
+			}
+		}
+
+		if (weaponAttachment)
+			name << "+" << skillModifiers.elementAt(i).getValue() << " " << statName;
+		else
+			name << statName << " +" << skillModifiers.elementAt(i).getValue();
 	}
 
 	setCustomObjectName(name.toString(), true);

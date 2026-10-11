@@ -7,9 +7,10 @@ lok_mercenaries_tier_2 = {
 	lootItems = {
 		{groupTemplate = "armor_attachments", weight = 200000},
 		{groupTemplate = "clothing_attachments", weight = 200000},
+		{groupTemplate = "weapon_attachments", weight = 200000},
 		{groupTemplate = "color_crystals", weight = 200000},
 		{groupTemplate = "heavy_weapons", weight = 1200000},
-		{groupTemplate = "junk", weight = 2100000},
+		{groupTemplate = "junk", weight = 1900000},
 		{groupTemplate = "loot_kit_parts", weight = 1200000},
 		{groupTemplate = "melee_polearm", weight = 400000},
 		{groupTemplate = "melee_unarmed", weight = 400000},

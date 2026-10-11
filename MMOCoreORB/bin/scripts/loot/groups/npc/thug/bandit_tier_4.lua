@@ -7,8 +7,9 @@ bandit_tier_4 = {
 	lootItems = {
 		{groupTemplate = "armor_attachments", weight = 800000},
 		{groupTemplate = "clothing_attachments", weight = 800000},
+		{groupTemplate = "weapon_attachments", weight = 800000},
 		{groupTemplate = "color_crystals", weight = 600000},
-		{groupTemplate = "junk", weight = 4800000},
+		{groupTemplate = "junk", weight = 4000000},
 		{groupTemplate = "melee_polearm", weight = 500000},
 		{groupTemplate = "pistols", weight = 500000},
 		{groupTemplate = "power_crystals", weight = 300000},

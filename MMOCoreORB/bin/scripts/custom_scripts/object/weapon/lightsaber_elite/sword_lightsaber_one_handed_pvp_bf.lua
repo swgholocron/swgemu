@@ -77,10 +77,10 @@ object_weapon_sword_lightsaber_one_handed_pvp_bf = object_weapon_sword_lightsabe
 	damageModifiers = { },
 	defenderToughnessModifiers = { "lightsaber_toughness" },
 	noTrade = 1,
-	healthAttackCost = 0,
-	actionAttackCost = 0,
-	mindAttackCost = 0,
-	forceCost = 0,
+	healthAttackCost = 20,
+	actionAttackCost = 35,
+	mindAttackCost = 40,
+	forceCost = 40,
 	pointBlankRange = 0,
 	pointBlankAccuracy = 20,
 	idealRange = 3,
@@ -88,7 +88,9 @@ object_weapon_sword_lightsaber_one_handed_pvp_bf = object_weapon_sword_lightsabe
 	maxRange = 5,
 	maxRangeAccuracy = 5,
 	attackSpeed = 4.5,
-	woundsRatio = 45,
+	maxDamage = 476,
+	minDamage = 351,
+	woundsRatio = 37,
 
 	-- Crystal/pearl container: same 4-slot saber inventory the stock gen4 sabers use.
 	childObjects = {

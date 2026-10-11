@@ -42,7 +42,9 @@ GroundZoneImplementation::GroundZoneImplementation(ZoneProcessServer* serv, cons
 		info(true) << "GroundZone " << capName << " using " << numThreads << " threads.";
 	}
 
-	Core::getTaskManager()->initializeCustomQueue(zoneName, numThreads, true);
+	// The zone's task queue is created by ZoneServerImplementation::startGroundZones() before any task is scheduled.
+	// Creating it here, while earlier zones are already running tasks, races with the unsynchronized queue lookups in
+	// TaskManagerImpl::executeTask() and crashed startup at random.
 }
 
 void GroundZoneImplementation::createContainerComponent() {

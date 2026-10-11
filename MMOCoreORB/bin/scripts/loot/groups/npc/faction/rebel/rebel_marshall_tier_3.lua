@@ -7,11 +7,12 @@ rebel_marshall_tier_3 = {
 	lootItems = {
 		{groupTemplate = "armor_attachments", weight = 900000},
 		{groupTemplate = "clothing_attachments", weight = 900000},
+		{groupTemplate = "weapon_attachments", weight = 900000},
 		{groupTemplate = "color_crystals", weight = 950000},
 		{groupTemplate = "holocron_light", weight = 500000},
 		{groupTemplate = "melee_weapons", weight = 1100000},
 		{groupTemplate = "power_crystals", weight = 500000},
-		{groupTemplate = "ranged_weapons", weight = 3500000},
+		{groupTemplate = "ranged_weapons", weight = 2600000},
 		{groupTemplate = "wearables_rare", weight = 700000},
 		{groupTemplate = "resource_gemstone", weight = 150000},
 		{groupTemplate = "resource_metal", weight = 150000},

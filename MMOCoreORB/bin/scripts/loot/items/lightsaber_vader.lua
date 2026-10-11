@@ -12,6 +12,7 @@ lightsaber_vader = {
 		{"attackhealthcost",50,20},
 		{"attackactioncost",50,20},
 		{"attackmindcost",50,20},
+		{"forcecost",15,15,1},
 	},
 	customizationStringNames = {},
 	customizationValues = {}

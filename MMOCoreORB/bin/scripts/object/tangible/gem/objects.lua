@@ -217,3 +217,10 @@ object_tangible_gem_shared_default = SharedTangibleObjectTemplate:new {
 }
 
 ObjectTemplates:addClientTemplate(object_tangible_gem_shared_default, "object/tangible/gem/shared_default.iff")
+
+-- Weapon attachment client template (holocron.tre): armor attachment behaviour, power bit model, own name.
+object_tangible_gem_shared_weapon = SharedTangibleObjectTemplate:new {
+	clientTemplateFileName = "object/tangible/gem/shared_weapon.iff"
+}
+
+ObjectTemplates:addClientTemplate(object_tangible_gem_shared_weapon, "object/tangible/gem/shared_weapon.iff")

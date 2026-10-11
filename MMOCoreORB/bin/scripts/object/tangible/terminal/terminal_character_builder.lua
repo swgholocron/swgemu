@@ -3098,11 +3098,10 @@ object_tangible_terminal_terminal_character_builder = object_tangible_terminal_s
 					"Sith Lord's Crimson Battle Robes", "object/tangible/wearables/robe/robe_swtor.iff"
 				}
 			},
-			--"Attachments",
-			--{
-			--	"Armor Attachment", "object/tangible/gem/armor.iff",
-			--	"Clothing Attachment", "object/tangible/gem/clothing.iff",
-			--},
+			"Attachments",
+			{
+				"Weapon Attachment", "object/tangible/gem/weapon.iff",
+			},
 			"Armor",
 			{
 				"Components",

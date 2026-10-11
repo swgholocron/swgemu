@@ -43,7 +43,11 @@
 *
 */
 
+// Armor condition loss in combat: vanilla was 20% of the damage dealt to the armor; reduced by 75%.
+static const float ARMOR_DECAY_RATE = 0.05f;
+
 // Sets attackers mainDefender and puts both in combat
+
 bool CombatManager::startCombat(CreatureObject* attacker, TangibleObject* defender, bool lockDefender, bool allowIncapTarget) const {
 	if (attacker == defender) {
 		return false;
@@ -2590,7 +2594,7 @@ int CombatManager::getArmorReduction(TangibleObject* attacker, WeaponObject* wea
 		// inflict condition damage
 		Locker alocker(armor);
 
-		armor->inflictDamage(armor, 0, damage * 0.2, true, true);
+		armor->inflictDamage(armor, 0, damage * ARMOR_DECAY_RATE, true, true);
 	}
 
 	return damage;
@@ -2764,7 +2768,7 @@ float CombatManager::doObjectDetonation(TangibleObject* attackerTanO, CreatureOb
 
 				Locker plocker(psgArmor, attackerTanO);
 
-				psgArmor->inflictDamage(psgArmor, 0, damage * 0.2, true, true);
+				psgArmor->inflictDamage(psgArmor, 0, damage * ARMOR_DECAY_RATE, true, true);
 			}
 
 			ManagedReference<ArmorObject*> armor = getArmorObject(defender, hitLocation);
@@ -2783,7 +2787,7 @@ float CombatManager::doObjectDetonation(TangibleObject* attackerTanO, CreatureOb
 				// inflict condition damage
 				Locker alocker(armor, attackerTanO);
 
-				armor->inflictDamage(armor, 0, damage * 0.2, true, true);
+				armor->inflictDamage(armor, 0, damage * ARMOR_DECAY_RATE, true, true);
 			}
 		}
 

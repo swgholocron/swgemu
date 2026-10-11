@@ -7,7 +7,8 @@ jinda_tribe_tier_1 = {
 	lootItems = {
 		{groupTemplate = "armor_attachments", weight = 400000},
 		{groupTemplate = "clothing_attachments", weight = 400000},
-		{groupTemplate = "ewok", weight = 7300000},
+		{groupTemplate = "weapon_attachments", weight = 400000},
+		{groupTemplate = "ewok", weight = 6900000},
 		{groupTemplate = "wearables_uncommon", weight = 900000},
 		{groupTemplate = "resource_creature", weight = 750000},
 		{groupTemplate = "resource_water", weight = 250000},

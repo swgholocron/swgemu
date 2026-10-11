@@ -37,10 +37,11 @@ looted_container = {
 		{itemTemplate = "jedi_holocron_dark", weight = 43861},
 		{itemTemplate = "jedi_holocron_light", weight = 43861},
 		{itemTemplate = "attachment_clothing", weight = 43860},
+		{itemTemplate = "attachment_weapon", weight = 43860},
 		{itemTemplate = "attachment_armor", weight = 43860},
 
 		-- Weapons (25% chance)
-		{groupTemplate = "weapons_all", weight = 2500000},
+		{groupTemplate = "weapons_all", weight = 2456140},
 
 		-- Armors (25% chance)
 		{groupTemplate = "armor_all", weight = 2500000},

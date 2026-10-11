@@ -73,10 +73,8 @@ TargaBitmap::TargaBitmap() {
 
 TargaBitmap::~TargaBitmap() {
 	if (pixelData != nullptr) {
-		for (int i = 0; i < header.width; ++i) {
-			for (int j = 0; j < header.height; ++j) {
-				delete pixelData[i * header.width + j];
-			}
+		for (int i = 0; i < header.width * header.height; ++i) {
+			delete pixelData[i];
 		}
 
 		delete [] pixelData;
@@ -124,9 +122,22 @@ void TargaBitmap::readObject(ObjectInputStream* stream) {
 	int read = header.bitsperpixel / 8;
 	int n = 0;
 
+	// The index below is only inside pixelData (width * height entries) when the bitmap is square. A non-square
+	// bitmap used to run off the end of the array, and the virtual call through whatever pointer was there wrote
+	// into random heap memory (random crashes during startup).
+	const int totalPixels = header.width * header.height;
+
+	if (header.width != header.height)
+		printf("TargaBitmap: non-square bitmap %d x %d, pixel order not guaranteed\n", (int) header.width, (int) header.height);
+
 	for (int i = header.width - 1; i >= 0; --i) {
 		for (int j = 0; j < header.height; ++j) {
-			pixelData[i * header.width + j]->read(stream, read);
+			int index = i * header.width + j;
+
+			if (index < 0 || index >= totalPixels)
+				continue;
+
+			pixelData[index]->read(stream, read);
 		}
 	}
 }

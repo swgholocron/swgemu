@@ -7,8 +7,9 @@ followers_of_lord_nyax_tier_4 = {
 	lootItems = {
 		{groupTemplate = "armor_attachments", weight = 1000000},
 		{groupTemplate = "clothing_attachments", weight = 1000000},
+		{groupTemplate = "weapon_attachments", weight = 1000000},
 		{groupTemplate = "grenades_looted", weight = 900000},
-		{groupTemplate = "junk", weight = 3600000},
+		{groupTemplate = "junk", weight = 2600000},
 		{groupTemplate = "nyax", weight = 2700000},
 		{groupTemplate = "resource_chemical", weight = 100000},
 		{groupTemplate = "resource_gemstone", weight = 100000},

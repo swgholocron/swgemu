@@ -20,6 +20,12 @@
 #include "server/zone/ZoneProcessServer.h"
 #include "server/zone/managers/player/PlayerMap.h"
 #include "server/chat/ChatManager.h"
+#include "conf/ConfigManager.h"
+#include "server/zone/objects/tangible/attachment/Attachment.h"
+#include "server/zone/objects/manufactureschematic/ManufactureSchematic.h"
+#include "server/zone/objects/draftschematic/DraftSchematic.h"
+#include "server/zone/objects/tangible/wearables/ModSortingHelper.h"
+#include "server/zone/objects/transaction/TransactionLog.h"
 
 
 void WeaponObjectImplementation::initializeTransientMembers() {
@@ -104,7 +110,21 @@ void WeaponObjectImplementation::sendContainerTo(CreatureObject* player) {
 
 		ManagedReference<SceneObject*> saberInv = getSlottedObject("saber_inv");
 
-		if (saberInv != nullptr) {
+		// Sabers made before their template had a crystal container (e.g. the Bloodfin sabers, or any saber whose
+		// container failed to attach) have no saber_inv. Build it now from the template so they can be opened.
+		if (saberInv == nullptr && templateObject != nullptr && templateObject->getChildObjectsSize() > 0) {
+			createChildObjects();
+
+			saberInv = getSlottedObject("saber_inv");
+
+			if (saberInv == nullptr) {
+				error() << "sendContainerTo: could not create saber_inv for " << getObjectID() << " (" << templateObject->getFullTemplateString() << ")";
+			}
+		}
+
+		if (saberInv == nullptr) {
+			player->sendSystemMessage("This lightsaber has no crystal container.");
+		} else {
 			saberInv->sendDestroyTo(player);
 			//saberInv->closeContainerTo(player, true);
 
@@ -234,6 +254,9 @@ void WeaponObjectImplementation::fillAttributeList(AttributeListMessage* alm, Cr
 		if (value > 0)
 			alm->insertAttribute(statname, value);
 	}
+
+	if (getRemainingSockets() > 0)
+		alm->insertAttribute("sockets", getRemainingSockets());
 
 	String ap;
 
@@ -663,6 +686,155 @@ void WeaponObjectImplementation::updateCraftingValues(CraftingValues* values, bo
 		setMaxCondition((int)value);
 
 	setConditionDamage(0);
+
+	if (firstUpdate)
+		generateSockets(values);
+}
+
+// Same socket roll armor and clothing use (WearableObjectImplementation::generateSockets): returns 0-MAXSOCKETS.
+// `skill` is the assembly skill (nothing is generated below MIN_SOCKET_MOD), `luck` the already-rolled luck value.
+static int rollSocketCount(int skill, int luck) {
+	const int minSocketMod = 60;
+	const int maxSockets = 4;
+
+	if (skill < minSocketMod)
+		return 0;
+
+	skill -= minSocketMod;
+	int bonusMod = 65 - skill;
+
+	if (bonusMod <= 0) {
+		bonusMod = 0;
+	} else {
+		bonusMod = System::random(bonusMod);
+	}
+
+	int skillAdjust = skill + System::random(luck) + bonusMod;
+	int maxMod = 65 + System::random(skill);
+
+	float randomSkill = System::random(skillAdjust) * 10;
+	float roll = randomSkill / (400.f + maxMod);
+
+	float generatedCount = roll * maxSockets;
+
+	if (generatedCount > maxSockets)
+		generatedCount = maxSockets;
+	else if (generatedCount > 3 && generatedCount <= 3.75f)
+		generatedCount = floor(generatedCount);
+
+	return (int)generatedCount;
+}
+
+void WeaponObjectImplementation::generateSockets(CraftingValues* craftingValues) {
+	// Lightsabers are excluded from attachment sockets for now
+	if (socketsGenerated || isJediWeapon())
+		return;
+
+	socketsGenerated = true;
+	usedSocketCount = 0;
+	socketCount = 0;
+
+	if (craftingValues == nullptr)
+		return;
+
+	ManagedReference<ManufactureSchematic*> manuSchematic = craftingValues->getManufactureSchematic();
+
+	if (manuSchematic == nullptr)
+		return;
+
+	ManagedReference<DraftSchematic*> draftSchematic = manuSchematic->getDraftSchematic();
+	ManagedReference<CreatureObject*> player = manuSchematic->getCrafter().get();
+
+	if (player == nullptr || draftSchematic == nullptr)
+		return;
+
+	int skill = player->getSkillMod(draftSchematic->getAssemblySkill());
+	int luck = System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck"));
+
+	socketCount = Math::min(rollSocketCount(skill, luck), (int)MAXSOCKETS);
+}
+
+void WeaponObjectImplementation::rollLootSockets(int level) {
+	// Lightsabers are excluded from attachment sockets for now
+	if (socketsGenerated || isJediWeapon())
+		return;
+
+	socketsGenerated = true;
+	usedSocketCount = 0;
+
+	// Dropped weapons have no crafter, so the level of the loot stands in for crafting skill and luck:
+	// level 1 behaves like a barely-skilled crafter (60), level ~160+ like a master crafter with tools (125).
+	int skill = Math::clamp(60, 60 + (int)(level * 0.4f), 125);
+	int luck = System::random(Math::clamp(0, level / 5, 60));
+
+	socketCount = Math::min(rollSocketCount(skill, luck), (int)MAXSOCKETS);
+}
+
+void WeaponObjectImplementation::applyAttachment(CreatureObject* player, Attachment* attachment) {
+	if (attachment == nullptr || player == nullptr || !isASubChildOf(player)) {
+		return;
+	}
+
+	if (getRemainingSockets() < 1 || wearableSkillMods.size() > 8) {
+		return;
+	}
+
+	bool equipped = isEquipped();
+
+	if (equipped) {
+		removeSkillModsFrom(player);
+	}
+
+	Locker clocker(attachment, player);
+
+	SortedVector<ModSortingHelper> sortedMods;
+	VectorMap<String, int>* skillModifiers = attachment->getSkillMods();
+
+	for (int i = 0; i < skillModifiers->size(); i++) {
+		auto key = skillModifiers->elementAt(i).getKey();
+		auto value = skillModifiers->elementAt(i).getValue();
+
+		sortedMods.put(ModSortingHelper(key, value));
+	}
+
+	// Same rule as clothing/armor: apply the highest mod on the attachment that
+	// beats what the weapon already has, then stop.
+	for (int i = 0; i < sortedMods.size(); i++) {
+		String modName = sortedMods.elementAt(i).getKey();
+		int modValue = sortedMods.elementAt(i).getValue();
+
+		int existingValue = -26;
+
+		if (wearableSkillMods.contains(modName)) {
+			existingValue = wearableSkillMods.get(modName);
+		}
+
+		if (modValue > existingValue) {
+			wearableSkillMods.put(modName, modValue);
+			break;
+		}
+	}
+
+	usedSocketCount++;
+	addMagicBit(true);
+
+	TransactionLog trx(player, asSceneObject(), attachment, TrxCode::APPLYATTACHMENT);
+
+	if (trx.isVerbose()) {
+		trx.addRelatedObject(attachment, true);
+		trx.setExportRelatedObjects(true);
+		trx.exportRelated();
+	}
+
+	trx.addState("subjectSkillModMap", sortedMods);
+	trx.addState("dstSkillModMap", wearableSkillMods);
+
+	attachment->destroyObjectFromWorld(true);
+	attachment->destroyObjectFromDatabase(true);
+
+	if (equipped) {
+		applySkillModsTo(player);
+	}
 }
 
 bool WeaponObjectImplementation::isCertifiedFor(CreatureObject* object) const {

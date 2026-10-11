@@ -15,6 +15,8 @@
 #include "server/zone/managers/collision/CollisionManager.h"
 #include "server/zone/objects/scene/TransferErrorCode.h"
 #include "QueueCommand.h"
+#include "server/zone/objects/tangible/attachment/Attachment.h"
+#include "server/zone/objects/tangible/weapon/WeaponObject.h"
 
 class TransferItemMiscCommand : public QueueCommand {
 public:
@@ -126,6 +128,36 @@ public:
 			if (!objectToTransfer->isManufactureSchematic()){
 				trx.abort() << "expected objectToTransfer to be ManufactureSchematic";
 				return GENERALERROR;
+			}
+		}
+
+		if (destinationObject->isWeaponObject()) {
+			creature->info(true) << "WEAPON-DROP transferItemMisc: object " << objectToTransfer->getObjectID() << " (" << objectToTransfer->_getClassName()
+				<< ", type " << objectToTransfer->getGameObjectType() << ") onto weapon " << destinationObject->getObjectID() << " transferType " << transferType;
+		}
+
+		// A weapon attachment dropped onto a weapon is fitted to it (same as armor and clothing attachments).
+		if (objectToTransfer->isAttachment() && destinationObject->isWeaponObject()) {
+			Attachment* attachment = dynamic_cast<Attachment*>(objectToTransfer);
+			WeaponObject* weapon = dynamic_cast<WeaponObject*>(destinationObject);
+
+			if (attachment != nullptr && weapon != nullptr && attachment->isWeaponAttachment()) {
+				trx.discard();
+
+				if (!objectToTransfer->isASubChildOf(creature) || !weapon->isASubChildOf(creature)) {
+					return GENERALERROR;
+				}
+
+				Locker wlock(weapon, creature);
+
+				if (weapon->getRemainingSockets() < 1) {
+					creature->sendSystemMessage("That weapon has no free attachment sockets.");
+					return GENERALERROR;
+				}
+
+				weapon->applyAttachment(creature, attachment);
+
+				return SUCCESS;
 			}
 		}
 

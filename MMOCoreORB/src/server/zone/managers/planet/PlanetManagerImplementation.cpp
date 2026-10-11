@@ -488,6 +488,12 @@ void PlanetManagerImplementation::buildRegionNavAreas() {
 
 	int i = 0;
 
+	// Loading a nav area deserializes its navmesh. Every zone does this at the same time at startup now that the
+	// database is scanned only once (before, the long per-zone scans staggered them), and loading them concurrently
+	// corrupted the heap and crashed startup at random. Load them one zone at a time.
+	static Mutex navAreaLoadMutex;
+	Locker navAreaLoadLocker(&navAreaLoadMutex);
+
 	for (int n = 0; n < zoneNavAreaIDs.size(); ++n) {
 		uint64 objectID = zoneNavAreaIDs.get(n);
 
@@ -504,6 +510,8 @@ void PlanetManagerImplementation::buildRegionNavAreas() {
 			error("Failed to deserialize nav area with objectID: " + String::valueOf(objectID));
 		}
 	}
+
+	navAreaLoadLocker.release();
 
 	info(String::valueOf(i) + " nav areas loaded for " + zoneName + ".", i > 0);
 

@@ -147,6 +147,18 @@ void ResourceSpawner::loadResourceSpawns() {
 			continue;
 		}
 
+		{
+			Locker repairLocker(resourceSpawn);
+
+			int repaired = resourceSpawn->repairCorruptedStrings();
+
+			if (repaired > 0) {
+				warning() << "Repaired " << repaired << " corrupted string length(s) on resource spawn " << objectID;
+
+				resourceSpawn->updateToDatabase();
+			}
+		}
+
 		// Create spawn maps for zones that were disabled when the resource spawned
 		if (resourceSpawn->inShift()) {
 			auto resourceEntry = resourceTree->getEntry(resourceSpawn->getType());

@@ -7,9 +7,10 @@ hutt_exp_tier_1 = {
 	lootItems = {
 		{groupTemplate = "armor_attachments", weight = 200000},
 		{groupTemplate = "clothing_attachments", weight = 200000},
+		{groupTemplate = "weapon_attachments", weight = 200000},
 		{groupTemplate = "color_crystals", weight = 200000},
 		{groupTemplate = "hutt_exp_common", weight = 1800000},
-		{groupTemplate = "junk", weight = 3000000},
+		{groupTemplate = "junk", weight = 2800000},
 		{groupTemplate = "loot_kit_parts", weight = 900000},
 		{groupTemplate = "power_crystals", weight = 150000},
 		{groupTemplate = "ranged_weapons", weight = 1500000},

@@ -6,6 +6,7 @@
  */
 
 #include "server/zone/managers/player/PlayerManager.h"
+#include "server/zone/objects/tangible/DurabilityRules.h"
 #include "server/zone/objects/player/GreyJedi.h"
 #include <utility>
 #include <mutex>
@@ -1860,13 +1861,14 @@ void PlayerManagerImplementation::sendPlayerToCloner(CreatureObject* player, uin
 
 				if (obj->getOptionsBitmask() & OptionBitmask::INSURED) {
 					//1% Decay for insured items
-					obj->inflictDamage(obj, 0, 0.01 * obj->getMaxCondition(), true, true);
+					// Armor decay is reduced by 75%
+					obj->inflictDamage(obj, 0, (obj->isArmorObject() ? 0.0025 : 0.01) * obj->getMaxCondition(), true, true);
 					//Set uninsured
 					uint32 bitmask = obj->getOptionsBitmask() - OptionBitmask::INSURED;
 					obj->setOptionsBitmask(bitmask);
 				} else {
 					//5% Decay for uninsured items
-					obj->inflictDamage(obj, 0, 0.05 * obj->getMaxCondition(), true, true);
+					obj->inflictDamage(obj, 0, (obj->isArmorObject() ? 0.0125 : 0.05) * obj->getMaxCondition(), true, true);
 				}
 
 				// Calculate condition percentage for decay report
@@ -4364,7 +4366,7 @@ void PlayerManagerImplementation::addInsurableItemsRecursive(SceneObject* obj, S
 
 		TangibleObject* item = cast<TangibleObject*>( object);
 
-		if (item == nullptr || item->hasAntiDecayKit() || item->isJediRobe() || item->isUnionRing() || !item->isInsurable())
+		if (item == nullptr || item->hasAntiDecayKit() || item->isJediRobe() || item->isUnionRing() || !item->isInsurable() || DurabilityRules::isDurabilityFree(item->getGameObjectType()))
 			continue;
 
 		if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject())) {
@@ -4398,7 +4400,7 @@ SortedVector<ManagedReference<SceneObject*> > PlayerManagerImplementation::getIn
 		if (container->isTangibleObject()) {
 			TangibleObject* item = cast<TangibleObject*>( container);
 
-			if (item == nullptr || item->hasAntiDecayKit() || item->isJediRobe() || item->isUnionRing() || !item->isInsurable())
+			if (item == nullptr || item->hasAntiDecayKit() || item->isJediRobe() || item->isUnionRing() || !item->isInsurable() || DurabilityRules::isDurabilityFree(item->getGameObjectType()))
 				continue;
 
 			if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject())) {

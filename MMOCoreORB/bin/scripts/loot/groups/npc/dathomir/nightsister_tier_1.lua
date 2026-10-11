@@ -7,8 +7,9 @@ nightsister_tier_1 = {
 	lootItems = {
 		{groupTemplate = "armor_attachments", weight = 100000},
 		{groupTemplate = "clothing_attachments", weight = 100000},
+		{groupTemplate = "weapon_attachments", weight = 100000},
 		{groupTemplate = "color_crystals", weight = 200000},
-		{groupTemplate = "junk", weight = 2500000},
+		{groupTemplate = "junk", weight = 2400000},
 		{groupTemplate = "loot_kit_parts", weight = 1000000},
 		{groupTemplate = "melee_weapons", weight = 1300000},
 		{groupTemplate = "nightsister_common", weight = 1000000},

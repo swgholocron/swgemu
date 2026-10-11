@@ -7,8 +7,9 @@ borvo_tier_3 = {
 	lootItems = {
 		{groupTemplate = "armor_attachments", weight = 500000},
 		{groupTemplate = "clothing_attachments", weight = 500000},
+		{groupTemplate = "weapon_attachments", weight = 500000},
 		{groupTemplate = "composite_armor", weight = 1400000},
-		{groupTemplate = "junk", weight = 1850000},
+		{groupTemplate = "junk", weight = 1350000},
 		{groupTemplate = "loot_kit_parts", weight = 1300000},
 		{groupTemplate = "melee_two_handed", weight = 1300000},
 		{groupTemplate = "tailor_components", weight = 1300000},

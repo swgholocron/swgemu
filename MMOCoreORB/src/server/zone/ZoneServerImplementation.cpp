@@ -263,6 +263,22 @@ void ZoneServerImplementation::startGroundZones() {
 		Core::getTaskManager()->initializeCustomQueue(spaceName, spaceThreads, true);
 	}
 
+	// Same for the ground zone task queues: create them all before the first zone is deployed.
+	for (int i = 0; i < totalZones; ++i) {
+		String queueZoneName = enabledZones.get(i);
+
+		if (queueZoneName.toLowerCase().contains("space"))
+			continue;
+
+		String capName = queueZoneName;
+		capName[0] = toupper(queueZoneName[0]);
+
+		int numThreads = configManager->getInt("Core3.Zone.ThreadsDefault", 1);
+		numThreads = configManager->getInt("Core3.Zone.Threads" + capName, numThreads);
+
+		Core::getTaskManager()->initializeCustomQueue(queueZoneName, numThreads, true);
+	}
+
 	info(true) << "Total Enabled Ground Zones: " << totalZones;
 
 	for (int i = 0; i < totalZones; ++i) {

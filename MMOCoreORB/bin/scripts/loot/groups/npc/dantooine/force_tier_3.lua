@@ -7,11 +7,12 @@ force_tier_3 = {
 	lootItems = {
 		{groupTemplate = "armor_attachments", weight = 1000000},
 		{groupTemplate = "clothing_attachments", weight = 1000000},
+		{groupTemplate = "weapon_attachments", weight = 1000000},
 		{groupTemplate = "color_crystals", weight = 600000},
 		{groupTemplate = "force_hunter_rare", weight = 100000},
 		{groupTemplate = "holocron_dark", weight = 450000},
 		{groupTemplate = "holocron_light", weight = 400000},
-		{groupTemplate = "junk", weight = 2900000},
+		{groupTemplate = "junk", weight = 1900000},
 		{groupTemplate = "melee_weapons", weight = 900000},
 		{groupTemplate = "power_crystals", weight = 500000},
 		{groupTemplate = "wearables_common", weight = 600000},

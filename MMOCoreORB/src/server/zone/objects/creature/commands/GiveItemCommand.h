@@ -11,6 +11,7 @@
 
 #include "server/zone/objects/tangible/attachment/Attachment.h"
 #include "server/zone/objects/tangible/wearables/WearableObject.h"
+#include "server/zone/objects/tangible/weapon/WeaponObject.h"
 #include "server/zone/objects/tangible/components/vendor/VendorDataComponent.h"
 #include "server/zone/objects/tangible/components/droid/DroidStimpackModuleDataComponent.h"
 #include "server/zone/objects/tangible/components/droid/DroidTrapModuleDataComponent.h"
@@ -89,12 +90,41 @@ public:
 			parentPerk = zoneServer->getObject(parentID);
 		}
 
+		if (giveObject->isAttachment()) {
+			creature->info(true) << "ATTACHMENT-DROP giveItem: attachment " << giveObject->getObjectID() << " (type " << giveObject->getGameObjectType()
+				<< ") onto " << targetObject->getObjectID() << " (" << targetObject->_getClassName() << ")";
+		}
+
 		// Attempting to add attachment to item
 		if (giveObject->isAttachment()) {
 			auto attachment = cast<Attachment*>(giveObject.get());
 
 			if (attachment == nullptr) {
 				return GENERALERROR;
+			}
+
+			// Weapon attachments go on weapons; every other attachment goes on clothing/armor
+			if (attachment->isWeaponAttachment()) {
+				if (!targetObject->isWeaponObject() || !targetObject->isASubChildOf(creature)) {
+					return GENERALERROR;
+				}
+
+				auto weapon = cast<WeaponObject*>(targetObject.get());
+
+				if (weapon == nullptr) {
+					return GENERALERROR;
+				}
+
+				Locker wlock(weapon, creature);
+
+				if (weapon->getRemainingSockets() < 1) {
+					creature->sendSystemMessage("That weapon has no free attachment sockets.");
+					return GENERALERROR;
+				}
+
+				weapon->applyAttachment(creature, attachment);
+
+				return SUCCESS;
 			}
 
 			if (!targetObject->isWearableObject() || !targetObject->isASubChildOf(creature)) {

@@ -303,6 +303,12 @@ class ResourceSpawn extends SceneObject {
 	@read
 	public native int getAttributeAndValue(string attribute, int index);
 
+	/**
+	 * Repairs resource strings whose stored length field has been corrupted (a stray high bit on the length of
+	 * "res_quality" aborted startup). Returns how many strings were repaired.
+	 */
+	public native int repairCorruptedStrings();
+
 	@read
 	public int getAttributeValue(int index) {
 		return spawnAttributes.get(index);

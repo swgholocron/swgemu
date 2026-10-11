@@ -7,10 +7,11 @@ mokk_tribe_tier_3 = {
 	lootItems = {
 		{groupTemplate = "armor_attachments", weight = 400000},
 		{groupTemplate = "clothing_attachments", weight = 400000},
+		{groupTemplate = "weapon_attachments", weight = 400000},
 		{groupTemplate = "color_crystals", weight = 400000},
 		{groupTemplate = "junk", weight = 2800000},
 		{groupTemplate = "loot_kit_parts", weight = 2300000},
-		{groupTemplate = "wearables_all", weight = 3100000},
+		{groupTemplate = "wearables_all", weight = 2700000},
 		{groupTemplate = "resource_creature", weight = 450000},
 		{groupTemplate = "resource_water", weight = 150000},
 	}

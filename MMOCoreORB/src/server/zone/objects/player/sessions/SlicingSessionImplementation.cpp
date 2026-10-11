@@ -5,6 +5,7 @@
  *      Author: polonel
  */
 
+#include "conf/ConfigManager.h"
 #include "server/zone/objects/player/sessions/SlicingSession.h"
 #include "server/zone/objects/player/sui/SuiWindowType.h"
 #include "server/zone/objects/player/sui/listbox/SuiListBox.h"
@@ -542,6 +543,36 @@ void SlicingSessionImplementation::handleWeaponSlice() {
 		handleSliceSpeed(percentage);
 		break;
 	}
+
+	handleSliceSockets(player, tangibleObject);
+}
+
+// Chance (Core3.WeaponSockets.SliceChance percent, default 15) for a successful weapon slice to also grant
+// attachment sockets: +1, or +2 one time in four. A weapon never has more than WeaponObject::MAXSOCKETS.
+void SlicingSessionImplementation::handleSliceSockets(CreatureObject* player, TangibleObject* tano) {
+	WeaponObject* weap = dynamic_cast<WeaponObject*>(tano);
+
+	if (weap == nullptr || weap->isJediWeapon())
+		return;
+
+	int chance = ConfigManager::instance()->getInt("Core3.WeaponSockets.SliceChance", 15);
+
+	if (System::random(99) >= chance)
+		return;
+
+	int current = weap->getMaxSockets();
+
+	if (current >= WeaponObject::MAXSOCKETS)
+		return;
+
+	Locker locker(weap);
+
+	int bonus = (System::random(3) == 0) ? 2 : 1;
+	int newCount = Math::min(current + bonus, (int)WeaponObject::MAXSOCKETS);
+
+	weap->setMaxSockets(newCount);
+
+	player->sendSystemMessage("Your slicing has opened up " + String::valueOf(newCount - current) + " additional attachment socket" + ((newCount - current) > 1 ? "s" : "") + " on the weapon.");
 }
 
 void SlicingSessionImplementation::detachPowerUp(CreatureObject* player, WeaponObject* weap) {

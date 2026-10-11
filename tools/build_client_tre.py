@@ -35,6 +35,16 @@ CUSTOM = {"holocron.tre", "holocron2.tre"}
 # Overlapping files we deliberately override even though they are not tables.
 FORCE_INCLUDE = {
     "clienteffect/pl_force_run_self.cef",  # 3s effect, replayed by the server while Force Run is active
+    # Gen 5 / Gen 6 lightsaber schematics (stats = Gen 4 +25% / +50%+), see tools/saber_schematics.py
+    "object/draft_schematic/weapon/lightsaber/shared_lightsaber_one_hand_gen5.iff",
+    "object/draft_schematic/weapon/lightsaber/shared_lightsaber_two_hand_gen5.iff",
+    "object/draft_schematic/weapon/lightsaber/shared_lightsaber_polearm_gen5.iff",
+    "object/draft_schematic/weapon/lightsaber/shared_lightsaber_onehanded_gen5_exar_kun.iff",
+    "object/draft_schematic/weapon/lightsaber/shared_lightsaber_onehanded_gen5_jinzu.iff",
+    "object/draft_schematic/weapon/lightsaber/shared_lightsaber_polearm_gen5_exar_kun.iff",
+    "object/draft_schematic/weapon/lightsaber/shared_lightsaber_polearm_gen6.iff",
+    "object/draft_schematic/weapon/lightsaber/shared_sword_lightsaber_one_handed_gen5.iff",
+    "object/draft_schematic/weapon/shared_lightsaber_mandalorian.iff",
 }
 
 
