@@ -44,6 +44,35 @@ DnaManager::~DnaManager() {
 	}
 }
 
+// "VHQ DNA Sample: Dune Lizard (CL12)": the quality, the creature and its level in the sample's name.
+static String makeSampleName(String creatureName, int quality, int creatureLevel) {
+	if (creatureName.beginsWith("a "))
+		creatureName = creatureName.subString(2, creatureName.length());
+	else if (creatureName.beginsWith("an "))
+		creatureName = creatureName.subString(3, creatureName.length());
+
+	creatureName = creatureName.replaceAll("_", " ");
+
+	for (int i = 0; i < creatureName.length(); ++i) {
+		if (i == 0 || creatureName.charAt(i - 1) == ' ')
+			creatureName[i] = toupper(creatureName.charAt(i));
+	}
+
+	const char* prefix = "???";
+
+	switch (quality) {
+		case 1: prefix = "VHQ"; break;
+		case 2: prefix = "HQ"; break;
+		case 3: prefix = "AAQ"; break;
+		case 4: prefix = "AQ"; break;
+		case 5: prefix = "BAQ"; break;
+		case 6: prefix = "LQ"; break;
+		case 7: prefix = "VLQ"; break;
+	}
+
+	return String(prefix) + " DNA Sample: " + creatureName + " (CL" + String::valueOf(creatureLevel) + ")";
+}
+
 void DnaManager::loadSampleData() {
 	info("Loading DNA Information",true);
 	try {
@@ -245,6 +274,7 @@ void DnaManager::generationalSample(PetDeed* deed, CreatureObject* player, int q
 	prototype->setSource(deed->getTemplateName());
 	prototype->setQuality(quality);
 	prototype->setLevel(creatureLevel);
+	prototype->setCustomObjectName(makeSampleName(deed->getTemplateName(), quality, creatureLevel), false);
 
 	String serial = craftingManager->generateSerial();
 
@@ -408,6 +438,7 @@ void DnaManager::generateSample(Creature* creature, CreatureObject* player, int 
 
 	prototype->setQuality(quality);
 	prototype->setLevel(creatureLevel);
+	prototype->setCustomObjectName(makeSampleName(creature->getDisplayedName(), quality, creatureLevel), false);
 
 	String serial = craftingManager->generateSerial();
 
@@ -604,6 +635,32 @@ int DnaManager::levelForScore(int type, float value) {
 			break;
 		default:
 			rc = 0;
+	}
+
+	// A value above the top of the table (a very strong creature) counts as the top level, not level 0.
+	if (rc == 0) {
+		switch (type) {
+			case HIT_LEVEL:
+				if (dnaHit.size() > 0 && value > dnaHit.get(dnaHit.size() - 1))
+					rc = dnaHit.size() - 1;
+				break;
+			case HAM_LEVEL:
+				if (dnaHam.size() > 0 && value > dnaHam.get(dnaHam.size() - 1))
+					rc = dnaHam.size() - 1;
+				break;
+			case DPS_LEVEL:
+				if (dnaDPS.size() > 0 && value > dnaDPS.get(dnaDPS.size() - 1))
+					rc = dnaDPS.size() - 1;
+				break;
+			case ARM_LEVEL:
+				if (dnaArmor.size() > 0 && value > dnaArmor.get(dnaArmor.size() - 1))
+					rc = dnaArmor.size() - 1;
+				break;
+			case REG_LEVEL:
+				if (dnaRegen.size() > 0 && value > dnaRegen.get(dnaRegen.size() - 1))
+					rc = dnaRegen.size() - 1;
+				break;
+		}
 	}
 
 	return rc;

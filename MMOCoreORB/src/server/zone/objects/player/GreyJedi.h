@@ -78,9 +78,10 @@ namespace GreyJedi {
 	}
 
 	// Searches everything below an object (inventory, bank, bags) for an item made from the template CRC.
-	inline bool containsTemplate(SceneObject* parent, uint32 crc, int depth = 0) {
+	// Returns its object ID, or 0.
+	inline uint64 findTemplate(SceneObject* parent, uint32 crc, int depth = 0) {
 		if (parent == nullptr || depth > 8)
-			return false;
+			return 0;
 
 		for (int i = 0; i < parent->getContainerObjectsSize(); ++i) {
 			ManagedReference<SceneObject*> child = parent->getContainerObject(i);
@@ -88,34 +89,61 @@ namespace GreyJedi {
 			if (child == nullptr)
 				continue;
 
-			if (child->getServerObjectCRC() == crc || containsTemplate(child, crc, depth + 1))
-				return true;
+			if (child->getServerObjectCRC() == crc)
+				return child->getObjectID();
+
+			uint64 found = findTemplate(child, crc, depth + 1);
+
+			if (found != 0)
+				return found;
 		}
 
-		return false;
+		return 0;
 	}
 
-	// True if the character wears, carries or has banked an item made from the template.
-	inline bool hasTemplate(CreatureObject* creature, uint32 crc) {
+	// Object ID of the item made from the template that the character wears, carries or has banked, or 0.
+	inline uint64 findTemplate(CreatureObject* creature, uint32 crc) {
 		for (int i = 0; i < creature->getSlottedObjectsSize(); ++i) {
 			ManagedReference<SceneObject*> object = creature->getSlottedObject(i);
 
 			if (object == nullptr)
 				continue;
 
-			if (object->getServerObjectCRC() == crc || containsTemplate(object, crc))
-				return true;
+			if (object->getServerObjectCRC() == crc)
+				return object->getObjectID();
+
+			uint64 found = findTemplate(object.get(), crc);
+
+			if (found != 0)
+				return found;
 		}
 
-		return false;
+		return 0;
 	}
 
-	// Creates the robe in the inventory unless the character already has one.
-	inline void giveRobeIfMissing(CreatureObject* creature, const String& robePath) {
+	// Creates the robe in the inventory unless the character already has one. The robe given is recorded on the
+	// character (by object ID), so it is not given again for as long as that robe still exists anywhere, even if it
+	// has been moved somewhere the search above does not reach. If the recorded robe is gone (destroyed or deleted)
+	// a new one is created.
+	inline void giveRobeIfMissing(CreatureObject* creature, PlayerObject* ghost, const String& robePath) {
 		uint32 crc = robePath.hashCode();
+		String recordKey = "robe_" + String::valueOf(crc);
 
-		if (hasTemplate(creature, crc))
+		String recorded = ghost->getScreenPlayData("GreyJedi", recordKey);
+
+		if (!recorded.isEmpty()) {
+			uint64 recordedID = UnsignedLong::valueOf(recorded);
+
+			if (recordedID != 0 && creature->getZoneServer()->getObject(recordedID) != nullptr)
+				return;
+		}
+
+		uint64 owned = findTemplate(creature, crc);
+
+		if (owned != 0) {
+			ghost->setScreenPlayData("GreyJedi", recordKey, String::valueOf(owned));
 			return;
+		}
 
 		ManagedReference<SceneObject*> inventory = creature->getSlottedObject("inventory");
 
@@ -137,10 +165,12 @@ namespace GreyJedi {
 		}
 
 		inventory->broadcastObject(robe, true);
+
+		ghost->setScreenPlayData("GreyJedi", recordKey, String::valueOf(robe->getObjectID()));
 	}
 
 	// Gives a Grey Jedi the starter schematics and the Grey Jedi robes their skills earn: the starter robe with the
-	// first skill and the mantle with the last. A missing robe is created again. Safe to call repeatedly.
+	// first skill and the mantle with the last. A robe is only created if none exists. Safe to call repeatedly.
 	inline void giveStarterKit(CreatureObject* creature, PlayerObject* ghost) {
 		if (creature == nullptr || ghost == nullptr || !creature->isPlayerCreature())
 			return;
@@ -152,10 +182,10 @@ namespace GreyJedi {
 		SchematicMap::instance()->addSchematics(ghost, groups, true);
 
 		if (creature->hasSkill(firstSkill()))
-			giveRobeIfMissing(creature, "object/tangible/wearables/robe/robe_jedi_gray_01.iff");
+			giveRobeIfMissing(creature, ghost, "object/tangible/wearables/robe/robe_jedi_gray_01.iff");
 
 		if (creature->hasSkill(masterSkill()))
-			giveRobeIfMissing(creature, "object/tangible/wearables/robe/robe_jedi_gray_02.iff");
+			giveRobeIfMissing(creature, ghost, "object/tangible/wearables/robe/robe_jedi_gray_02.iff");
 	}
 }
 

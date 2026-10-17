@@ -61,6 +61,14 @@ def build_tre(file_list, out_path, compress_level=6):
     """file_list: list of (archive_path, local_disk_path) tuples.
     archive_path uses forward slashes, e.g. 'datatables/skill/skills.iff'.
     """
+    # Standing rule: Force Sensitive skill boxes cost 0 skill points. Never write an archive that says otherwise.
+    for archive_path, local_path in file_list:
+        if archive_path == "datatables/skill/skills.iff":
+            import lock_fs_skill_points as _fs
+            if not _fs.verify(local_path):
+                raise SystemExit("refusing to build %s: skills.iff gives force_sensitive skills a point cost "
+                                 "(run tools/lock_fs_skill_points.py patch on it)" % out_path)
+
     # Sort by archive path -- matches how real archives are laid out and
     # keeps rebuilds deterministic (stable diffs between versions).
     file_list = sorted(file_list, key=lambda t: t[0])

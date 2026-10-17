@@ -26,7 +26,8 @@ old_man = Creature:new {
 	optionsBitmask = AIENABLED + INVULNERABLE + CONVERSABLE,
 	diet = HERBIVORE,
 
-	templates = {"object/mobile/dressed_fs_village_oldman.iff"},
+	-- Appearance: Obi-Wan Kenobi's Force ghost (was object/mobile/dressed_fs_village_oldman.iff)
+	templates = {"object/mobile/som/obi_wan_ghost.iff"},
 	lootGroups = {},
 
 	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)

@@ -363,8 +363,7 @@ bool PetManagerImplementation::handleCommandTraining(CreatureObject* speaker, Ai
 				return false;
 
 			int skill = speaker->getSkillMod("tame_level");
-			int level = petCreature->getAdultLevel();
-			int roll = System::random(skill + level);
+			int roll = 0; // training always succeeds for anyone with the creature handler skill
 
 			if (skill > roll)
 				success = true;

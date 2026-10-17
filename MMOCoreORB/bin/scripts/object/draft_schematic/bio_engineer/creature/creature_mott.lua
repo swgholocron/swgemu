@@ -49,7 +49,7 @@ object_draft_schematic_bio_engineer_creature_creature_mott = object_draft_schema
    customObjectName = "Mott",
 
    craftingToolTab = 256, -- (See DraftSchematicObjectTemplate.h)
-   complexity = 16, 
+   complexity = 1, 
    size = 1, 
    factoryCrateType = "object/factory/factory_crate_clothing.iff",
 

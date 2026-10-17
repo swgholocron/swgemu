@@ -49,7 +49,7 @@ object_draft_schematic_bio_engineer_creature_creature_guf_drolg = object_draft_s
    customObjectName = "Guf Drolg",
 
    craftingToolTab = 256, -- (See DraftSchematicObjectTemplate.h)
-   complexity = 29, 
+   complexity = 1, 
    size = 1, 
    factoryCrateType = "object/factory/factory_crate_clothing.iff",
 

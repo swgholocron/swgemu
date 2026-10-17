@@ -49,7 +49,7 @@ object_draft_schematic_bio_engineer_creature_creature_bolma = object_draft_schem
    customObjectName = "Bolma",
 
    craftingToolTab = 256, -- (See DraftSchematicObjectTemplate.h)
-   complexity = 26, 
+   complexity = 1, 
    size = 1, 
    factoryCrateType = "object/factory/factory_crate_clothing.iff",
 

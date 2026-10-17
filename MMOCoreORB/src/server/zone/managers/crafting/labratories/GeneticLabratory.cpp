@@ -51,9 +51,8 @@ String GeneticLabratory::pickSpecialAttack(String a, String b, String c, String 
 	} else {
 		effectiveSpecial = a;
 	}
-	if (effectiveSpecial.contains("creature"))
-		effectiveSpecial = "defaultattack";
-	int roll = System::random(750);
+	// Creature (area) specials may be passed down from the DNA like any other special.
+	int roll = System::random(2000);
 	// roll now determined by template quality
 	// we roll 0-800 if that number is < quality * 100 i.e. VHQ 100 VLQ 700 if we get less than the odds we dont stick the special
 	// VLQ has a 7% chance to stick a special VHQ has 87% chance to stick it

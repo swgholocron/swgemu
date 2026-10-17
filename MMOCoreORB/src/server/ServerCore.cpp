@@ -880,6 +880,8 @@ void ServerCore::run() {
 }
 
 void ServerCore::shutdown() {
+	runState = 2;
+
 	info(true) << "shutting down server.. flags = "
 		<< (nextShutdownFlags == ShutdownFlags::DEFAULT) << " DEFAULT"
 		<< (nextShutdownFlags & ShutdownFlags::FAST) << " FAST"
@@ -1096,6 +1098,8 @@ void ServerCore::handleCommands() {
 		return;
 
 	consoleCommandPipe.create(false);
+
+	runState = 1;
 
 	auto reader = coredetail::ConsoleReaderService(instance);
 	reader.start(true);

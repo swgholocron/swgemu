@@ -198,6 +198,23 @@ def main():
     for cls, name in GEN4.items():
         base[cls] = get_forms(parse(read(GEN4_TRE, name)))
 
+    # Equalize Gen 4 damage: the one-handed and two-handed Gen 4 schematics take the polearm's min/max damage
+    # ranges. Gen 5 and Gen 6 are derived from these, so they follow.
+    pole_min = get_value(base["pole"]["minDamage"])
+    pole_max = get_value(base["pole"]["maxDamage"])
+
+    for cls in ("1h", "2h"):
+        root4 = parse(read(GEN4_TRE, GEN4[cls]))
+        forms4 = get_forms(root4)
+        set_value(forms4["minDamage"], *pole_min)
+        set_value(forms4["maxDamage"], *pole_max)
+        dest4 = os.path.join(STAGE, GEN4[cls])
+        print("%-70s gen4 %s damage -> min %s max %s" % (GEN4[cls], cls, pole_min, pole_max))
+        if not dry:
+            os.makedirs(os.path.dirname(dest4), exist_ok=True)
+            open(dest4, "wb").write(dump(root4))
+        base[cls] = forms4
+
     # Compute scaled ranges per class/generation (each generation rounds before the next is derived).
     ranges = {}
     for cls, forms in base.items():

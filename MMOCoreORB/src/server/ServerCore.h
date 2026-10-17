@@ -91,6 +91,10 @@ private:
 
 	bool handleCmds;
 
+	// 0 = starting up, 1 = running (console commands are being read), 2 = shutting down.
+	// Read by the termination signal watcher in main.cpp.
+	volatile int runState = 0;
+
 	static SortedVector<String> arguments;
 	static ManagedReference<server::zone::ZoneServer*> zoneServerRef;
 	static bool truncateAllData;
@@ -115,6 +119,10 @@ public:
 	void handleCommands();
 	void processConfig();
 	void signalShutdown(ShutdownFlags flags = ShutdownFlags::DEFAULT);
+
+	int getRunState() const {
+		return runState;
+	}
 
 	// getters
 	static server::zone::ZoneServer* getZoneServer() {

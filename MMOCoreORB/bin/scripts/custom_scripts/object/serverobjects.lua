@@ -14,6 +14,8 @@ includeFile("../custom_scripts/object/mobile/shared_meatlump_king.lua")
 includeFile("../custom_scripts/object/mobile/meatlump_king.lua")
 includeFile("../custom_scripts/object/mobile/shared_mutant_acklay.lua")
 includeFile("../custom_scripts/object/mobile/mutant_acklay.lua")
+includeFile("../custom_scripts/object/mobile/shared_som_obi_wan_ghost.lua")
+includeFile("../custom_scripts/object/mobile/som_obi_wan_ghost.lua")
 
 -- Elite-tier harvester/generator installations + deeds ported from
 -- Bloodfin.Net's client assets (holocron2.tre, not yet deployed to the
@@ -359,3 +361,6 @@ includeFile("../custom_scripts/object/flurry_planets/serverobjects.lua")
 includeFile("../custom_scripts/object/infinity_dwb/serverobjects.lua")
 includeFile("../custom_scripts/object/flurry_loot/serverobjects.lua")
 includeFile("../custom_scripts/object/flurry_robes/serverobjects.lua")
+
+-- Server object templates for the Project Phoenix bosses
+includeFile("../custom_scripts/object/phoenix_bosses/serverobjects.lua")

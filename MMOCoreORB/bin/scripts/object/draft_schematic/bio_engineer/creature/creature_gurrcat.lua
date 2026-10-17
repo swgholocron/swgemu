@@ -49,7 +49,7 @@ object_draft_schematic_bio_engineer_creature_creature_gurrcat = object_draft_sch
    customObjectName = "Gurrcat",
 
    craftingToolTab = 256, -- (See DraftSchematicObjectTemplate.h)
-   complexity = 23, 
+   complexity = 1, 
    size = 1, 
    factoryCrateType = "object/factory/factory_crate_clothing.iff",
 

@@ -49,7 +49,7 @@ object_draft_schematic_bio_engineer_creature_creature_bearded_jax = object_draft
    customObjectName = "Bearded Jax",
 
    craftingToolTab = 256, -- (See DraftSchematicObjectTemplate.h)
-   complexity = 12, 
+   complexity = 1, 
    size = 1, 
    factoryCrateType = "object/factory/factory_crate_clothing.iff",
 

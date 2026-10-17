@@ -45,6 +45,11 @@ FORCE_INCLUDE = {
     "object/draft_schematic/weapon/lightsaber/shared_lightsaber_polearm_gen6.iff",
     "object/draft_schematic/weapon/lightsaber/shared_sword_lightsaber_one_handed_gen5.iff",
     "object/draft_schematic/weapon/shared_lightsaber_mandalorian.iff",
+    # Force Sensitive skills cost 0 points (locked, see tools/lock_fs_skill_points.py); always ship the client's table
+    "datatables/skill/skills.iff",
+    # Gen 4 one- and two-handed damage equalized to the polearm
+    "object/draft_schematic/weapon/lightsaber/shared_lightsaber_one_hand_gen4.iff",
+    "object/draft_schematic/weapon/lightsaber/shared_lightsaber_two_hand_gen4.iff",
 }
 
 

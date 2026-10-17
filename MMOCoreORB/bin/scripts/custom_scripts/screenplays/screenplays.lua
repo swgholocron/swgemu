@@ -6,3 +6,6 @@ includeFile("../custom_scripts/screenplays/flurry_planets/screenplays.lua")
 
 -- Collection / boss loot crates (Lua menu components)
 includeFile("../custom_scripts/screenplays/boss_loot_crates.lua")
+
+-- Project Phoenix custom bosses
+includeFile("../custom_scripts/screenplays/phoenix_bosses.lua")

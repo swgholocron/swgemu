@@ -22,6 +22,7 @@ lok_regions = {
 
 	-- Named Regions, POIs and Decor
 	{"building_ruins", -226, -448, {CIRCLE, 30}, NOSPAWNAREA + NOBUILDZONEAREA},
+	{"generals_bunker", 3760, -3080, {CIRCLE, 100}, NOSPAWNAREA + NOBUILDZONEAREA},
 	{"building_ruins_2", -2204, -4558, {CIRCLE, 30}, NOSPAWNAREA + NOBUILDZONEAREA},
 	{"buried_at_st", -6037, 2405, {CIRCLE, 45}, NOSPAWNAREA + NOBUILDZONEAREA},
 	{"debris_1", -2591, 6187, {CIRCLE, 30}, NOSPAWNAREA + NOBUILDZONEAREA},

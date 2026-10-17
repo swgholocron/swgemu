@@ -45,21 +45,7 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player, bool ini
 		return;
 	}
 
-	// Private Building Check
-	auto parent = player->getParent().get();
-
-	if (parent != nullptr && !parent->isMount() && !parent->isVehicleObject()) {
-		ManagedReference<SceneObject*> strongRef = player->getRootParent();
-
-		if (strongRef != nullptr && !strongRef->isPobShip()) {
-			ManagedReference<BuildingObject*> building = strongRef.castTo<BuildingObject*>();
-
-			if (building == nullptr || building->isPrivateStructure()) {
-				player->sendSystemMessage("@pet/pet_menu:private_house"); // You cannot call pets in a private building.
-				return;
-			}
-		}
-	}
+	// Pets can be called anywhere, including inside private buildings (the private building check is disabled).
 
 	auto zoneServer = player->getZoneServer();
 
@@ -139,8 +125,11 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player, bool ini
 		}
 	}
 
-	// Only Bomb droids can be called while in combat and while feigning death
-	if ((((isBombDroid && !initialCall) || !isBombDroid) && (player->isInCombat() || player->isIncapacitated())) || (isBombDroid && initialCall && player->isIncapacitated() && !player->isFeigningDeath())) {
+	// A master creature handler can call a creature pet in combat
+	bool masterCHCreaturePet = (player->hasSkill("outdoors_creaturehandler_master") && getPetType() == PetManager::CREATUREPET);
+
+	// Only Bomb droids and master creature handlers' creature pets can be called while in combat; bomb droids can be called while feigning death
+	if ((((isBombDroid && !initialCall) || !isBombDroid) && !masterCHCreaturePet && (player->isInCombat() || player->isIncapacitated())) || (isBombDroid && initialCall && player->isIncapacitated() && !player->isFeigningDeath()) || (masterCHCreaturePet && player->isIncapacitated())) {
 		player->sendSystemMessage("@pet/pet_menu:cant_call"); // You cannot call this pet right now.
 		return;
 	}
@@ -652,7 +641,7 @@ bool PetControlDeviceImplementation::growPet(CreatureObject* player, bool force,
 
 	Time currentTime;
 	uint32 timeDelta = currentTime.getTime() - lastGrowth.getTime();
-	int stagesToGrow = timeDelta / 43200; // 12 hour
+	int stagesToGrow = timeDelta / 60; // one growth stage per minute
 
 	if (adult)
 		stagesToGrow = 10;

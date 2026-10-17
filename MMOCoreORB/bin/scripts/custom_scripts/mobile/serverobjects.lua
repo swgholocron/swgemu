@@ -8,3 +8,6 @@ includeFile("../custom_scripts/mobile/halloween/serverobjects.lua")
 
 -- Taanab / Nalhutta / Mustafar creatures, lairs and world spawn groups (ported from Flurry)
 includeFile("../custom_scripts/mobile/flurry_planets/serverobjects.lua")
+
+-- Custom bosses ported from Project Phoenix
+includeFile("../custom_scripts/mobile/phoenix_bosses/serverobjects.lua")

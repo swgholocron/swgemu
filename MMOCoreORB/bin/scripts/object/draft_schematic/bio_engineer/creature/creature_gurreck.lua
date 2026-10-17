@@ -49,7 +49,7 @@ object_draft_schematic_bio_engineer_creature_creature_gurreck = object_draft_sch
    customObjectName = "Gurreck",
 
    craftingToolTab = 256, -- (See DraftSchematicObjectTemplate.h)
-   complexity = 27, 
+   complexity = 1, 
    size = 1, 
    factoryCrateType = "object/factory/factory_crate_clothing.iff",
 

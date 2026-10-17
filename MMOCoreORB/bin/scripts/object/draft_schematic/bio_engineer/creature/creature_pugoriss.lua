@@ -49,7 +49,7 @@ object_draft_schematic_bio_engineer_creature_creature_pugoriss = object_draft_sc
    customObjectName = "Pugoriss",
 
    craftingToolTab = 256, -- (See DraftSchematicObjectTemplate.h)
-   complexity = 23, 
+   complexity = 1, 
    size = 1, 
    factoryCrateType = "object/factory/factory_crate_clothing.iff",
 
