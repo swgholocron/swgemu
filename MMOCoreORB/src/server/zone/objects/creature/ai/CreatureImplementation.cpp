@@ -367,9 +367,17 @@ bool CreatureImplementation::hasSkillToSampleMe(CreatureObject* player) {
 
 	int skillMod = player->getSkillMod("dna_harvesting");
 	int cl = _this.getReferenceUnsafeStaticCast()->getLevel();
-	// Skill Mod Check, you need atleast x skill points to be able to sample x level unless creature > 13k ham or CL 75 (we only generated values to 75)
-	if (skillMod < 1 || cl > skillMod + 15)
+	// Skill Mod Check: you need at least x skill points to sample a level x creature (plus 15), but a master
+	// Bio-Engineer can sample anything up to level 350, the top of the DNA table.
+	if (skillMod < 1)
 		return false;
+
+	if (player->hasSkill("outdoors_bio_engineer_master")) {
+		if (cl > 350)
+			return false;
+	} else if (cl > skillMod + 15) {
+		return false;
+	}
 
 	if (dnaState == CreatureManager::DNASAMPLED)
 		return false;
